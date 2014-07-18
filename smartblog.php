@@ -977,19 +977,19 @@ class smartblog extends Module {
                 for ($i = 1; $i <= 4; $i++){
                      if($i==1):
                         $title='From Now we are certified web agency';
-                        $slug='from_now_we_are_certified_web_agency';
+                        $slug='from-now-we-are-certified-web-agency';
                        $des='Smartdatasoft is an offshore web development company located in Bangladesh. We are serving this sector since 2010. Our team is committed to develop high quality web based application and theme for our clients and also for the global marketplace. As your web development partner we will assist you in planning, development, implementation and upgrade! Why Smartdatasoft? Smartdatasoft released their first prestashop theme in November 2012. Till now we have 6+ prestashop theme which are getting sold on global renowned marketplace. Those themes are getting used in more than 400 customers eCommerce websites. Those themes are very user friendly and highly customize able from admin dashboard. For these reason these theme are very popular among the end users and developers';
                     elseif($i==2):
                         $title='What is Bootstrap? – The History and the Hype';
-                       $slug='what_is_bootstrap';
+                       $slug='what-is-bootstrap';
                     $des='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
                     elseif($i==3):
                           $title='Answers to your Questions about PrestaShop 1.6';
-                          $slug='answer_to_your_question_about_prestashop_1_6';
+                          $slug='answer-to-your-question-about-prestashop-1-6';
                     $des='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
                     elseif($i==4):
                         $title='Share the Love for PrestaShop 1.6';
-                        $slug='share_the_love_for_prestashop_1_6';
+                        $slug='share-the-love-for-prestashop-1-6';
                     $des='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'; 
                     elseif($i==5):
                         $title='Christmas Sale is here 5';
