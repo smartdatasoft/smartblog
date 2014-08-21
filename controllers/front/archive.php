@@ -3,7 +3,7 @@
 include_once(dirname(__FILE__).'/../../classes/controllers/FrontController.php');
 class smartblogarchiveModuleFrontController extends smartblogModuleFrontController
 {
-	public $ssl = true;
+	public $ssl = false;
 	public function init(){
             parent::init();
 	}  
