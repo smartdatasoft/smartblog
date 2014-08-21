@@ -14,7 +14,6 @@ class AdminBlogPostController extends AdminController {
         $this->bootstrap = true;
             if (Shop::isFeatureActive())
                  Shop::addTableAssociation($this->table, array('type' => 'shop'));
-		parent::__construct();
         $this->fields_list = array(
                             'id_smart_blog_post' => array(
                                     'title' => $this->l('Id'),
