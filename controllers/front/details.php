@@ -3,7 +3,7 @@
 include_once(dirname(__FILE__).'/../../classes/controllers/FrontController.php');
 class  smartblogDetailsModuleFrontController extends smartblogModuleFrontController
 {
-    public $ssl = true;
+    public $ssl = false;
     public $_report = '';
     private $_postsObject;
         
