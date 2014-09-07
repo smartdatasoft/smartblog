@@ -120,10 +120,10 @@ class AdminBlogPostController extends AdminController {
 				$SmartBlogPost->meta_description[$language['id_lang']] = Tools::getValue('meta_description_'.$language['id_lang']);
 				$SmartBlogPost->short_description[$language['id_lang']] = (string)Tools::getValue('short_description_'.$language['id_lang']);
 				$SmartBlogPost->content[$language['id_lang']] = Tools::getValue('content_'.$language['id_lang']);
-                                if(Tools::getValue('link_rewrite_'.$language['id_lang'])=='' && Tools::getValue('link_rewrite_'.$language['id_lang']) == null){
-                                    $SmartBlogPost->link_rewrite[$language['id_lang']] = str_replace(array(' ',':', '\\', '/', '#', '!','*','.','?'),'-',Tools::getValue('meta_title_'.$id_lang_default));
+								if(Tools::getValue('link_rewrite_'.$language['id_lang'])=='' && Tools::getValue('link_rewrite_'.$language['id_lang']) == null){
+                                	$SmartBlogPost->link_rewrite[$language['id_lang']] = Tools::link_rewrite(Tools::getValue('meta_title_'.$id_lang_default));
                                 }else{
-                                    $SmartBlogPost->link_rewrite[$language['id_lang']] = str_replace(array(' ',':', '\\', '/', '#', '!','*','.','?'),'-',Tools::getValue('link_rewrite_'.$language['id_lang']));
+                                    $SmartBlogPost->link_rewrite[$language['id_lang']] = Tools::link_rewrite(Tools::getValue('link_rewrite_'.$language['id_lang']));
                                 }
                         }
                         $SmartBlogPost->id_parent = Tools::getValue('id_parent');   
@@ -161,7 +161,7 @@ class AdminBlogPostController extends AdminController {
 				$SmartBlogPost->meta_description[$language['id_lang']] = Tools::getValue('meta_description_'.$language['id_lang']);
 				$SmartBlogPost->short_description[$language['id_lang']] = Tools::getValue('short_description_'.$language['id_lang']);
 				$SmartBlogPost->content[$language['id_lang']] = Tools::getValue('content_'.$language['id_lang']);
-				$SmartBlogPost->link_rewrite[$language['id_lang']] = str_replace(array(' ',':', '\\', '/', '#', '!','*','.','?'),'-',Tools::getValue('link_rewrite_'.$language['id_lang']));
+				$SmartBlogPost->link_rewrite[$language['id_lang']] = Tools::link_rewrite(Tools::getValue('link_rewrite_'.$language['id_lang']));
                         }
                         $SmartBlogPost->is_featured = Tools::getValue('is_featured');
                         $SmartBlogPost->id_parent = Tools::getValue('id_parent');
