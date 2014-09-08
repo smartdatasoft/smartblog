@@ -49,7 +49,7 @@ exit;
                      $array_error['mail'] = $SmartBlog->l('E-mail address not valid !');
                 }
                 if(Configuration::get('smartcaptchaoption') == '1'){
-                    if($captcha != $m_captcha){
+                    if($captcha != $m_captcha || empty($m_captcha)){
                    $array_error['captcha'] =  $SmartBlog->l('Captcha is not valid');
                     }
                 }
