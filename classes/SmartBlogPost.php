@@ -94,7 +94,7 @@ class SmartBlogPost extends ObjectModel
         $employee = new  Employee($post[0]['id_author']);
         $result['lastname'] = $employee->lastname;
         $result['firstname'] = $employee->firstname;
-        
+
         if (file_exists(_PS_MODULE_DIR_.'smartblog/images/' . $post[0]['id_smart_blog_post'] . '.jpg') )
         {
            $image =   $post[0]['id_smart_blog_post'] . '.jpg';
@@ -155,6 +155,7 @@ class SmartBlogPost extends ObjectModel
                        $result[$i]['post_img'] = 'no';
                     }
                 $result[$i]['created'] = $post['created'];
+                $result[$i]['tags'] = SmartBlogPost::getProductTags($post['id_smart_blog_post']);
                 $i++;
             }
         return $result;
