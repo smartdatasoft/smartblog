@@ -11,7 +11,16 @@
           {assign var="catlink" value=null}
           {$catlink.id_category = $post.id_category}
           {$catlink.slug = $post.cat_link_rewrite}
-         <span>{l s='Posted by' mod='smartblog'} <span itemprop="author">{if $smartshowauthor ==1}&nbsp;<i class="icon icon-user"></i>&nbsp; {if $smartshowauthorstyle != 0}{$post.firstname} {$post.lastname}{else}{$post.lastname} {$post.firstname}{/if}</span>{/if} &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp; <span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catlink)}">{if $title_category != ''}{$title_category}{else}{$post.cat_name}{/if}</a></span> &nbsp;<span class="comment"> &nbsp;<i class="icon icon-comments"></i>&nbsp; <a title="{$post.totalcomment} Comments" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}#articleComments">{$post.totalcomment} {l s=' Comments' mod='smartblog'}</a></span>{if $smartshowviewed ==1}&nbsp; <i class="icon icon-eye-open"></i>{l s=' views' mod='smartblog'} ({$post.viewed}){/if}</span>{if $post.is_featured}&nbsp;&nbsp;<i class="icon icon-asterisk"></i><span> featured</span>{/if}
+         <span>
+         {if $smartshowauthor == 1}
+           {l s='Posted by' mod='smartblog'} 
+           <span itemprop="author">&nbsp;<i class="icon icon-user"></i>&nbsp; {if $smartshowauthorstyle != 0}{$post.firstname} {$post.lastname}{else}{$post.lastname} {$post.firstname}{/if}</span>
+         {/if}
+          {if !empty($title_category) || strtolower($post.cat_name) != 'uncategories'}
+          &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp; <span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catlink)}">{if !empty($title_category)}{$title_category}{else}{if strtolower($post.cat_name) != 'uncategories'}{$post.cat_name}{/if}{/if}</a></span>
+          {/if}
+           &nbsp;<span class="comment"> &nbsp;<i class="icon icon-comments"></i>&nbsp; <a title="{$post.totalcomment} Comments" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}#articleComments">{$post.totalcomment} {l s=' Comments' mod='smartblog'}</a></span>{if $smartshowviewed ==1}&nbsp; <i class="icon icon-eye-open"></i>{l s=' views' mod='smartblog'} ({$post.viewed}){/if}</span>{if $post.is_featured}&nbsp;&nbsp;<i class="icon icon-asterisk"></i><span> featured</span>{/if}
+          
     </div>
     <div class="articleContent">
           <a itemprop="url" title="{$post.meta_title}" class="imageFeaturedLink">
