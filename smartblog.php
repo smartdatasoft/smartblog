@@ -42,7 +42,7 @@ class smartblog extends Module {
             Configuration::updateGlobalValue('smartacceptcomment', '1'); 
             Configuration::updateGlobalValue('smartcustomcss', ''); 
             Configuration::updateGlobalValue('smartdisablecatimg','1'); 
-            Configuration::updateGlobalValue('smartblogmetatitle', 'Smart Bolg Title'); 
+            Configuration::updateGlobalValue('smartblogmetatitle', 'Smart Blog Title'); 
             Configuration::updateGlobalValue('smartblogmetakeyword', 'smart,blog,smartblog,prestashop blog,prestashop,blog'); 
             Configuration::updateGlobalValue('smartblogmetadescrip', 'Prestashop powerfull blog site developing module. It has hundrade of extra plugins. This module developed by SmartDataSoft.com'); 
 			$this->addquickaccess();
