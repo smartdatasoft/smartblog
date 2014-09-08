@@ -14,12 +14,16 @@
          <span>
          {if $smartshowauthor == 1}
            {l s='Posted by' mod='smartblog'} 
-           <span itemprop="author">&nbsp;<i class="icon icon-user"></i>&nbsp; {if $smartshowauthorstyle != 0}{$post.firstname} {$post.lastname}{else}{$post.lastname} {$post.firstname}{/if}</span>
+           &nbsp;<i class="icon icon-user"></i>&nbsp; <span itemprop="author">{if $smartshowauthorstyle != 0}{$post.firstname} {$post.lastname}{else}{$post.lastname} {$post.firstname}{/if}</span>
          {/if}
+         &nbsp;<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$post.created|date_format}</span>
           {if !empty($title_category) || strtolower($post.cat_name) != 'uncategories'}
-          &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp; <span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catlink)}">{if !empty($title_category)}{$title_category}{else}{if strtolower($post.cat_name) != 'uncategories'}{$post.cat_name}{/if}{/if}</a></span>
+          &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp; <span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catlink)}">{if !empty($title_category)}{$title_category}{else}{$post.cat_name}{/if}</a></span>
           {/if}
-           &nbsp;<span class="comment"> &nbsp;<i class="icon icon-comments"></i>&nbsp; <a title="{$post.totalcomment} Comments" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}#articleComments">{$post.totalcomment} {l s=' Comments' mod='smartblog'}</a></span>{if $smartshowviewed ==1}&nbsp; <i class="icon icon-eye-open"></i>{l s=' views' mod='smartblog'} ({$post.viewed}){/if}</span>{if $post.is_featured}&nbsp;&nbsp;<i class="icon icon-asterisk"></i><span> featured</span>{/if}
+           &nbsp;<span class="comment"> &nbsp;<i class="icon icon-comments"></i>&nbsp; <a title="{$post.totalcomment} Comments" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}#articleComments">{$post.totalcomment} {l s=' Comments' mod='smartblog'}</a></span>
+           {if $smartshowviewed ==1}&nbsp; <i class="icon icon-eye-open"></i>{l s=' views' mod='smartblog'} ({$post.viewed}){/if}
+           {if $post.is_featured}&nbsp;&nbsp;<i class="icon icon-asterisk"></i><span> featured</span>{/if}
+           </span>
           
     </div>
     <div class="articleContent">
