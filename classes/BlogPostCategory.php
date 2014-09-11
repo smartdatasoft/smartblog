@@ -35,6 +35,7 @@ class BlogPostCategory extends ObjectModel
                 $result[$i]['content'] = $post['content'];
                 $result[$i]['meta_keyword'] = $post['meta_keyword'];
                 $result[$i]['id_category'] = $post['id_category'];
+                $result[$i]['is_featured'] = $post['is_featured'];
                 $result[$i]['link_rewrite'] = $post['link_rewrite'];
                 $result[$i]['cat_link_rewrite'] = $BlogCategory->getCatLinkRewrite($post['id_category']);
                 $employee = new  Employee( $post['id_author']);

@@ -69,39 +69,41 @@ class SmartBlogPost extends ObjectModel
                 AND p.active= 1 AND p.id_smart_blog_post = '.$id_post;
         
         if (!$post = Db::getInstance()->executeS($sql))
-			return false;
-                $result['id_post'] = $post[0]['id_smart_blog_post'];
-                $result['meta_title'] = $post[0]['meta_title'];
-                $result['meta_description'] = $post[0]['meta_description'];
-                $result['short_description'] = $post[0]['short_description'];
-                $result['meta_keyword'] = $post[0]['meta_keyword'];
+          return false;
+        $result['id_post'] = $post[0]['id_smart_blog_post'];
+        $result['meta_title'] = $post[0]['meta_title'];
+        $result['meta_description'] = $post[0]['meta_description'];
+        $result['short_description'] = $post[0]['short_description'];
+        $result['meta_keyword'] = $post[0]['meta_keyword'];
+
 				if((Module::isEnabled('smartshortcode') == 1) && (Module::isInstalled('smartshortcode') == 1)){
-				 require_once(_PS_MODULE_DIR_ . 'smartshortcode/smartshortcode.php');
-				$smartshortcode = new SmartShortCode();
-				$result['content'] = $smartshortcode->parse($post[0]['content']);
+          require_once(_PS_MODULE_DIR_ . 'smartshortcode/smartshortcode.php');
+          $smartshortcode = new SmartShortCode();
+          $result['content'] = $smartshortcode->parse($post[0]['content']);
 				}else{
-				
-				 $result['content'] = $post[0]['content'];
-				 }
-                $result['active'] = $post[0]['active'];
-                $result['created'] = $post[0]['created'];
-                $result['comment_status'] = $post[0]['comment_status'];
-                $result['viewed'] = $post[0]['viewed'];
-                $result['is_featured'] = $post[0]['is_featured'];
-                $result['post_type'] = $post[0]['post_type'];
-                $result['id_category'] = $post[0]['id_category'];
-                $employee = new  Employee($post[0]['id_author']);
-                $result['lastname'] = $employee->lastname;
-                $result['firstname'] = $employee->firstname;
-                if (file_exists(_PS_MODULE_DIR_.'smartblog/images/' . $post[0]['id_smart_blog_post'] . '.jpg') )
-                {
-                   $image =   $post[0]['id_smart_blog_post'] . '.jpg';
-                   $result['post_img'] = $image;
-		}
-                else
-                {
-                   $result['post_img'] =NULL;
-                }
+          $result['content'] = $post[0]['content'];
+        }
+
+        $result['active'] = $post[0]['active'];
+        $result['created'] = $post[0]['created'];
+        $result['comment_status'] = $post[0]['comment_status'];
+        $result['viewed'] = $post[0]['viewed'];
+        $result['is_featured'] = $post[0]['is_featured'];
+        $result['post_type'] = $post[0]['post_type'];
+        $result['id_category'] = $post[0]['id_category'];
+        $employee = new  Employee($post[0]['id_author']);
+        $result['lastname'] = $employee->lastname;
+        $result['firstname'] = $employee->firstname;
+
+        if (file_exists(_PS_MODULE_DIR_.'smartblog/images/' . $post[0]['id_smart_blog_post'] . '.jpg') )
+        {
+           $image =   $post[0]['id_smart_blog_post'] . '.jpg';
+           $result['post_img'] = $image;
+        }
+        else
+        {
+           $result['post_img'] =NULL;
+        }
         return $result;
     }
     
@@ -153,6 +155,7 @@ class SmartBlogPost extends ObjectModel
                        $result[$i]['post_img'] = 'no';
                     }
                 $result[$i]['created'] = $post['created'];
+                $result[$i]['tags'] = SmartBlogPost::getProductTags($post['id_smart_blog_post']);
                 $i++;
             }
         return $result;

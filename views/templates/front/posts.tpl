@@ -5,12 +5,26 @@
    			<h1>{$meta_title}</h1>
    		</div>
       <div class="post-info">
-         {assign var="catOptions" value=null}
-                        {$catOptions.id_category = $id_category}
-                        {$catOptions.slug = $cat_link_rewrite}
-                     <span>
-               {l s='Posted by ' mod='smartblog'} {if $smartshowauthor ==1}&nbsp;<i class="icon icon-user"></i><span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>&nbsp;<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|date_format}</span>{/if}&nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;<span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catOptions)}">{$title_category}</a></span> &nbsp;<i class="icon icon-comments"></i>&nbsp; {if $countcomment != ''}{$countcomment}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}</span>
-                  <a title="" style="display:none" itemprop="url" href="#"></a>
+        {assign var="catOptions" value=null}
+        {$catOptions.id_category = $id_category}
+        {$catOptions.slug = $cat_link_rewrite}
+
+
+        <span>
+        {if $smartshowauthor == 1}
+	       {l s='Posted by ' mod='smartblog'} 
+	       &nbsp;<i class="icon icon-user"></i> <span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>
+       {/if}
+	       &nbsp;<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|date_format}</span>
+       {if !empty($title_category) && strtolower($title_category) != 'uncategories'}
+      	 &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;<span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catOptions)}">{$title_category}</a></span> 
+       {/if}
+       &nbsp;<i class="icon icon-comments"></i>&nbsp; {if $countcomment != ''}{$countcomment}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}</span>
+
+		{if $smartshowviewed == 1}&nbsp; <i class="icon icon-eye-open"></i>{l s=' views' mod='smartblog'} ({$viewed}){/if}
+        {if $is_featured}&nbsp;&nbsp;<i class="icon icon-asterisk"></i><span> featured</span>{/if}
+
+       <a title="" style="display:none" itemprop="url" href="#"></a>
       </div>
       <div itemprop="articleBody">
             <div id="lipsum" class="articleContent">
