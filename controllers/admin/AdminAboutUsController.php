@@ -1,7 +1,9 @@
 <?php
+
 class AdminAboutUsController extends ModuleAdminController {
 
     public $asso_type = 'shop';
+
     public function __construct() {
         $this->module = 'smartblog';
         $this->lang = true;
@@ -11,15 +13,13 @@ class AdminAboutUsController extends ModuleAdminController {
         parent::__construct();
     }
 
-    public function ajaxProcessGetSmartThemes()
-    {
+    public function ajaxProcessGetSmartThemes() {
         if (@fsockopen('referals.smartdatasoft.com', 80, $errno, $errst, 3))
-            @readfile('http://referals.smartdatasoft.com/adminthemes.php?lang='.$this->context->language->iso_code);
+            @readfile('http://referals.smartdatasoft.com/adminthemes.php?lang=' . $this->context->language->iso_code);
     }
 
-    public function initContent()
-    {
-               $htm = '<p id="smartextra"><img src="http://referals.smartdatasoft.com/images/logo.png"><b>Smartdatasoft is a Prestashop certified and authorized 
+    public function initContent() {
+        $htm = '<p id="smartextra"><img src="http://referals.smartdatasoft.com/images/logo.png"><b>Smartdatasoft is a Prestashop certified and authorized 
  Prestashop partner developing brand. With some of very outstanding Prestashop project like-
   opensource blog module, Revolution Slider and others; it is already a name of trust and quality among web clients. With continuous Total Quality Management (TQM) philosophy, inventive creativity 
   and reliable after sales service concept, Smartdatasoft is trying to bring a difference among marketplace.</b></p>
@@ -29,8 +29,8 @@ class AdminAboutUsController extends ModuleAdminController {
 <a href="http://facebook.com/pages/SmartDataSoft/332747343429694"><img src="http://smartdatasoft.com/envato-add/mecror-prestashop/envato-branding-facebook1.png"></a> <a href="http://twitter.com/smartdatasoft">
 <img src="http://smartdatasoft.com/envato-add/mecror-prestashop/envato-branding-twitter1.png"></a>
  </p>';
-       
-        $this->content = $htm.'<fieldset class="width3" id="smartdatasoft-content">
+
+        $this->content = $htm . '<fieldset class="width3" id="smartdatasoft-content">
 <style>               
     #smartdatasoft-content { 
         padding: 0;
@@ -56,14 +56,15 @@ class AdminAboutUsController extends ModuleAdminController {
             "ajax-tab.php",
             {
                 tab: \'AdminAboutUs\',
-                token: \''.$this->token.'\',
+                token: \'' . $this->token . '\',
                 ajax: \'1\',
                 action:\'GetSmartThemes\',
                 page:\'themes\'
             }, function(a){
                 $("#smartdatasoft-content").html("<legend><img src=\'../img/admin/prestastore.gif\' class=\'middle\' />Live from SmartDataSoft Addons!</legend>"+a);
             });
-    </script>'; 
+    </script>';
         return parent::initContent();
     }
+
 }

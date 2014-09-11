@@ -30,7 +30,7 @@
                   {assign var="options" value=null}
                         {$options.id_post = $post.id_post}  
                         {$options.slug = $post.link_rewrite}  
-                         <span class="more"><a title="{$post.meta_title}" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}" class="r_more">{l s='Read more' mod='smartblog'} </a></span>
+                         <span class="more"><a title="{$post.meta_title}" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}" class="r_more button-medium">{l s='Read more' mod='smartblog'} </a></span>
         </div>
    </div>
 </div>

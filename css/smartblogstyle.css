@@ -549,6 +549,21 @@ div.relProduct .price-new {
     padding: 0px 10px;
     font-weight: bold;
 }
+
+.sdsreadMore .more a.button-medium {
+font-size: 17px;
+line-height: 21px;
+color: white;
+padding: 3px 8px 3px 8px;
+font-weight: bold;
+background: #43b754;
+border: 1px solid;
+border-color: #399a49 #247f32 #1a6d27 #399a49;
+}
+.sdsreadMore .more a:hover {
+background: #575757;
+border-color: #303030 #303030 #666666 #444444;
+}
 .sdsreadMore .comment a{
     text-decoration: none;
 }
@@ -666,12 +681,16 @@ fieldset.account_creation {
  .blogTags .sdsbox-content{
      margin-bottom: 10px;
  }
-.blogTags .sdsbox-content a{
-    line-height: 1.5em;
-    margin: 0 0.1em;
-    padding: 5px;
-     font-weight: bold;
-     font-size: 12px;
+ 
+.blogTags .sdsbox-content a {
+display: inline-block;
+font-size: 13px;
+line-height: 16px;
+font-weight: bold;
+padding: 4px 9px 5px 9px;
+border: 1px solid #d6d4d4;
+float: left;
+margin: 0 3px 3px 0;
 }
 .smartblock {
     margin-bottom: 20px;

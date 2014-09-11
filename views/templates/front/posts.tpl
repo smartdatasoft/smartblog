@@ -28,8 +28,8 @@
                     <span class="tags"><b>{l s='Tags:' mod='smartblog'} </b> 
                         {foreach from=$tags item=tag}
                             {assign var="options" value=null}
-                            {$options.tag = $tag.name}
-                            <a title="tag" href="{smartblog::GetSmartBlogLink('smartblog_tag',$options)}">{$tag.name}</a>
+                            {$options.tag = $tag.name|urlencode}
+                            <a title="tag" href="{smartblog::GetSmartBlogLink('smartblog_tag',$options)|escape:'html':'UTF-8'}">{$tag.name}</a>
                         {/foreach}
                     </span>
                 </div>

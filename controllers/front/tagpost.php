@@ -25,7 +25,7 @@ class smartblogtagpostModuleFrontController extends smartblogModuleFrontControll
                     $limit_start = $posts_per_page * ($c - 1);
 	        }
                 
-                    $keyword = Tools::getValue('tag');
+                    $keyword = urldecode(Tools::getValue('tag'));
                     $id_lang = (int)$this->context->language->id;
                 $result  =  SmartBlogPost::tagsPost($keyword,$id_lang);
                 $total = count($result);
