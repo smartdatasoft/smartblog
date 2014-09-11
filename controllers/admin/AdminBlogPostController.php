@@ -107,11 +107,12 @@ class AdminBlogPostController extends AdminController {
             }
         }
 
-        elseif  (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0) || Tools::getValue('deleteImage'))
+        elseif  ( Tools::getValue('deleteImage'))
         {
+
             $this->processForceDeleteImage();
             if (Tools::isSubmit('forcedeleteImage'))
-                Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
+                Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminBlogPost').'&conf=7');
         }
         elseif (Tools::isSubmit('submitAddsmart_blog_post'))
         {
