@@ -214,11 +214,49 @@ class AdminBlogPostController extends AdminController {
     public function processForceDeleteImage()
     {
         $blog_post = $this->loadObject(true);
-        if (Validate::isLoadedObject($blog_post))
-            $blog_post->deleteImage(true);
+
+        if (Validate::isLoadedObject($blog_post)) {
+
+        $this->deleteImage($blog_post->id_smart_blog_post);
+        }
+        
+          
     }
     
+    public function deleteImage($id_smart_blog_post = 1)
+     {
+       
+      if (!$id_smart_blog_post)
+       return false;
 
+     
+      // Delete base image
+      if (file_exists(_MODULE_SMARTBLOG_DIR_.'/'.$id_smart_blog_post.'.jpg'))
+       unlink($this->image_dir.'/'.$id_smart_blog_post.'.jpg');
+      else
+       return false;
+
+    // now we need to delete the image type of post
+
+     $files_to_delete = array();
+ 
+        // Delete auto-generated images
+        $image_types = BlogImageType::GetImageAllType('post');
+        foreach ($image_types as $image_type)
+            $files_to_delete[] = $this->image_dir.'/'.$id_smart_blog_post.'-'.$image_type['type_name'].'.jpg';
+
+         // Delete tmp images
+        $files_to_delete[] = _PS_TMP_IMG_DIR_.'smart_blog_post_'.$id_smart_blog_post.'.jpg';
+        $files_to_delete[] = _PS_TMP_IMG_DIR_.'smart_blog_post_mini_'.$id_smart_blog_post.'.jpg';
+
+        foreach ($files_to_delete as $file)
+            if (file_exists($file) && !@unlink($file))
+                return false;
+ 
+        return true;
+
+     }
+     
     public function processImage($FILES,$id) {
  
             if (isset($FILES['image']) && isset($FILES['image']['tmp_name']) && !empty($FILES['image']['tmp_name'])) {
