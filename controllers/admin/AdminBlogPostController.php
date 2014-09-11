@@ -2,6 +2,7 @@
 class AdminBlogPostController extends AdminController {
 
     public $asso_type = 'shop';
+    protected $_blog_post = null;
 
     public function __construct() {
         $this->table = 'smart_blog_post';
@@ -104,7 +105,15 @@ class AdminBlogPostController extends AdminController {
                 Hook::exec('actionsbdeletepost', array('SmartBlogPost' => $SmartBlogPost));
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminBlogPost'));
             }
-        }elseif (Tools::isSubmit('submitAddsmart_blog_post'))
+        }
+
+        elseif  (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0) || Tools::getValue('deleteImage'))
+        {
+            $this->processForceDeleteImage();
+            if (Tools::isSubmit('forcedeleteImage'))
+                Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
+        }
+        elseif (Tools::isSubmit('submitAddsmart_blog_post'))
         {
             parent::validateRules();
             if (count($this->errors))
@@ -201,6 +210,14 @@ class AdminBlogPostController extends AdminController {
         }
     }
 
+    public function processForceDeleteImage()
+    {
+        $blog_post = $this->loadObject(true);
+        if (Validate::isLoadedObject($blog_post))
+            $blog_post->deleteImage(true);
+    }
+    
+
     public function processImage($FILES,$id) {
  
             if (isset($FILES['image']) && isset($FILES['image']['tmp_name']) && !empty($FILES['image']['tmp_name'])) {
@@ -242,6 +259,18 @@ class AdminBlogPostController extends AdminController {
         if(Tools::getvalue('id_smart_blog_post') != '' && Tools::getvalue('id_smart_blog_post') != NULL){
              $img_desc .= '<br/><img style="height:auto;width:300px;clear:both;border:1px solid black;" alt="" src="'.__PS_BASE_URI__.'modules/smartblog/images/'.Tools::getvalue('id_smart_blog_post').'.jpg" /><br />';
         }
+
+    if (!($obj = $this->loadObject(true)))
+            return;
+
+        $image = _MODULE_SMARTBLOG_DIR_.$obj->id.'.jpg';
+      
+        $image_url = ImageManager::thumbnail($image, $this->table.'_'.Tools::getvalue('id_smart_blog_post').'.jpg', 200,
+        'jpg', true, true);
+        $image_size = file_exists($image) ? filesize($image) / 1000 : false;
+
+   
+
         $this->fields_form = array(
           'legend' => array(
           'title' => $this->l('Blog Post'),
@@ -252,10 +281,13 @@ class AdminBlogPostController extends AdminController {
                     'name' => 'post_type',
                     'default_value' => 0,
                 ),
+
                 array(
                     'type' => 'text',
                     'label' => $this->l('Blog Title'),
                     'name' => 'meta_title',
+                    'id' => 'name', 
+                    'class'=>'copyMeta2friendlyURL',
                     'size' => 60,
                     'required' => true,
                     'desc' => $this->l('Enter Your Blog Post Title'),
@@ -271,15 +303,21 @@ class AdminBlogPostController extends AdminController {
                     'class' => 'rte',
                     'autoload_rte' => true,
                     'required' => true,
-                    'desc' => $this->l('Enter Your Post Description')
+                    'hint' => array($this->l('Enter Your Post Description'), 
+                            $this->l('Invalid characters:').' <>;=#{}' 
+                    )
                 ),
+ 
                 array(
-                    'type' => 'file',
-                    'label' => $this->l('Feature Image:'),
-                    'name' => 'image',
-                    'display_image' => false,
-                    'desc' => $img_desc
-                ),
+                        'type' => 'file',
+                        'label' => $this->l('Feature Image:'),
+                        'name' => 'image',
+                        'display_image' => true,
+                        'image' => $image_url ? $image_url : false,
+                        'size' => $image_size,
+                        'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.Tools::getvalue('id_smart_blog_post').'&token='.$this->token.'&deleteImage=1',
+                        'hint' => $this->l('Upload a feature image from your computer.'),
+                    ),
                 array(
 					'type' => 'select',
 					'label' => $this->l('Blog Category'),
@@ -292,14 +330,17 @@ class AdminBlogPostController extends AdminController {
 					'desc' => $this->l('Select Your Parent Category')
                       ),
                 array(
-                    'type' => 'text',
-                    'label' => $this->l('Meta Keyword'),
-                    'name' => 'meta_keyword',
+                    'type' => 'tags',
+                    'label' => $this->l('Meta keywords'),
+                    'name' => 'meta_keywords',
                     'lang' => true,
-                    'size' => 60,
-                    'required' => false,
-                    'desc' => $this->l('Enter Your Post Meta Keyword. Separated by comma(,)')
+                     'hint' => array(
+                        $this->l('To add "tags" click in the field, write something, and then press "Enter."'),
+                        $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    )
+                    
                 ),
+
                 array(
                     'type' => 'textarea',
                     'label' => $this->l('Short Description'),
@@ -308,7 +349,10 @@ class AdminBlogPostController extends AdminController {
                     'cols' => 62,
                     'lang' => true,
                     'required' => true,
-                    'desc' => $this->l('Enter Your Post Short Description')
+                  
+                        'hint' => array(
+                        $this->l('Enter Your Post Short Description'), 
+                    )
                 ),
                 array(
                     'type' => 'textarea',
@@ -327,16 +371,19 @@ class AdminBlogPostController extends AdminController {
                     'size' => 60,
                     'lang' => true,
                     'required' => false,
-                    'desc' => $this->l('Enetr Your Post Slug. Use In SEO Friendly URL')
+                    'hint' => $this->l('Only letters and the hyphen (-) character are allowed.')
                 ),
                 array(
-                    'type' => 'text',
+                    'type' => 'tags',
                     'label' => $this->l('Tag'),
                     'name' => 'tags',
                     'size' => 60,
                     'lang' => true,
                     'required' => false,
-                    'desc' => $this->l('Enter Your Post Meta Tag. Separated by comma(,)')
+                    'hint' => array(
+                        $this->l('To add "tags" click in the field, write something, and then press "Enter."'),
+                        $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+                    )
                 ),
                 array(
                                         'type' => 'radio',
@@ -428,6 +475,7 @@ class AdminBlogPostController extends AdminController {
             'image' => $image ? $image : false,
             'size' => $image ? filesize(_MODULE_SMARTBLOG_DIR_ . $SmartBlogPost->id_smart_blog_post . '.jpg') / 1000 : false
         );
+
             if(Tools::getvalue('id_smart_blog_post') != '' && Tools::getvalue('id_smart_blog_post') != NULL)
                  {
                     foreach (Language::getLanguages(false) as $lang)
@@ -435,6 +483,9 @@ class AdminBlogPostController extends AdminController {
                             $this->fields_value['tags'][(int)$lang['id_lang']] = SmartBlogPost::getProductTagsBylang((int)Tools::getvalue('id_smart_blog_post'), (int)$lang['id_lang']);
                         }
                  }
+
+        $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');   
+
         return parent::renderForm();
     }
     
@@ -442,6 +493,13 @@ class AdminBlogPostController extends AdminController {
         
         parent::initToolbar();
     }
+        public function setMedia()
+    {
+        parent::setMedia();
+        $this->addJqueryUi('ui.widget');
+        $this->addJqueryPlugin('tagify');
+    }
+
     public function updateTags($languages, $post)
 	{
 		$tag_success = true;

@@ -35,6 +35,7 @@ class smartblog extends Module {
             Configuration::updateGlobalValue('smartusehtml', '1');
             Configuration::updateGlobalValue('smartshowauthorstyle', '1');
             Configuration::updateGlobalValue('smartenablecomment', '1');
+            Configuration::updateGlobalValue('smartshowauthor', '1');
             Configuration::updateGlobalValue('smartcaptchaoption', '1');
             Configuration::updateGlobalValue('smartshowviewed', '1');
             Configuration::updateGlobalValue('smartshownoimg', '1');
