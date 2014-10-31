@@ -160,22 +160,22 @@ class AdminBlogPostController extends AdminController {
 
                 $SmartBlogPost = new $SmartBlogPost($id_smart_blog_post);
                 $languages = Language::getLanguages(false);
-                foreach ($languages as $language) {
-                    $title = Tools::link_rewrite(Tools::getValue('meta_title_' . $language['id_lang']));
-                    $SmartBlogPost->meta_title[$language['id_lang']] = $title;
-                    $SmartBlogPost->meta_keyword[$language['id_lang']] = Tools::getValue('meta_keyword_' . $language['id_lang']);
-                    $SmartBlogPost->meta_description[$language['id_lang']] = Tools::getValue('meta_description_' . $language['id_lang']);
-                    $SmartBlogPost->short_description[$language['id_lang']] = Tools::getValue('short_description_' . $language['id_lang']);
-                    $SmartBlogPost->content[$language['id_lang']] = Tools::getValue('content_' . $language['id_lang']);
-                    $SmartBlogPost->link_rewrite[$language['id_lang']] = Tools::link_rewrite(Tools::getValue('link_rewrite_' . $language['id_lang']));
-                }
-                $SmartBlogPost->is_featured = Tools::getValue('is_featured');
-                $SmartBlogPost->id_parent = Tools::getValue('id_parent');
-                $SmartBlogPost->active = Tools::getValue('active');
-                $SmartBlogPost->id_category = Tools::getValue('id_category');
-                $SmartBlogPost->comment_status = Tools::getValue('comment_status');
-                $SmartBlogPost->id_author = $this->context->employee->id;
-                $SmartBlogPost->modified = Date('y-m-d H:i:s');
+			foreach ($languages as $language){
+                $title = Tools::getValue('meta_title_'.$language['id_lang']);
+				$SmartBlogPost->meta_title[$language['id_lang']] = $title;
+				$SmartBlogPost->meta_keyword[$language['id_lang']] = Tools::getValue('meta_keyword_'.$language['id_lang']);
+				$SmartBlogPost->meta_description[$language['id_lang']] = Tools::getValue('meta_description_'.$language['id_lang']);
+				$SmartBlogPost->short_description[$language['id_lang']] = Tools::getValue('short_description_'.$language['id_lang']);
+				$SmartBlogPost->content[$language['id_lang']] = Tools::getValue('content_'.$language['id_lang']);
+				$SmartBlogPost->link_rewrite[$language['id_lang']] = Tools::link_rewrite(Tools::getValue('link_rewrite_'.$language['id_lang']));
+                        }
+                        $SmartBlogPost->is_featured = Tools::getValue('is_featured');
+                        $SmartBlogPost->id_parent = Tools::getValue('id_parent');
+                        $SmartBlogPost->active = Tools::getValue('active');
+                        $SmartBlogPost->id_category = Tools::getValue('id_category');
+                        $SmartBlogPost->comment_status = Tools::getValue('comment_status');
+                        $SmartBlogPost->id_author = $this->context->employee->id;
+                        $SmartBlogPost->modified = Date('y-m-d H:i:s');
                 if (!$SmartBlogPost->update())
                     $this->errors[] = Tools::displayError('An error occurred while updating an object.')
                             . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
