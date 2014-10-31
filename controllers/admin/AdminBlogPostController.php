@@ -120,7 +120,7 @@ class AdminBlogPostController extends AdminController {
                 $id_lang_default = Configuration::get('PS_LANG_DEFAULT');
                 $languages = Language::getLanguages(false);
                 foreach ($languages as $language) {
-                    $title = Tools::link_rewrite(Tools::getValue('meta_title_' . $language['id_lang']));
+                    $title = Tools::getValue('meta_title_'.$language['id_lang']);
                     $SmartBlogPost->meta_title[$language['id_lang']] = $title;
                     $SmartBlogPost->meta_keyword[$language['id_lang']] = (string) Tools::getValue('meta_keyword_' . $language['id_lang']);
                     $SmartBlogPost->meta_description[$language['id_lang']] = Tools::getValue('meta_description_' . $language['id_lang']);
