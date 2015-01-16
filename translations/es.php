@@ -11,7 +11,7 @@ $_MODULE['<{smartblog}prestashop>ajax_473d447ca2865283f4f3b96ce94519f7'] = 'Come
 $_MODULE['<{smartblog}prestashop>ajax_84e0b329560fefccd744c261a157bcd8'] = 'Comentario enviado exitosamente';
 $_MODULE['<{smartblog}prestashop>smartblog_b5f649412bcd84838a04c58e3dcb9d9b'] = 'Smart Blog';
 $_MODULE['<{smartblog}prestashop>smartblog_b6e6d268418bcb7a032cea01121d5889'] = 'El módulo de blog más poderoso para Prestashop - por smartdatasoft';
-$_MODULE['<{smartblog}prestashop>smartblog_fa214007826415a21a8456e3e09f999d'] = '¿Está seguro de que quiere borrar sus detalles?';
+$_MODULE['<{smartblog}prestashop>smartblog_fa214007826415a21a8456e3e09f999d'] = '¿Está seguro de que quiere borrar los detalles?';
 $_MODULE['<{smartblog}prestashop>smartblog_be8df1f28c0abc85a0ed0c6860e5d832'] = 'Blog';
 $_MODULE['<{smartblog}prestashop>smartblog_21ee0d457c804ed84627ec8345f3c357'] = 'Configuración actualizada exitosamente.';
 $_MODULE['<{smartblog}prestashop>smartblog_c60b5c9c0d922b5846d2e863d356458c'] = 'Generación satisfactoria de nuevo Thumblr.';
@@ -115,7 +115,7 @@ $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_c101058e7ea21bbbf2a5ac8
 $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_49bf2fec2e330e8e24eeee261f6dcf5b'] = 'Estado de comentario';
 $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Habilitado';
 $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deshabilitado';
-$_MODULE['<{smartblog}prestashop>adminblogpostcontroller_4240547f1f07951572f1c115595e76b3'] = 'Puede habilitar o deshabilitar sus comentarios';
+$_MODULE['<{smartblog}prestashop>adminblogpostcontroller_4240547f1f07951572f1c115595e76b3'] = 'Puede habilitar o deshabilitar los comentarios';
 $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_aaf1340fcabf77abec34403f4ef55741'] = '¿Para destacar?';
 $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{smartblog}prestashop>adminblogpostcontroller_f16b5952df8d25ea30b25ff95ee8fedf'] = 'Asociación con tienda:';
