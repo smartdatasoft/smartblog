@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{smartblog}prestashop>ajax_ff0f4960555ff95b5cdacd4468cea37f'] = 'Nombre es requerido';
-$_MODULE['<{smartblog}prestashop>ajax_f3699aeffc524458f0774a0229e7aeff'] = '¡El comentario debe tener entre 255 y 1500 caracteres!';
+$_MODULE['<{smartblog}prestashop>ajax_f3699aeffc524458f0774a0229e7aeff'] = '¡El comentario debe tener entre 25 y 1500 caracteres!';
 $_MODULE['<{smartblog}prestashop>ajax_4d23aeebb3862950ddffbe8900938d33'] = '¡Dirección de e-mail es inválida!';
 $_MODULE['<{smartblog}prestashop>ajax_bd91572c208b09ee6a8639ace433025e'] = 'CAPTCHA es inválido';
 $_MODULE['<{smartblog}prestashop>ajax_9e1ea9441163a48ad91c84dd6f5f7dc3'] = 'Advertencia: ¡verifique el formulario requerido más abajo!';
@@ -142,7 +142,7 @@ $_MODULE['<{smartblog}prestashop>details_856f8ebed240426012f6e32ba8b66270'] = '�
 $_MODULE['<{smartblog}prestashop>archivecategory_5c109ac48b3cfcce1b09a084b7139ce1'] = 'Todas las entradas del Blog';
 $_MODULE['<{smartblog}prestashop>archivecategory_468c8383d26ecb84b5f805435f401a8b'] = 'No hay entrada en el archivo';
 $_MODULE['<{smartblog}prestashop>category_loop_24ad95557100e42e28ea73335e4e8ad1'] = 'Publicado por';
-$_MODULE['<{smartblog}prestashop>category_loop_f386bccd2fe9a73a61bee9b9b414a61c'] = 'Comentarios';
+$_MODULE['<{smartblog}prestashop>category_loop_f386bccd2fe9a73a61bee9b9b414a61c'] = ' comentarios';
 $_MODULE['<{smartblog}prestashop>category_loop_372e4263f5a84e6167ced32f982507e9'] = ' Vistas';
 $_MODULE['<{smartblog}prestashop>category_loop_43340e6cc4e88197d57f8d6d5ea50a46'] = 'Leer más';
 $_MODULE['<{smartblog}prestashop>postcategory_5c109ac48b3cfcce1b09a084b7139ce1'] = 'Todas las entradas del Blog';
@@ -151,7 +151,7 @@ $_MODULE['<{smartblog}prestashop>postcategory_6cd5964b76612e3d3a9b8493b6d1ea1b']
 $_MODULE['<{smartblog}prestashop>posts_5c109ac48b3cfcce1b09a084b7139ce1'] = 'Todas las entradas del Blog';
 $_MODULE['<{smartblog}prestashop>posts_03de68d09e4d74581fd593c97bf6194d'] = 'Publicado por';
 $_MODULE['<{smartblog}prestashop>posts_cfcd208495d565ef66e7dff9f98764da'] = '0 ';
-$_MODULE['<{smartblog}prestashop>posts_f386bccd2fe9a73a61bee9b9b414a61c'] = 'Comentarios';
+$_MODULE['<{smartblog}prestashop>posts_f386bccd2fe9a73a61bee9b9b414a61c'] = ' comentarios';
 $_MODULE['<{smartblog}prestashop>posts_32b502f33a535f75dcbf63f6753c631e'] = 'Etiquetas';
 $_MODULE['<{smartblog}prestashop>posts_898a7414a92986350d30bf856123ca87'] = 'Deje un comentario';
 $_MODULE['<{smartblog}prestashop>posts_7d584ae1dc7a65646c5f2073284f9be6'] = 'Deje una respuesta';
