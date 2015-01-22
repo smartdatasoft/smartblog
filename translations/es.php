@@ -148,6 +148,10 @@ $_MODULE['<{smartblog}prestashop>category_loop_43340e6cc4e88197d57f8d6d5ea50a46'
 $_MODULE['<{smartblog}prestashop>postcategory_5c109ac48b3cfcce1b09a084b7139ce1'] = 'Todas las entradas del Blog';
 $_MODULE['<{smartblog}prestashop>postcategory_98574c0a37f23fba0cb1f608c8a8f547'] = 'No hay publicaciones en la categoría';
 $_MODULE['<{smartblog}prestashop>postcategory_6cd5964b76612e3d3a9b8493b6d1ea1b'] = 'No hay publicaciones en el blog';
+$_MODULE['<{smartblog}prestashop>postcategory_b4e6101378d2a08d80df7e5da0625128'] = 'Mostrando';
+$_MODULE['<{smartblog}prestashop>postcategory_01b6e20344b68835c5ed1ddedf20d531'] = 'al';
+$_MODULE['<{smartblog}prestashop>postcategory_8bf8854bebe108183caeb845c7676ae4'] = 'de';
+$_MODULE['<{smartblog}prestashop>postcategory_453aceb005ceaf54a47da15fee8b2a26'] = 'Páginas';
 $_MODULE['<{smartblog}prestashop>posts_5c109ac48b3cfcce1b09a084b7139ce1'] = 'Todas las entradas del Blog';
 $_MODULE['<{smartblog}prestashop>posts_03de68d09e4d74581fd593c97bf6194d'] = 'Publicado por';
 $_MODULE['<{smartblog}prestashop>posts_cfcd208495d565ef66e7dff9f98764da'] = '0 ';
