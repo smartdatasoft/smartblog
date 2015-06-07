@@ -1,4 +1,8 @@
-{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')}">{l s='All Blog News' mod='smartblog'}</a><span class="navigation-pipe">{$navigationPipe}</span>{$meta_title}{/capture}
+{capture name=path}
+    <a href="{smartblog::GetSmartBlogLink('smartblog')}">{l s='All Blog News' mod='smartblog'}</a>
+    <span class="navigation-pipe">{$navigationPipe}</span>
+    {$meta_title}
+{/capture}
 <div id="content" class="block">
    <div itemtype="#" itemscope="" id="sdsblogArticle" class="blog-post">
    		<div class="page-item-title">
@@ -9,8 +13,30 @@
                         {$catOptions.id_category = $id_category}
                         {$catOptions.slug = $cat_link_rewrite}
                      <span>
-               {l s='Posted by ' mod='smartblog'} {if $smartshowauthor ==1}&nbsp;<i class="icon icon-user"></i><span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>&nbsp;<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|date_format}</span>{/if}&nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;<span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catOptions)}">{$title_category}</a></span> &nbsp;<i class="icon icon-comments"></i>&nbsp; {if $countcomment != ''}{$countcomment}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}</span>
-                  <a title="" style="display:none" itemprop="url" href="#"></a>
+                        {l s='Posted by ' mod='smartblog'} 
+                        {if $smartshowauthor ==1}
+                            &nbsp;<i class="icon icon-user"></i>&nbsp; 
+                            <span itemprop="author">
+                                {if $smartshowauthorstyle != 0}
+                                    {$firstname} {$lastname}
+                                {else}
+                                    {$lastname} {$firstname}
+                                {/if}
+                            </span>&nbsp; 
+                            <i class="icon icon-calendar"></i>&nbsp; 
+                            <span itemprop="dateCreated">
+                                {Tools::displayDate($created, null, $smartshowtime)}
+                            </span>
+                        {/if}&nbsp;&nbsp;
+                        <i class="icon icon-tags"></i>&nbsp;
+                        <span itemprop="articleSection">
+                            <a href="{smartblog::GetSmartBlogLink('smartblog_category',$catOptions)}">{$title_category}</a>
+                        </span> &nbsp;
+                        <i class="icon icon-comments"></i>&nbsp; 
+                        {l s='Comments' mod='smartblog'} 
+                        ({if $countcomment != ''}{$countcomment}{else}{l s='0' mod='smartblog'}{/if})
+                     </span>
+                    <a title="" style="display:none" itemprop="url" href="#"></a>
       </div>
       <div itemprop="articleBody">
             <div id="lipsum" class="articleContent">
@@ -43,7 +69,11 @@
 
 {if $countcomment != ''}
 <div id="articleComments">
-            <h3>{if $countcomment != ''}{$countcomment}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}<span></span></h3>
+            <h3>
+                {l s='Comments' mod='smartblog'}
+                ({if $countcomment != ''}{$countcomment}{else}{l s='0' mod='smartblog'}{/if})
+                <span></span>
+            </h3>
         <div id="comments">      
             <ul class="commentList">
                   {$i=1}
@@ -61,33 +91,33 @@
 {if Configuration::get('smartenablecomment') == 1}
 {if $comment_status == 1}
 <div class="smartblogcomments" id="respond">
-    <!-- <h4 id="commentTitle">{l s="Leave a Comment"  mod="smartblog"}</h4> -->
-    <h4 class="comment-reply-title" id="reply-title">{l s="Leave a Reply"  mod="smartblog"} <small style="float:right;">
+    <!-- <h4 id="commentTitle">{l s='Leave a Comment'  mod='smartblog'}</h4> -->
+    <h4 class="comment-reply-title" id="reply-title">{l s='Leave a Reply'  mod='smartblog'} <small style="float:right;">
                 <a style="display: none;" href="/wp/sellya/sellya/this-is-a-post-with-preview-image/#respond" 
-                   id="cancel-comment-reply-link" rel="nofollow">{l s="Cancel Reply"  mod="smartblog"}</a>
+                   id="cancel-comment-reply-link" rel="nofollow">{l s='Cancel Reply'  mod='smartblog'}</a>
             </small>
         </h4>
 		<div id="commentInput">
 	<table>
             <form action="" method="post" id="commentform">
 		<tbody><tr>
-	<td><span class="required">*</span> <b>{l s="Name:"  mod="smartblog"} </b></td>
+	<td><span class="required">*</span> <b>{l s='Name:'  mod='smartblog'} </b></td>
 		<td>
 	<input type="text" tabindex="1" class="inputName form-control grey" value="" name="name">																	
 		</td>
 	</tr>
         <tr>
-		<td><span class="required">*</span> <b>{l s="E-mail:"  mod="smartblog"} </b><span class="note">{l s="(Not Published)"  mod="smartblog"}</span></td>
+		<td><span class="required">*</span> <b>{l s='E-mail:'  mod='smartblog'} </b><span class="note">{l s='(Not Published)'  mod='smartblog'}</span></td>
 			<td>
 		<input type="text" tabindex="2" class="inputMail form-control grey" value="" name="mail">
 			</td>
 		</tr>
 		<tr>
-			<td>&nbsp;&nbsp;&nbsp;<b>{l s="Website:"  mod="smartblog"} </b><span class="note"> {l s="(Site url with"  mod="smartblog"}http://)</span></td>
+			<td>&nbsp;&nbsp;&nbsp;<b>{l s='Website:'  mod='smartblog'} </b><span class="note"> {l s='(Site url with'  mod='smartblog'}http://)</span></td>
 		<td><input type="text" tabindex="3" value="" name="website" class="form-control grey"></td>
 		</tr>
 			<tr>
-			<td><span class="required">*</span> <b> {l s="Comment:"  mod="smartblog"}</b></td>
+			<td><span class="required">*</span> <b> {l s='Comment:'  mod='smartblog'}</b></td>
 		<td>
 		<textarea tabindex="4" class="inputContent form-control grey" rows="8" cols="50" name="comment"></textarea>
 	</td>
@@ -96,7 +126,7 @@
 		<tr>
 			<td></td><td><img src="{$modules_dir}smartblog/classes/CaptchaSecurityImages.php?width=100&height=40&characters=5"></td>
 		</tr><tr>
-		<td><b>{l s="Type Code" mod="smartblog"}</b></td><td><input type="text" tabindex="" value="" name="smartblogcaptcha" class="smartblogcaptcha form-control grey"></td>
+		<td><b>{l s='Type Code' mod='smartblog'}</b></td><td><input type="text" tabindex="" value="" name="smartblogcaptcha" class="smartblogcaptcha form-control grey"></td>
 		</tr>
 	{/if}
 	</tbody></table>
@@ -107,7 +137,7 @@
 	<div class="right">
       
         <div class="submit">
-            <input type="submit" name="addComment" id="submitComment" class="bbutton btn btn-default button-medium" value="Submit">
+            <input type="submit" name="addComment" id="submitComment" class="bbutton btn btn-default button-medium" value="{l s='Submit'  mod='smartblog'}">
 		</div>
 
         </form>
