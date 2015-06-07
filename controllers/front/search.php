@@ -64,6 +64,7 @@ class smartblogsearchModuleFrontController extends smartblogModuleFrontControlle
                                             'smartcustomcss' => Configuration::get('smartcustomcss'),
                                             'smartshownoimg' => Configuration::get('smartshownoimg'),
                                             'smartshowauthor'=>Configuration::get('smartshowauthor'),
+				                            'smartshowtime'=>Configuration::get('smartshowtime'),
                                             'smartblogliststyle' => Configuration::get('smartblogliststyle'),
                                             'post_per_page'=>$posts_per_page,
                                             'smartsearch'=>Tools::getValue('smartsearch'),

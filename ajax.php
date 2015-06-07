@@ -13,14 +13,14 @@ switch (Tools::getValue('action')) {
 exit;
 
    function _posts(){
-           
+	   
             $SmartBlogPost = new SmartBlogPost();
         	$SmartBlog = new SmartBlog();
        
-         $array_error = array();
-           		
-           		$context = 
-                $id_lang = (int)Context::getContext()->language->id;
+			$array_error = array();
+			
+				$context = (int)Context::getContext();
+				$id_lang = $context->language->id;
                 $id_post = Tools::getValue('id_post');
                 $post = $SmartBlogPost->getPost($id_post,$id_lang);
                 if($post['comment_status'] == 1){
@@ -40,23 +40,23 @@ exit;
                 $id_parent_post = (int)Tools::getValue('id_parent_post');
                 //'name'=>'Name between 2 - 25 characters !',
                 if(empty($name)){
-                   $array_error['name'] =  $SmartBlog->l('Name is required');
+                   $array_error['name'] =  $SmartBlog->l('Name is required', 'ajax');
                 }
                 if(empty($comment)){
-                     $array_error['comment'] =   $SmartBlog->l('Comment must be between 25 and 1500 characters!') ;
+                     $array_error['comment'] =   $SmartBlog->l('Comment must be between 25 and 1500 characters!', 'ajax') ;
                 }
                if(!filter_var($mail,FILTER_VALIDATE_EMAIL)){
-                     $array_error['mail'] = $SmartBlog->l('E-mail address not valid !');
+                     $array_error['mail'] = $SmartBlog->l('E-mail address not valid !', 'ajax');
                 }
                 if(Configuration::get('smartcaptchaoption') == '1'){
                     if($captcha != $m_captcha){
-                   $array_error['captcha'] =  $SmartBlog->l('Captcha is not valid');
+                   $array_error['captcha'] =  $SmartBlog->l('Captcha is not valid', 'ajax');
                     }
                 }
                 
 
                 if(is_array($array_error)&& count($array_error)) { 
-				        $array_error['common'] = $SmartBlog->l('Warning: Please check required form bellow!');
+				        $array_error['common'] = $SmartBlog->l('Warning: Please check required form bellow!', 'ajax');
                 	die( Tools::jsonEncode( array('error'=> $array_error)));
  					      }
                 else
@@ -87,8 +87,8 @@ exit;
                         $bc->active = (int)$value;
                         $bc->created = Date('y-m-d H:i:s');
                         if($bc->add()){
-						$array_success['common'] = $SmartBlog->l('Your comment successfully submitted.');
-						$array_success['success'] =$SmartBlog->l('Your comment successfully submitted'); 
+						$array_success['common'] = $SmartBlog->l('Your comment successfully submitted.', 'ajax');
+						$array_success['success'] =$SmartBlog->l('Your comment successfully submitted', 'ajax'); 
                         Hook::exec('actionsbpostcomment', array('bc' => $bc));
 
                         die( Tools::jsonEncode( $array_success));

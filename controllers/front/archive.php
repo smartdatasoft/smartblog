@@ -52,6 +52,7 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
                                             'smartcustomcss' => Configuration::get('smartcustomcss'),
                                             'smartshownoimg' => Configuration::get('smartshownoimg'),
                                             'smartshowauthor'=>Configuration::get('smartshowauthor'),
+				                            'smartshowtime'=>Configuration::get('smartshowtime'),
                                             'post_per_page'=>$posts_per_page,
                                             'pagenums' => $totalpages - 1,
                                             'smartblogliststyle' => Configuration::get('smartblogliststyle'),

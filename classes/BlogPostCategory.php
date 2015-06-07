@@ -29,6 +29,7 @@ class BlogPostCategory extends ObjectModel
             foreach($posts as $post){
                 $result[$i]['id_post'] = $post['id_smart_blog_post'];
                 $result[$i]['viewed'] = $post['viewed'];
+				$result[$i]['created'] = $post['created'];
                 $result[$i]['meta_title'] = $post['meta_title'];
                 $result[$i]['meta_description'] = $post['meta_description'];
                 $result[$i]['short_description'] = $post['short_description'];
