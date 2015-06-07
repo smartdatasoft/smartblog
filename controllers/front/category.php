@@ -98,6 +98,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
                                             'smartshownoimg' => Configuration::get('smartshownoimg'),
                                             'smartdisablecatimg' => Configuration::get('smartdisablecatimg'),
                                             'smartshowviewed' => Configuration::get('smartshowviewed'),
+				                            'smartshowtime' => Configuration::get('smartshowtime'),
                                             'post_per_page'=>$posts_per_page,
                                             'pagenums' => $totalpages - 1,
                                             'totalpages' =>$totalpages

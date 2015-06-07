@@ -48,6 +48,7 @@ class  smartblogDetailsModuleFrontController extends smartblogModuleFrontControl
                                             'id_post'=>$post['id_post'],
                                             'smartshowauthorstyle'=>Configuration::get('smartshowauthorstyle'),
                                             'smartshowauthor'=>Configuration::get('smartshowauthor'),
+			                                'smartshowtime'=>Configuration::get('smartshowtime'),
                                             'created'=>$post['created'],
                                             'firstname'=>$post['firstname'],
                                             'lastname'=>$post['lastname'],

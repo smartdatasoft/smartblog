@@ -37,6 +37,7 @@ class smartblog extends Module {
         Configuration::updateGlobalValue('smartshowauthorstyle', '1');
         Configuration::updateGlobalValue('smartenablecomment', '1');
         Configuration::updateGlobalValue('smartshowauthor', '1');
+		Configuration::updateGlobalValue('smartshowtime', '0');
         Configuration::updateGlobalValue('smartcaptchaoption', '1');
         Configuration::updateGlobalValue('smartshowviewed', '1');
         Configuration::updateGlobalValue('smartshownoimg', '1');
@@ -115,7 +116,8 @@ class smartblog extends Module {
                 !Configuration::deleteByName('smartshowauthorstyle') ||
                 !Configuration::deleteByName('smartcustomcss') ||
                 !Configuration::deleteByName('smartshownoimg') ||
-                !Configuration::deleteByName('smartshowauthor')
+                !Configuration::deleteByName('smartshowauthor')||
+                !Configuration::deleteByName('smartshowtime')
         )
             return false;
 
@@ -406,6 +408,7 @@ class smartblog extends Module {
             Configuration::updateValue('smartdisablecatimg', Tools::getvalue('smartdisablecatimg'));
             Configuration::updateValue('smartshowauthorstyle', Tools::getvalue('smartshowauthorstyle'));
             Configuration::updateValue('smartshowauthor', Tools::getvalue('smartshowauthor'));
+			Configuration::updateValue('smartshowtime', Tools::getvalue('smartshowtime'));
             Configuration::updateValue('smartshowcolumn', Tools::getvalue('smartshowcolumn'));
             Configuration::updateValue('smartmainblogurl', Tools::getvalue('smartmainblogurl'));
             Configuration::updateValue('smartusehtml', Tools::getvalue('smartusehtml'));
@@ -687,6 +690,25 @@ class smartblog extends Module {
                             'label' => $this->l('Disabled')
                         )
                     )
+                ),array(
+                    'type' => 'radio',
+                    'label' => $this->l('Show publish date incl. time'),
+                    'name' => 'smartshowtime',
+                    'required' => false,
+                    'class' => 't',
+                    'is_bool' => false,
+                    'values' => array(
+                        array(
+                            'id' => 'smartshowtime',
+                            'value' => 1,
+                            'label' => $this->l('Enabled')
+                        ),
+                        array(
+                            'id' => 'smartshowtime',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')
+                        )
+                    )
                 ), array(
                     'type' => 'radio',
                     'label' => $this->l('Show Post Viewed'),
@@ -847,6 +869,7 @@ class smartblog extends Module {
         $helper->fields_value['smartacceptcomment'] = Configuration::get('smartacceptcomment');
         $helper->fields_value['smartshowauthorstyle'] = Configuration::get('smartshowauthorstyle');
         $helper->fields_value['smartshowauthor'] = Configuration::get('smartshowauthor');
+		$helper->fields_value['smartshowtime'] = Configuration::get('smartshowtime');
         $helper->fields_value['smartmainblogurl'] = Configuration::get('smartmainblogurl');
         $helper->fields_value['smartusehtml'] = Configuration::get('smartusehtml');
         $helper->fields_value['smartshowcolumn'] = Configuration::get('smartshowcolumn');
