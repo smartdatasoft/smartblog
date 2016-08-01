@@ -139,4 +139,8 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_imagetype`(
   PRIMARY KEY (`id_smart_blog_imagetype`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8' ;
 
-?>
+foreach ($sql as $query) {
+    if (!Db::getInstance()->execute($query)) {
+        return false;
+    }
+}

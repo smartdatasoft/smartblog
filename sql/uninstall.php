@@ -16,4 +16,8 @@ $sql[] = 'DROP TABLE IF EXISTS  `'._DB_PREFIX_.'smart_blog_tag`';
 $sql[] = 'DROP TABLE IF EXISTS  `'._DB_PREFIX_.'smart_blog_post_tag`';
 $sql[] = 'DROP TABLE IF EXISTS  `'._DB_PREFIX_.'smart_blog_imagetype`';
 
-?>
+foreach ($sql as $s) {
+    if (!Db::getInstance()->execute($s)) {
+        return false;
+    }
+}

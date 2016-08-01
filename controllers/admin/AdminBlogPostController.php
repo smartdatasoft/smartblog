@@ -93,7 +93,7 @@ class AdminBlogPostController extends AdminController {
 
     public function postProcess() {
         $SmartBlogPost = new SmartBlogPost();
-        $BlogPostCategory = new BlogPostCategory();
+        $BlogPostCategory = new SmartBlogPostCategory();
 
         if (Tools::isSubmit('deletesmart_blog_post') && Tools::getValue('id_smart_blog_post') != '') {
             $SmartBlogPost = new SmartBlogPost((int) Tools::getValue('id_smart_blog_post'));
@@ -232,7 +232,7 @@ class AdminBlogPostController extends AdminController {
         $files_to_delete = array();
 
         // Delete auto-generated images
-        $image_types = BlogImageType::GetImageAllType('post');
+        $image_types = SmartBlogImageType::GetImageAllType('post');
         foreach ($image_types as $image_type)
             $files_to_delete[] = $this->image_dir . '/' . $id_smart_blog_post . '-' . $image_type['type_name'] . '.jpg';
 
@@ -282,7 +282,7 @@ class AdminBlogPostController extends AdminController {
                     //  return true;
                 }
 
-                $posts_types = BlogImageType::GetImageAllType('post');
+                $posts_types = SmartBlogImageType::GetImageAllType('post');
                 foreach ($posts_types as $image_type) {
                     $dir = _PS_MODULE_DIR_ . 'smartblog/images/' . $id . '-' . stripslashes($image_type['type_name']) . '.jpg';
                     if (file_exists($dir))
@@ -363,7 +363,7 @@ class AdminBlogPostController extends AdminController {
                     'label' => $this->l('Blog Category'),
                     'name' => 'id_category',
                     'options' => array(
-                        'query' => BlogCategory::getCategory(),
+                        'query' => SmartBlogCategory::getCategory(),
                         'id' => 'id_smart_blog_category',
                         'name' => 'meta_title'
                     ),
