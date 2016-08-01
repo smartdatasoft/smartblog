@@ -61,33 +61,33 @@
 {if Configuration::get('smartenablecomment') == 1}
 {if $comment_status == 1}
 <div class="smartblogcomments" id="respond">
-    <!-- <h4 id="commentTitle">{l s="Leave a Comment"  mod="smartblog"}</h4> -->
-    <h4 class="comment-reply-title" id="reply-title">{l s="Leave a Reply"  mod="smartblog"} <small style="float:right;">
+    <!-- <h4 id="commentTitle">{l s='Leave a Comment'  mod='smartblog'}</h4> -->
+    <h4 class="comment-reply-title" id="reply-title">{l s='Leave a Reply'  mod='smartblog'} <small style="float:right;">
                 <a style="display: none;" href="/wp/sellya/sellya/this-is-a-post-with-preview-image/#respond" 
-                   id="cancel-comment-reply-link" rel="nofollow">{l s="Cancel Reply"  mod="smartblog"}</a>
+                   id="cancel-comment-reply-link" rel="nofollow">{l s='Cancel Reply'  mod='smartblog'}</a>
             </small>
         </h4>
 		<div id="commentInput">
 	<table>
             <form action="" method="post" id="commentform">
 		<tbody><tr>
-	<td><span class="required">*</span> <b>{l s="Name:"  mod="smartblog"} </b></td>
+	<td><span class="required">*</span> <b>{l s='Name:'  mod='smartblog'} </b></td>
 		<td>
 	<input type="text" tabindex="1" class="inputName form-control grey" value="" name="name">																	
 		</td>
 	</tr>
         <tr>
-		<td><span class="required">*</span> <b>{l s="E-mail:"  mod="smartblog"} </b><span class="note">{l s="(Not Published)"  mod="smartblog"}</span></td>
+		<td><span class="required">*</span> <b>{l s='E-mail:'  mod='smartblog'} </b><span class="note">{l s='(Not Published)'  mod='smartblog'}</span></td>
 			<td>
 		<input type="text" tabindex="2" class="inputMail form-control grey" value="" name="mail">
 			</td>
 		</tr>
 		<tr>
-			<td>&nbsp;&nbsp;&nbsp;<b>{l s="Website:"  mod="smartblog"} </b><span class="note"> {l s="(Site url with"  mod="smartblog"}http://)</span></td>
+			<td>&nbsp;&nbsp;&nbsp;<b>{l s='Website:'  mod='smartblog'} </b><span class="note"> {l s='(Site url with'  mod='smartblog'}http://)</span></td>
 		<td><input type="text" tabindex="3" value="" name="website" class="form-control grey"></td>
 		</tr>
 			<tr>
-			<td><span class="required">*</span> <b> {l s="Comment:"  mod="smartblog"}</b></td>
+			<td><span class="required">*</span> <b> {l s='Comment:'  mod='smartblog'}</b></td>
 		<td>
 		<textarea tabindex="4" class="inputContent form-control grey" rows="8" cols="50" name="comment"></textarea>
 	</td>
@@ -96,7 +96,7 @@
 		<tr>
 			<td></td><td><img src="{$modules_dir}smartblog/classes/CaptchaSecurityImages.php?width=100&height=40&characters=5"></td>
 		</tr><tr>
-		<td><b>{l s="Type Code" mod="smartblog"}</b></td><td><input type="text" tabindex="" value="" name="smartblogcaptcha" class="smartblogcaptcha form-control grey"></td>
+		<td><b>{l s='Type Code' mod='smartblog'}</b></td><td><input type="text" tabindex="" value="" name="smartblogcaptcha" class="smartblogcaptcha form-control grey"></td>
 		</tr>
 	{/if}
 	</tbody></table>
@@ -107,7 +107,7 @@
 	<div class="right">
       
         <div class="submit">
-            <input type="submit" name="addComment" id="submitComment" class="bbutton btn btn-default button-medium" value="Submit">
+            <input type="submit" name="addComment" id="submitComment" class="bbutton btn btn-default button-medium" value="{l s='Submit' mod='smartblog'}">
 		</div>
 
         </form>
