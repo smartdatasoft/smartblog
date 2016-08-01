@@ -55,7 +55,7 @@
                 </ul>
 			</div>
 			<div class="col-md-6">
-                <div class="results">{l s="Showing" mod="smartblog"} {if $limit_start!=0}{$limit_start}{else}1{/if} {l s="to" mod="smartlatestnews"} {if $limit_start+$limit >= $total}{$total}{else}{$limit_start+$limit}{/if} {l s="of" mod="smartblog"} {$total} ({$c} {l s="Pages" mod="smartblog"})</div>
+                <div class="results">{l s="Showing" mod='smartblog'} {if $limit_start!=0}{$limit_start}{else}1{/if} {l s="to" mod='smartblog'} {if $limit_start+$limit >= $total}{$total}{else}{$limit_start+$limit}{/if} {l s="of" mod='smartblog'} {$total} ({$c} {l s="Pages" mod='smartblog'})</div>
             </div>
   </div>
   </div> {/if}
