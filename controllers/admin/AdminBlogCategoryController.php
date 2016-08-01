@@ -122,7 +122,7 @@ class AdminBlogCategoryController extends AdminController {
                     'label' => $this->l('Parent Category'),
                     'name' => 'id_parent',
                     'options' => array(
-                        'query' => BlogCategory::getCategory(),
+                        'query' => SmartBlogCategory::getCategory(),
                         'id' => 'id_smart_blog_category',
                         'name' => 'meta_title'
                     ),
@@ -186,7 +186,7 @@ class AdminBlogCategoryController extends AdminController {
             if ((int) $catpost != 0) {
                 $this->errors[] = Tools::displayError('You need to delete all posts associate with this category .');
             } else {
-                $BlogCategory = new BlogCategory((int) Tools::getValue('id_smart_blog_category'));
+                $BlogCategory = new SmartBlogCategory((int) Tools::getValue('id_smart_blog_category'));
                 if (!$BlogCategory->delete()) {
                     $this->errors[] = Tools::displayError('An error occurred while deleting the object.')
                             . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
@@ -200,7 +200,7 @@ class AdminBlogCategoryController extends AdminController {
             if (count($this->errors))
                 return false;
             if (!$id_smart_blog_category = (int) Tools::getValue('id_smart_blog_category')) {
-                $BlogCategory = new BlogCategory();
+                $BlogCategory = new SmartBlogCategory();
 
                 $languages = Language::getLanguages(false);
                 foreach ($languages as $language) {
@@ -230,7 +230,7 @@ class AdminBlogCategoryController extends AdminController {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminBlogCategory'));
                 }
             } elseif ($id_smart_blog_category = Tools::getValue('id_smart_blog_category')) {
-                $BlogCategory = new BlogCategory($id_smart_blog_category);
+                $BlogCategory = new SmartBlogCategory($id_smart_blog_category);
                 $languages = Language::getLanguages(false);
                 foreach ($languages as $language) {
                     $title = str_replace('"', '', htmlspecialchars_decode(html_entity_decode(Tools::getValue('meta_title_' . $language['id_lang']))));
@@ -294,7 +294,7 @@ class AdminBlogCategoryController extends AdminController {
                     if (Configuration::hasContext('category_image', null, Shop::getContext()) && Configuration::get('BLOCKBANNER_IMG') != $file_name)
                         @unlink(dirname(__FILE__) . '/' . Configuration::get('BLOCKBANNER_IMG'));
 
-                    $images_types = BlogImageType::GetImageAllType('category');
+                    $images_types = SmartBlogImageType::GetImageAllType('category');
                     foreach ($images_types as $image_type) {
                         $dir = _PS_MODULE_DIR_ . 'smartblog/images/category/' . $id . '-' . stripslashes($image_type['type_name']) . '.jpg';
                         if (file_exists($dir))
