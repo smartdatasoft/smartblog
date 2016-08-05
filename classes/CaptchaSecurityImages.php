@@ -56,11 +56,17 @@ class CaptchaSecurityImages {
 		for( $i=0; $i<($width*$height)/150; $i++ ) {
 			imageline($image, mt_rand(0,$width), mt_rand(0,$height), mt_rand(0,$width), mt_rand(0,$height), $noise_color);
 		}
+		
+		/**
+		 - It's necessary to use the full path for the font
+		*/
+		$fontPath = getcwd().'/'.$this->font;
+		
 		/* create textbox and add text */
-		$textbox = imagettfbbox($font_size, 0, $this->font, $code) or die('Error in imagettfbbox function');
+		$textbox = imagettfbbox($font_size, 0, $fontPath, $code) or die('Error in imagettfbbox function');
 		$x = ($width - $textbox[4])/2;
 		$y = ($height - $textbox[5])/2;
-		imagettftext($image, $font_size, 0, $x, $y, $text_color, $this->font , $code) or die('Error in imagettftext function');
+		imagettftext($image, $font_size, 0, $x, $y, $text_color, $fontPath , $code) or die('Error in imagettftext function');
 		/* output captcha image to browser */
 		header('Content-Type: image/jpeg');
 		imagejpeg($image);
