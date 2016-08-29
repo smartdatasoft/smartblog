@@ -1,36 +1,76 @@
+{*
+* 2007-2015 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2015 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*}
+ 
 <div itemtype="#" itemscope="" class="sdsarticleCat clearfix">
-    <div id="smartblogpost-{$post.id_post}">
-    <div class="sdsarticleHeader">
-         {assign var="options" value=null}
-                            {$options.id_post = $post.id_post} 
-                            {$options.slug = $post.link_rewrite}
-                            <p class='sdstitle_block'><a title="{$post.meta_title}" href='{smartblog::GetSmartBlogLink('smartblog_post',$options)}'>{$post.meta_title}</a></p>
-             {assign var="options" value=null}
-                        {$options.id_post = $post.id_post}
-                        {$options.slug = $post.link_rewrite}
-               {assign var="catlink" value=null}
-                            {$catlink.id_category = $post.id_category}
-                            {$catlink.slug = $post.cat_link_rewrite}
-         <span>{l s='Posted by' mod='smartblog'} <span itemprop="author">{if $smartshowauthor ==1}&nbsp;<i class="icon icon-user"></i>&nbsp; {if $smartshowauthorstyle != 0}{$post.firstname} {$post.lastname}{else}{$post.lastname} {$post.firstname}{/if}</span>{/if} &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp; <span itemprop="articleSection"><a href="{smartblog::GetSmartBlogLink('smartblog_category',$catlink)}">{if $title_category != ''}{$title_category}{else}{$post.cat_name}{/if}</a></span> &nbsp;<span class="comment"> &nbsp;<i class="icon icon-comments"></i>&nbsp; <a title="{$post.totalcomment} Comments" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}#articleComments">{$post.totalcomment} {l s=' Comments' mod='smartblog'}</a></span>{if $smartshowviewed ==1}&nbsp; <i class="icon icon-eye-open"></i>{l s=' views' mod='smartblog'} ({$post.viewed}){/if}</span>
-    </div>
-    <div class="articleContent">
-          <a itemprop="url" title="{$post.meta_title}" class="imageFeaturedLink">
-                    {assign var="activeimgincat" value='0'}
-                    {$activeimgincat = $smartshownoimg} 
-                    {if ($post.post_img != "no" && $activeimgincat == 0) || $activeimgincat == 1}
-              <img itemprop="image" alt="{$post.meta_title}" src="{$modules_dir}/smartblog/images/{$post.post_img}-single-default.jpg" class="imageFeatured">
-                    {/if}
-          </a>
-    </div>
-           <div class="sdsarticle-des">
-          <span itemprop="description" class="clearfix"><div id="lipsum">
-	{$post.short_description}</div></span>
-         </div>
-        <div class="sdsreadMore">
-                  {assign var="options" value=null}
-                        {$options.id_post = $post.id_post}  
-                        {$options.slug = $post.link_rewrite}  
-                         <span class="more"><a title="{$post.meta_title}" href="{smartblog::GetSmartBlogLink('smartblog_post',$options)}" class="r_more button-medium">{l s='Read more' mod='smartblog'} </a></span>
+    <div id="smartblogpost-{$post.id_post|escape:'htmlall':'UTF-8'}">
+        <div class="sdsarticleHeader"> 
+            <p class='title_block'><a title="{$post.meta_title|escape:'htmlall':'UTF-8'}" href="{$smartbloglink->getSmartBlogPostLink($post.id_post,$post.link_rewrite)|escape:'htmlall':'UTF-8'}">{$post.meta_title|escape:'htmlall':'UTF-8'}</a></p>
+                  
+            <span>{if
+$smartshowauthor ==1}{l s='Posted by' mod='smartblog'} 
+                <span itemprop="author">&nbsp;<i class="icon icon-user"></i>&nbsp; {if
+$smartshowauthorstyle != 0}{$post.firstname|escape:'htmlall':'UTF-8'}
+                    {$post.lastname|escape:'htmlall':'UTF-8'}{else}{$post.lastname|escape:'htmlall':'UTF-8'} {$post.firstname|escape:'htmlall':'UTF-8'}{/if}
+                           </span> {/if}
+                                {$assocCats = BlogCategory::getPostCategoriesFull($post.id_post)}
+                                {$catCounts = 0}
+                                {if !empty($assocCats)}
+                                &nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp; 
+                                <span itemprop="articleSection">
+                                    {foreach $assocCats as $catid=>$assoCat}
+                                    {if $catCounts > 0}, {/if}
+                                    {$catlink=[]}
+                                    {$catlink.id_category = $assoCat.id_category}
+                                    {$catlink.slug = $assoCat.link_rewrite}
+                                    <a href="{$smartbloglink->getSmartBlogCategoryLink($assoCat.id_category,$assoCat.link_rewrite)|escape:'htmlall':'UTF-8'}">
+                                        {$assoCat.name|escape:'htmlall':'UTF-8'}
+                                    </a>
+                                    {$catCounts = $catCounts + 1}
+                                {/foreach}
+                            </span>
+                        {/if}
+                        &nbsp; <span class="comment">&nbsp;<i class="icon icon-comments"></i>&nbsp;
+                            <a href=
+                               "{$smartbloglink->getSmartBlogPostLink($post.id_post,$post.link_rewrite)|escape:'htmlall':'UTF-8'}#articleComments"
+                               title="{$post.totalcomment|escape:'htmlall':'UTF-8'} Comments">{$post.totalcomment} {l s=' Comments'
+        mod='smartblog'}</a></span>{if $smartshowviewed ==1}&nbsp; <i class=
+                                                                      "icon icon-eye-open"></i>{l s=' views' mod='smartblog'}
+                        ({$post.viewed|intval}){/if}</span>
+                </div>
+
+ 
+
+                <div class="articleContent">
+                    {include file="./post_format.tpl" ispost=$post.id_post post=$post cameFromLoop= 'true' smartshownoimg=$smartshownoimg}
+                </div>
+               {if $post.post_format != 'quote' && $post.post_format != 'link'}
+                <div class="sdsreadMore">  
+                    <a title="{$post.meta_title|escape:'htmlall':'UTF-8'}" href="{$smartbloglink->getSmartBlogPostLink($post.id_post,$post.link_rewrite)|escape:'htmlall':'UTF-8'}" class="r_more btn btn-default button button-small"><span>{l s='Read more' mod='smartblog'}<i class="icon-chevron-right right"></i></span></a>
+                </div>
+                {/if}
+                
+                
+            </div>
         </div>
-   </div>
-</div>

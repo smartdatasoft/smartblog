@@ -3,11 +3,11 @@
     margin-bottom: 0px;
     overflow: hidden;
 }
-.sdsarticleCat {
-    border-bottom: 1px solid #E1E1E1;
+.sdsarticleCat,.addthis_toolbox  {
     margin-bottom: 10px;
     padding-bottom: 8px;
 }
+
 .sdsarticleHeader {
     margin: 6px 0 10px;
     padding-bottom: 5px;
@@ -21,11 +21,15 @@
 .sdsarticleHeader span a:hover {
     text-decoration: underline;
 }
+.sdsarticleHeader i.icon{
+    vertical-align: middle;
+}
+
 .articleContent {
     overflow: hidden;
 }
 .articleContent{
-   
+
 }
 .articleContent img{
     max-width: 98%;
@@ -97,8 +101,8 @@
     padding: 0;
     width: 40%;
 }
-.sdsarticleBottom li, #sdsblogCategory li {
-    background: url("../images/message-news.png") no-repeat scroll 0 3px rgba(0, 0, 0, 0);
+.sdsarticleBottom li, #sdsblogCategory li, #articleRelated li {
+    background: url("../img/message-news.png") no-repeat scroll 0 3px rgba(0, 0, 0, 0);
     padding: 3px 0 3px 20px;
 }
 #productRelated .box-product {
@@ -529,10 +533,6 @@ div.relProduct .price-new {
     line-height: 18px;
     margin-bottom: 10px;
 }
-.sdsarticleHeader span{
-    font-size: 12px;
-    line-height: 18px;
-}
 .sdsarticle-des{
     margin: 10px 0px;
 }
@@ -544,25 +544,9 @@ div.relProduct .price-new {
 .sdsarticle-des ol{
     list-style-type: none;
 }
-.sdsreadMore .more a {
+.sdsreadMore a.r_more {
     float: right;
-    padding: 0px 10px;
     font-weight: bold;
-}
-
-.sdsreadMore .more a.button-medium {
-font-size: 17px;
-line-height: 21px;
-color: white;
-padding: 3px 8px 3px 8px;
-font-weight: bold;
-background: #43b754;
-border: 1px solid;
-border-color: #399a49 #247f32 #1a6d27 #399a49;
-}
-.sdsreadMore .more a:hover {
-background: #575757;
-border-color: #303030 #303030 #666666 #444444;
 }
 .sdsreadMore .comment a{
     text-decoration: none;
@@ -596,8 +580,8 @@ fieldset.account_creation {
     max-width: 95%;
 }
 .post-page .results{
-  float: right;
-  margin-top: 30px;
+    float: right;
+    margin-top: 30px;
 }
 .paddleftreleted{
     padding-left:34px;
@@ -606,7 +590,7 @@ fieldset.account_creation {
     width:100%;
 }
 .sdstitle_block{
- background: none repeat scroll 0 0 #F6F6F6;
+    background: none repeat scroll 0 0 #F6F6F6;
     border-top: 5px solid #333333;
     color: #555454;
     font: 600 18px/22px "Open Sans",sans-serif;
@@ -678,19 +662,15 @@ fieldset.account_creation {
     height: 45px;
     margin: 5px 5px;
 }
- .blogTags .sdsbox-content{
-     margin-bottom: 10px;
- }
- 
-.blogTags .sdsbox-content a {
-display: inline-block;
-font-size: 13px;
-line-height: 16px;
-font-weight: bold;
-padding: 4px 9px 5px 9px;
-border: 1px solid #d6d4d4;
-float: left;
-margin: 0 3px 3px 0;
+.blogTags .sdsbox-content{
+    margin-bottom: 10px;
+}
+.blogTags .sdsbox-content a{
+    line-height: 1.5em;
+    margin: 0 0.1em;
+    padding: 5px;
+    font-weight: bold;
+    font-size: 12px;
 }
 .smartblock {
     margin-bottom: 20px;
@@ -713,7 +693,7 @@ margin: 0 3px 3px 0;
 
 
 #sdssearch_block_top {
-  padding-top: 0px;
+    padding-top: 0px;
 }
 #sdssearch_block_top #searchbox {
     float: left;
@@ -732,18 +712,18 @@ margin: 0 3px 3px 0;
     padding: 10px 0 11px 0;
 }
 #sdssearch_block_top .btn.button-search span {
-      display: none;
+    display: none;
 }
 #sdssearch_block_top .btn.button-search:before {
-      content: "\f002";
-      display: block;
-      font-family: "FontAwesome";
-      font-size: 17px;
-      width: 100%;
-      text-align: center;
+    content: "\f002";
+    display: block;
+    font-family: "FontAwesome";
+    font-size: 17px;
+    width: 100%;
+    text-align: center;
 }
 #sdssearch_block_top .btn.button-search:hover {
-      color: #6f6f6f;
+    color: #6f6f6f;
 }
 #sdssearch_block_top #search_query_top {
     display: inline;
@@ -755,10 +735,10 @@ margin: 0 3px 3px 0;
 }
 
 .ac_results {
-  background: white;
-  border: 1px solid #d6d4d4;
-  width: 271px;
-  margin-top: -1px;
+    background: white;
+    border: 1px solid #d6d4d4;
+    width: 271px;
+    margin-top: -1px;
 }
 .ac_results li {
     padding: 0 10px;
@@ -768,14 +748,14 @@ margin: 0 3px 3px 0;
     line-height: 22px;
 }
 .ac_results li.ac_odd {
-      background: white;
-    }
+    background: white;
+}
 .ac_results li:hover, .ac_results li.ac_over {
-      background: #fbfbfb;
+    background: #fbfbfb;
 }
 
 form#searchbox {
-  position: relative;
+    position: relative;
 }
 form#searchbox label {
     color: #333333;
@@ -791,7 +771,7 @@ form#searchbox .button.button-small {
     float: left;
 }
 form#searchbox .button.button-small i {
-      margin-right: 0;
+    margin-right: 0;
 }
 
 

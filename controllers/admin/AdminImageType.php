@@ -1,8 +1,34 @@
 <?php
+/**
+* 2007-2015 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2015 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
 
-class AdminImageTypeController extends ModuleAdminController {
+class AdminImageTypeController extends ModuleAdminController
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->table = 'smart_blog_imagetype';
         $this->className = 'BlogImageType';
         $this->module = 'smartblog';
@@ -47,7 +73,8 @@ class AdminImageTypeController extends ModuleAdminController {
         parent::__construct();
     }
 
-    public function renderForm() {
+    public function renderForm()
+    {
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->l('Blog Category'),
@@ -102,11 +129,10 @@ class AdminImageTypeController extends ModuleAdminController {
                     )
                 ),
                 array(
-                    'type' => 'radio',
+                    'type' => 'switch',
                     'label' => $this->l('Status'),
                     'name' => 'active',
                     'required' => false,
-                    'class' => 't',
                     'is_bool' => true,
                     'values' => array(
                         array(
@@ -124,7 +150,6 @@ class AdminImageTypeController extends ModuleAdminController {
             ),
             'submit' => array(
                 'title' => $this->l('Save'),
-                'class' => 'button'
             )
         );
 
@@ -133,19 +158,19 @@ class AdminImageTypeController extends ModuleAdminController {
 
         $this->fields_form['submit'] = array(
             'title' => $this->l('Save   '),
-            'class' => 'button'
         );
         return parent::renderForm();
     }
 
-    public function renderList() {
+    public function renderList()
+    {
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         return parent::renderList();
-        ;
     }
 
-    public function initToolbar() {
+    public function initToolbar()
+    {
         parent::initToolbar();
     }
 
