@@ -56,7 +56,7 @@ class smartblog extends Module
     {
         $this->name = 'smartblog';
         $this->tab = 'front_office_features';
-        $this->version = '2.1.3';
+        $this->version = '2.1.4';
         $this->author = 'SmartDataSoft';
         $this->need_upgrade = true;
         $this->controllers = array('archive', 'category', 'details', 'search', 'tagpost');
@@ -835,7 +835,11 @@ class smartblog extends Module
         foreach ($tabvalue as $tab) {
             $newtab = new Tab();
             $newtab->class_name = $tab['class_name'];
+            if($tab['id_parent']==-1)
+                    $newtab->id_parent = $tab['id_parent'];
+                else
             $newtab->id_parent = $tab_id;
+
             $newtab->module = $tab['module'];
             foreach ($langs as $l) {
                 $newtab->name[$l['id_lang']] = $this->l($tab['name']);
