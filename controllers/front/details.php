@@ -151,9 +151,8 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
             SmartBlogPost::postViewed($id_post);
 
             //here we can give validation if category page or other page it will show
-
-
             $post['date'] =  Smartblog::displayDate($post['created']);
+            
             
             $this->context->smarty->assign(array(
                 'smartbloglink'=> $smartbloglink,

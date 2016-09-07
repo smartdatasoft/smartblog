@@ -74,3 +74,5 @@ $smartshowauthorstyle != 0}{$post.firstname|escape:'htmlall':'UTF-8'}
                 
             </div>
         </div>
+		
+		

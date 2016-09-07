@@ -430,6 +430,7 @@ class smartblog extends Module
                     'module' => 'smartblog',
                 ),
             ),
+
             'smartblog_post_rule' => array(
                 'controller' => 'details',
                 'rule' => $alias . '/{id_post}_{slug}' . $html,
@@ -444,6 +445,7 @@ class smartblog extends Module
                     'module' => 'smartblog',
                 ),
             ),
+
             'smartblog_category_pagination' => array(
                 'controller' => 'category',
                 'rule' => $alias . '/category/{id_category}_{slug}/page/{page}' . $html,
@@ -1987,12 +1989,14 @@ class smartblog extends Module
             //  $id_cat = BlogCategory::getCategoryNameByPost(Tools::getvalue('id_post'));
             $id_lang = $this->context->language->id;
             //$posts = SmartBlogPost::getRelatedProduct($id_lang, Tools::getvalue('id_post'));
-            $id_post = pSQL(Tools::getvalue('id_post'));
+
+            $id_post = (int)Tools::getvalue('id_post');
        
             if($id_post==''){
                 $slug = Tools::getvalue('slug');
                 $id_post = $this->slug2id($slug);
             }
+
             if ($id_post != null) {
                 $proucts = SmartBlogPost::getRelatedProduct($id_lang, $id_post);
                 $this->smarty->assign(array(
@@ -2029,7 +2033,7 @@ class smartblog extends Module
             
             $posts = SmartBlogPost::getRelatedPostsById_post($id_post);
             
-//            $i=0;
+         $i=0;
             foreach($posts as $i => &$post){
                 $posts[$i]['created'] =  Smartblog::displayDate($post['created']);
                 

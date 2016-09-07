@@ -55,21 +55,33 @@ class smartblogtagpostModuleFrontController extends smartblogModuleFrontControll
             $limit_start = $posts_per_page * ($c - 1);
         }
 
+
 		$smartblogurlpattern = (int)Configuration::get('smartblogurlpattern');
+         
 
         //now we will check whihc option we need to url rewrite 
         switch ($smartblogurlpattern) {
 
             case 1:
             	$SmartBlog = new smartblog();
+
+                $keyword = urldecode(Tools::getValue('tag'));
                 break;
             case 2:
+               $keyword = urldecode(Tools::getValue('tag'));
                 break;
             case 3:
+                $keyword = urldecode(Tools::getValue('tag'));
                 break;
-
+            default:
+              $keyword = urldecode(Tools::getValue('tag'));
+                
         }
-
+        
+		
+   
+        $id_lang = (int) $this->context->language->id;
+        
 
         $result = SmartBlogPost::tagsPost($keyword, $id_lang); 
         $total = count($result);

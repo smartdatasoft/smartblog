@@ -427,7 +427,10 @@ class SmartBlogPost extends ObjectModel
         
         
         $sql = 'SELECT itl.*,it.* FROM `' . _DB_PREFIX_ . 'smart_blog_post` it,`' . _DB_PREFIX_ . 'smart_blog_post_category` itc1, `' . _DB_PREFIX_ . 'smart_blog_post_category` itc2 ,`' . _DB_PREFIX_ . 'smart_blog_post_lang` itl, `' . _DB_PREFIX_ . 'smart_blog_post_shop` its'
-                . ' WHERE it.id_smart_blog_post = itc2.id_smart_blog_post AND itl.id_smart_blog_post = itc2.id_smart_blog_post AND  itc1.id_smart_blog_category =itc2.id_smart_blog_category  AND itc1.id_smart_blog_post ='.pSQL($id_post).' AND itc2.id_smart_blog_post <>'.pSQL($id_post).' AND it.active =1 AND itl.id_lang = '.(int) Context::getContext()->language->id.' AND its.id_smart_blog_post = it.id_smart_blog_post AND its.id_shop = '.(int) Context::getContext()->shop->id. ' ORDER BY it.id_smart_blog_post DESC LIMIT 0,' . $limit;
+
+                . ' WHERE it.id_smart_blog_post = itc2.id_smart_blog_post AND itl.id_smart_blog_post = itc2.id_smart_blog_post AND  itc1.id_smart_blog_category =itc2.id_smart_blog_category  AND itc1.id_smart_blog_post ='.(int)$id_post.' AND itc2.id_smart_blog_post <>'.(int)$id_post.' AND it.active =1 AND itl.id_lang = '.(int) Context::getContext()->language->id.' AND its.id_smart_blog_post = it.id_smart_blog_post AND its.id_shop = '.(int) Context::getContext()->shop->id. ' ORDER BY it.id_smart_blog_post DESC LIMIT 0,' . $limit;
+
+
             
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql); 
             
