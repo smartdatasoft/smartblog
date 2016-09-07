@@ -29,13 +29,13 @@ include_once(dirname(__FILE__) . '/../../classes/controllers/FrontController.php
 class smartblogCategoryModuleFrontController extends smartblogModuleFrontController
 {
 
-    public $ssl = true;
+    public $ssl = false;
     public $smartblogCategory;
 
     public function init()
     {
         if (Configuration::get('PS_SSL_ENABLED')) {
-            $this->ssl = true;
+            $this->ssl = false;
         }
 
 

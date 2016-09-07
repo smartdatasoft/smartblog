@@ -53,7 +53,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
     public function init()
     {
        if (Configuration::get('PS_SSL_ENABLED')) {
-            $this->ssl = true;
+            $this->ssl = false;
         }
 
         parent::init();
