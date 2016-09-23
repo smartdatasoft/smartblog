@@ -125,7 +125,7 @@
 		</ul>
 		 
 </div>
-{if ($enableguestcomment == 0 && isset($is_looged) && $is_looged > 0) || $enableguestcomment == 1}
+
 {if $countcomment != ''}
 <div id="articleComments">
             <h3>{if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}<span></span></h3>
@@ -141,7 +141,6 @@
         </div>
 </div>
  {/if}
-{/if}
 
 {if ($enableguestcomment==0) && isset($is_looged) && $is_looged==''}
 <section class="page-product-box">
