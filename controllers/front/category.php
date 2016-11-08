@@ -34,10 +34,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 
     public function init()
     {
-        if (Configuration::get('PS_SSL_ENABLED')) {
-            $this->ssl = false;
-        }
-
+      
 
         parent::init();
     }
@@ -172,7 +169,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
  
         parent::initContent();
 
-        $this->canonicalRedirection();
+       // $this->canonicalRedirection();
         
 
         $this->context->smarty->assign(array(
