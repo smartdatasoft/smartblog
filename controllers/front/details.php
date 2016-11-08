@@ -52,9 +52,6 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 
     public function init()
     {
-       if (Configuration::get('PS_SSL_ENABLED')) {
-            $this->ssl = false;
-        }
 
         parent::init();
     }
@@ -102,7 +99,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
         
         parent::initContent();
 
-        $this->canonicalRedirection();
+      //  $this->canonicalRedirection();
 
         if (!$this->errors) {
             Hook::exec('actionsbsingle', array('id_post' => $this->post));
