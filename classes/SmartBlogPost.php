@@ -155,6 +155,28 @@ class SmartBlogPost extends ObjectModel
 
     public static function getAllPost($id_lang = null, $limit_start, $limit)
     {
+        $sorting = Configuration::get('news_sort_by');
+
+        if($sorting == 'name_ASC'){
+            $orderby = 'pl.meta_title';
+            $orderway = 'ASC';
+        }elseif($sorting == 'name_DESC'){
+            $orderby = 'pl.meta_title';
+            $orderway = 'DESC';
+        }elseif($sorting == 'created_ASC'){
+            $orderby = 'p.created';
+            $orderway = 'ASC';
+        }elseif($sorting == 'created_DESC'){
+            $orderby = 'p.created';
+            $orderway = 'DESC';
+        }elseif($sorting == 'id_ASC'){
+            $orderby = 'p.id_smart_blog_post';
+            $orderway = 'ASC';
+        }else{
+            $orderby = 'p.id_smart_blog_post';
+            $orderway = 'DESC';
+        }
+
         if ($id_lang == null) {
             $id_lang = (int) Context::getContext()->language->id;
         }
@@ -169,7 +191,7 @@ class SmartBlogPost extends ObjectModel
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
                 WHERE pl.id_lang=' . $id_lang . '
-                AND p.active= 1 ORDER BY p.id_smart_blog_post DESC LIMIT ' . $limit_start . ',' . $limit;
+                AND p.active= 1 ORDER BY '.$orderby.' '.$orderway.' LIMIT ' . $limit_start . ',' . $limit;
 
         if (!$posts = Db::getInstance()->executeS($sql))
             return false;
@@ -813,6 +835,12 @@ class SmartBlogPost extends ObjectModel
         }elseif($sorting == 'name_DESC'){
             $orderby = 'pl.meta_title';
             $orderway = 'DESC';
+        }elseif($sorting == 'created_ASC'){
+            $orderby = 'p.created';
+            $orderway = 'ASC';
+        }elseif($sorting == 'created_DESC'){
+            $orderby = 'p.created';
+            $orderway = 'DESC';
         }elseif($sorting == 'id_ASC'){
             $orderby = 'p.id_smart_blog_post';
             $orderway = 'ASC';
@@ -831,10 +859,10 @@ class SmartBlogPost extends ObjectModel
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
                 WHERE pl.id_lang=' . $id_lang . ' 		
-                AND p.active= 1 ORDER BY p.id_smart_blog_post DESC 
+                AND p.active= 1 ORDER BY '.$orderby.' '.$orderway.'
                 LIMIT ' . $limit;
         $posts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        if (empty($posts)) {
+        /*if (empty($posts)) {
             $sql2 = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post  AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
@@ -842,7 +870,7 @@ class SmartBlogPost extends ObjectModel
                 AND p.active= 1 ORDER BY '.$orderby.' '.$orderway.' 
                 LIMIT ' . pSQL($limit);
             $posts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql2);
-        }
+        }*/
         $i = 0;
         foreach ($posts as $post) {
             $result[$i]['id'] = $post['id_smart_blog_post'];

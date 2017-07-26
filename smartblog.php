@@ -126,7 +126,8 @@ class smartblog extends Module
         Configuration::updateGlobalValue('smartshowrelatedpost', 3);
         Configuration::updateGlobalValue('sort_category_by', 'id_desc');
         Configuration::updateGlobalValue('latestnews_sort_by', 'id_desc');
-        
+        Configuration::updateGlobalValue('news_sort_by', 'id_desc');
+
         
         $this->addquickaccess(); 
 
@@ -890,7 +891,8 @@ class smartblog extends Module
             Configuration::updateValue('smartshowrelatedpost', Tools::getvalue('smartshowrelatedpost'));
             Configuration::updateValue('sort_category_by', Tools::getvalue('sort_category_by'));
             Configuration::updateValue('latestnews_sort_by', Tools::getvalue('latestnews_sort_by'));
-            
+            Configuration::updateValue('news_sort_by', Tools::getvalue('news_sort_by'));
+
 
             $this->processImageUpload($_FILES);
             $html = $this->displayConfirmation($this->l('The settings have been updated successfully.'));
@@ -1311,7 +1313,7 @@ class smartblog extends Module
                                 'name' => 'Name ASC (A-Z)'
                             ),
                             array(
-                                'id_option' => 'name_DSC',
+                                'id_option' => 'name_DESC',
                                 'name' => 'Name DESC (Z-A)'
                             ),
                             array(
@@ -1319,7 +1321,7 @@ class smartblog extends Module
                                 'name' => 'Id ASC'
                             ),
                             array(
-                                'id_option' => 'id_ASC',
+                                'id_option' => 'id_DESC',
                                 'name' => 'Id DESC'
                             ),
                         ),
@@ -1347,7 +1349,7 @@ class smartblog extends Module
                                 'name' => 'Name ASC (A-Z)'
                             ),
                             array(
-                                'id_option' => 'name_DSC',
+                                'id_option' => 'name_DESC',
                                 'name' => 'Name DESC (Z-A)'
                             ),
                             array(
@@ -1355,8 +1357,52 @@ class smartblog extends Module
                                 'name' => 'Id ASC'
                             ),
                             array(
-                                'id_option' => 'id_ASC',
+                                'id_option' => 'id_DESC',
                                 'name' => 'Id DESC'
+                            ),
+                            array(
+                                'id_option' => 'created_ASC',
+                                'name' => 'Created ASC'
+                            ),
+                            array(
+                                'id_option' => 'created_DESC',
+                                'name' => 'Created DESC'
+                            ),
+                        ),
+                        'id' => 'id_option',
+                        'name' => 'name'
+                    )
+                ),
+                array(
+                    'type' => 'select',
+                    'label' => $this->l('Sort News By'),
+                    'name' => 'news_sort_by',
+                    'required' => false,
+                    'options' => array(
+                        'query' => array(
+                            array(
+                                'id_option' => 'name_ASC',
+                                'name' => 'Name ASC (A-Z)'
+                            ),
+                            array(
+                                'id_option' => 'name_DESC',
+                                'name' => 'Name DESC (Z-A)'
+                            ),
+                            array(
+                                'id_option' => 'id_ASC',
+                                'name' => 'Id ASC'
+                            ),
+                            array(
+                                'id_option' => 'id_DESC',
+                                'name' => 'Id DESC'
+                            ),
+                            array(
+                                'id_option' => 'created_ASC',
+                                'name' => 'Created ASC'
+                            ),
+                            array(
+                                'id_option' => 'created_DESC',
+                                'name' => 'Created DESC'
                             ),
                         ),
                         'id' => 'id_option',
@@ -1493,6 +1539,7 @@ class smartblog extends Module
         $helper->fields_value['smartshowrelatedpost'] = Configuration::get('smartshowrelatedpost');
          $helper->fields_value['sort_category_by'] = Configuration::get('sort_category_by');
           $helper->fields_value['latestnews_sort_by'] = Configuration::get('latestnews_sort_by');
+          $helper->fields_value['news_sort_by'] = Configuration::get('news_sort_by');
         return $helper;
     }
 
