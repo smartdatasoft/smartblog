@@ -1311,7 +1311,7 @@ class smartblog extends Module
                                 'name' => 'Name ASC (A-Z)'
                             ),
                             array(
-                                'id_option' => 'name_DSC',
+                                'id_option' => 'name_DESC',
                                 'name' => 'Name DESC (Z-A)'
                             ),
                             array(
@@ -1319,7 +1319,7 @@ class smartblog extends Module
                                 'name' => 'Id ASC'
                             ),
                             array(
-                                'id_option' => 'id_ASC',
+                                'id_option' => 'id_DESC',
                                 'name' => 'Id DESC'
                             ),
                         ),
@@ -1347,7 +1347,7 @@ class smartblog extends Module
                                 'name' => 'Name ASC (A-Z)'
                             ),
                             array(
-                                'id_option' => 'name_DSC',
+                                'id_option' => 'name_DESC',
                                 'name' => 'Name DESC (Z-A)'
                             ),
                             array(
@@ -1355,7 +1355,7 @@ class smartblog extends Module
                                 'name' => 'Id ASC'
                             ),
                             array(
-                                'id_option' => 'id_ASC',
+                                'id_option' => 'id_DESC',
                                 'name' => 'Id DESC'
                             ),
                         ),
