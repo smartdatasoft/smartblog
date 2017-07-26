@@ -1358,6 +1358,14 @@ class smartblog extends Module
                                 'id_option' => 'id_DESC',
                                 'name' => 'Id DESC'
                             ),
+                            array(
+                                'id_option' => 'created_ASC',
+                                'name' => 'Created ASC'
+                            ),
+                            array(
+                                'id_option' => 'created_DESC',
+                                'name' => 'Created DESC'
+                            ),
                         ),
                         'id' => 'id_option',
                         'name' => 'name'

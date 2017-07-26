@@ -813,6 +813,12 @@ class SmartBlogPost extends ObjectModel
         }elseif($sorting == 'name_DESC'){
             $orderby = 'pl.meta_title';
             $orderway = 'DESC';
+        }elseif($sorting == 'created_ASC'){
+            $orderby = 'p.created';
+            $orderway = 'ASC';
+        }elseif($sorting == 'created_DESC'){
+            $orderby = 'p.created';
+            $orderway = 'DESC';
         }elseif($sorting == 'id_ASC'){
             $orderby = 'p.id_smart_blog_post';
             $orderway = 'ASC';
