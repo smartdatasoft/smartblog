@@ -27,7 +27,7 @@ class smartbloghomelatestnews extends Module {
                  if (!parent::install() || !$this->registerHook('displayHome'))
             return false;
                  Configuration::updateValue('smartshowhomepost',4);
-                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_desc');
+                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_DESC');
                  return true;
             }
             
