@@ -40,7 +40,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_category` (
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_category_lang` (
   `id_smart_blog_category` int(11) NOT NULL,
-  `id_lang` int(11) DEFAULT NULL,
+  `id_lang` int(11) NOT NULL,
   `name` VARCHAR(128) NOT NULL ,
   `meta_title` varchar(150) DEFAULT NULL,
   `meta_keyword` varchar(200) DEFAULT NULL,
@@ -52,7 +52,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_category_lan
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_category_shop` (  
   `id_smart_blog_category` int(11) NOT NULL,
-  `id_shop` int(11) DEFAULT NULL,
+  `id_shop` int(11) NOT NULL,
   PRIMARY KEY (`id_smart_blog_category`,`id_shop`),
 	KEY `id_shop` (`id_shop`)
 )ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
@@ -73,7 +73,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_comment`(
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_comment_shop` ( 
   `id_smart_blog_comment` int(11) NOT NULL,
-  `id_shop` int(11) DEFAULT NULL,  
+  `id_shop` int(11) NOT NULL,  
   PRIMARY KEY (`id_smart_blog_comment`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 )ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
@@ -110,7 +110,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_post` (
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_post_lang` (
   `id_smart_blog_post` int(11) NOT NULL,
-  `id_lang` varchar(45) DEFAULT NULL,
+  `id_lang` varchar(45) NOT NULL,
   `meta_title` varchar(150) DEFAULT NULL,
   `meta_keyword` varchar(200) DEFAULT NULL,
   `meta_description` varchar(450) DEFAULT NULL,
@@ -138,7 +138,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_post_meta` (
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_post_category` (
   `id_smart_blog_category` int(11) NOT NULL,
-  `id_smart_blog_post` int(11) DEFAULT NULL,
+  `id_smart_blog_post` int(11) NOT NULL,
     PRIMARY KEY (`id_smart_blog_category`, `id_smart_blog_post`),
     KEY `id_smart_blog_post` (`id_smart_blog_post`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
@@ -146,7 +146,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_post_categor
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_tag` (
   `id_tag` int(11) NOT NULL auto_increment,
-  `id_lang` int(11) DEFAULT NULL,
+  `id_lang` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_tag`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
