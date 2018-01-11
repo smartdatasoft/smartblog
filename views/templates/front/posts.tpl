@@ -259,7 +259,7 @@ var data = { 'action':'postcomment',
 	  beforeSend: function() {
 				$('.success, .warning, .error').remove();
 				$('#submitComment').attr('disabled', true);
-				$('#commentInput').before('<div class="attention"><img src="http://321cart.com/sellya/catalog/view/theme/default/image/loading.gif" alt="" />Please wait!</div>');
+				$('#commentInput').before('<div class="attention"><img src="views/img/loading.gif" alt="" />Please wait!</div>');
 
 				},
 				complete: function() {
