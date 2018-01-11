@@ -27,7 +27,7 @@ class smartbloghomelatestnews extends Module {
                  if (!parent::install() || !$this->registerHook('displayHome'))
             return false;
                  Configuration::updateValue('smartshowhomepost',4);
-                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_desc');
+                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_DESC');
                  return true;
             }
             
@@ -49,6 +49,7 @@ class smartbloghomelatestnews extends Module {
 
         if (!$this->isCached('smartblog_latest_news.tpl')) {
             $view_data['posts'] = SmartBlogPost::GetPostLatestHome(Configuration::get('smartshowhomepost'));
+      
             $this->smarty->assign(array(
                 'smartbloglink' => $smartbloglink,
                 'view_data' => $view_data['posts']
