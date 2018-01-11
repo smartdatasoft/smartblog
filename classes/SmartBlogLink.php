@@ -71,7 +71,11 @@ class SmartBlogLink
     public function getImageLink($name, $ids, $type = null)
     {
         
-       
+
+       if(Configuration::get('smartshownoimg')){
+            // return __PS_BASE_URI__ . 'img/p/en-default-home_default.jpg';
+            // return false;
+       }
         $not_default = false;
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
@@ -101,7 +105,13 @@ class SmartBlogLink
             }
         }
 
-        return $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path;
+        if (@getimagesize($this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path)) {
+            return $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path;
+        } else {
+            if(Configuration::get('smartshownoimg'))
+                return __PS_BASE_URI__ . 'modules/smartblog/images/no-single-default.jpg';
+            return "false";
+        }
     }
 
     public  function getSmartBlogPostLink($blogpost, $alias = null, $ssl = null, $id_lang = null, $id_shop = null, $relative_protocol= false)

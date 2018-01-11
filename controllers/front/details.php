@@ -89,8 +89,20 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
         if ($id_post) {
 
             $this->post = new SmartBlogPost($id_post, true, $this->context->language->id, $this->context->shop->id);
-        }
 
+                $meta_title = $this->post->meta_title;
+                $meta_description = $this->post->meta_description;
+                $meta_keyword = $this->post->meta_keyword;
+
+            if(!$this->post->active) $this->post = array();
+            if (new DateTime() >= new DateTime($this->post->created)){
+                $published = true;
+            } else {
+                $this->post = array();
+                $published = false;
+            }
+        }
+            
         if (!Validate::isLoadedObject($this->post)) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
@@ -130,7 +142,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
             $id_cate = $post['id_category'];
             //$title_category = $BlogCategory->getNameCategory($id_cate);
             if (file_exists(_PS_MODULE_DIR_ . 'smartblog/images/' . $id_post . '.jpg')) {
-                $post_img = $id_post.'.jpg'; 
+                $post_img = $id_post; 
             } else {
                 $post_img = 'no';
             }
@@ -149,10 +161,13 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 
             //here we can give validation if category page or other page it will show
             $post['date'] =  Smartblog::displayDate($post['created']);
-            
-            
+
             $this->context->smarty->assign(array(
+                'link_rewrite_'=>SmartBlogPost::GetPostSlugById($id_post,$this->context->language->id),
+                'displayBackOfficeSmartBlog'=>Hook::exec('displayBackOfficeSmartBlog'),
                 'smartbloglink'=> $smartbloglink,
+                'baseDir'=>_PS_BASE_URL_.__PS_BASE_URI__,
+                'modules_dir'=>_PS_BASE_URL_.__PS_BASE_URI__.'modules/',
                 'post' => $post,
                 'posts_next' => $posts_next,
                 'posts_previous' => $posts_previous,
@@ -165,11 +180,11 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
                 'tags' => $tags,
                 //'live_configurator_token' => $this->getLiveConfiguratorToken(),
                 //'title_category' => $title_category[0][0]['meta_title'],
-                'title_category' => $title_category,
-               // 'cat_link_rewrite' => $title_category[0][0]['link_rewrite'],
+                'title_category' => (isset($title_category[0][0]['name']))? $title_category[0][0]['name'] : '',
+               'cat_link_rewrite' => (isset($title_category[0][0]['link_rewrite'])) ? $title_category[0][0]['link_rewrite'] : '',
                 'meta_title' => $post['meta_title'],
                 'post_active' => $post['active'],
-                'blogcontent' => $post['content'],
+                'content' => $post['content'],
                 'id_post' => $post['id_post'],
                 'smartshowauthorstyle' => Configuration::get('smartshowauthorstyle'),
                 'smartshowauthor' => Configuration::get('smartshowauthor'),
@@ -186,8 +201,12 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
             ));
             $this->context->smarty->assign('HOOK_SMART_BLOG_POST_FOOTER', Hook::exec('displaySmartAfterPost'));
         }
+        
+        $this->context->smarty->assign('meta_title',$meta_title);
+        $this->context->smarty->assign('meta_description',$meta_description);
+        $this->context->smarty->assign('meta_keywords',$meta_keyword);
 
-        $this->setTemplate('posts.tpl');
+        $this->setTemplate('module:smartblog/views/templates/front/posts.tpl');
     }
 
       /**

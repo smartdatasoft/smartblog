@@ -84,8 +84,8 @@ class Blogcomment extends ObjectModel
         $j = 0;
 
         if (isset($child_comments) && (count($child_comments) > 0)) {
-            foreach ($child_comments as $ch_comment) {
-
+            foreach ($child_comments as $key => $ch_comment) {
+                $child_comments[$key]['content'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$ch_comment['content']);
                 if ($this->comment_child_loop <= $this->comment_child_loop_depth) {
                     $coments_2 = $this->getChildComment($ch_comment['id_smart_blog_comment']);
                     if (count($coments_2) > 0)
@@ -106,7 +106,8 @@ class Blogcomment extends ObjectModel
         if (!$comments = DB::getInstance()->executeS($sql))
             return false;
         $i = 0;
-        foreach ($comments as $comment) {
+        foreach ($comments as $key => $comment) {
+            $comments[$key]['content'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$comment['content']);
             $coments = $this->getChildComment($comment['id_smart_blog_comment']);
 
             if (count($coments) > 0)
@@ -144,9 +145,10 @@ class Blogcomment extends ObjectModel
             $result[$i]['website'] = $post['website'];
             $result[$i]['active'] = $post['active'];
             $result[$i]['created'] = $post['created'];
-            $result[$i]['content'] = $post['content'];
+            $result[$i]['content'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$post['content']);
             $SmartBlogPost = new SmartBlogPost();
-            $result[$i]['slug'] = $SmartBlogPost->GetPostSlugById($post['id_post']);
+            $result[$i]['link_rewrite'] = $SmartBlogPost->GetPostSlugById($post['id_post']);
+            $result[$i]['slug'] = $SmartBlogPost->GetPostSlugById($post['id_post']);            
             $i++;
         }
         return $result;

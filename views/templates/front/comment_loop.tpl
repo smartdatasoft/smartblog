@@ -32,18 +32,18 @@
                                           <div class="created">
                                              <span itemprop="commentTime">{$childcommnets.created|date_format|escape:'htmlall':'UTF-8'}</span>
                                           </div>
-                                          <p>{$childcommnets.content|escape:'htmlall':'UTF-8'}</p>
+                                          <p>{$childcommnets.content nofilter}</p>
                                           {if Configuration::get('smartenablecomment') == 1}
                                             {if $comment_status == 1}
                             <div class="reply">
-                                   <a onclick="return addComment.moveForm('comment-{$comment.id_smart_blog_comment|escape:'htmlall':'UTF-8'}', '{$comment.id_smart_blog_comment|escape:'htmlall':'UTF-8'}', 'respond', '{$smarty.get.id_post|intval}')"  class="comment-reply-link">{l s='Reply' mod='smartblog'}</a>
+                                   <a onclick="return addComment.moveForm('comment-{$comment.id_smart_blog_comment|escape:'htmlall':'UTF-8'}', '{$comment.id_smart_blog_comment|escape:'htmlall':'UTF-8'}', 'respond', '{$comment.id_post|intval}')"  class="comment-reply-link">{l s='Reply' mod='smartblog'}</a>
                              </div>
                                             {/if}
                                           {/if}
                         {if isset($childcommnets.child_comments)}
                             	{foreach from=$childcommnets.child_comments item=comment}  
                                    {if isset($childcommnets.child_comments)}
-                                    {include file="./comment_loop.tpl" childcommnets=$comment}
+                                    {include file="module:smartblog/views/templates/front/comment_loop.tpl" childcommnets=$comment}
                         
                                     {$i=$i+1}
                                     

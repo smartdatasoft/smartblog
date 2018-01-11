@@ -1,4 +1,18 @@
-
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+.block-blog {
+    box-shadow: 2px 2px 8px 0 rgba(0,0,0,.2);
+    background: #fff;
+    padding: 1.563rem 1.25rem;
+    margin-bottom: 1.563rem;
+}
+.btn-blog-search{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 53px;
+    overflow: hidden;
+    height: 45px;
+}
 #sdsblogCategory {
     margin-bottom: 0px;
     overflow: hidden;
@@ -578,6 +592,22 @@ fieldset.account_creation {
 .news_module_image_holder img{
     padding: 5px;
     max-width: 95%;
+    max-height: 220px;
+}
+.news_home_image_holder img{
+    width: 100%;
+}
+.news_home_category a{
+    color: #251b5b;
+    outline: 0;
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: -.4px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    margin: 13px auto;
+    display: inline-block;
 }
 .post-page .results{
     float: right;
@@ -690,7 +720,27 @@ fieldset.account_creation {
     content:none !important;
 }
 
-
+.sds_post_title_home a{
+    font-family: Montserrat,sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;
+    color: #251b5b;
+    outline: 0;
+    text-decoration: none;
+    margin: 18px auto;
+    display: block;
+    min-height: 40px;
+}
+.sds_post_date{
+    padding: 0;
+    margin: 0;
+    font-family: Montserrat,sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: left;
+    color: #251b5b;
+}
 
 #sdssearch_block_top {
     padding-top: 0px;

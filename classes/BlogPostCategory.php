@@ -54,6 +54,19 @@ class BlogPostCategory extends ObjectModel
         $i = 0;
 //        $BlogCategory = new BlogCategory();
         foreach ($posts as $post) {
+
+            $selected_cat = BlogCategory::getPostCategoriesFull((int) $post['id_smart_blog_post'], Context::getContext()->language->id);
+
+            $result[$i]['id_category'] = 1;
+            $result[$i]['cat_link_rewrite'] = '';
+            $result[$i]['cat_name'] = 'Home';
+
+            foreach ($selected_cat as $key => $value) {
+                $result[$i]['id_category'] = $selected_cat[$key]['id_category'];
+                $result[$i]['cat_link_rewrite'] = $selected_cat[$key]['link_rewrite'];
+                $result[$i]['cat_name'] = $selected_cat[$key]['name'];
+            }
+
             $result[$i]['id_post'] = $post['id_smart_blog_post'];
             $result[$i]['viewed'] = $post['viewed'];
             //$result[$i]['name'] = $post['name'];
@@ -77,23 +90,6 @@ class BlogPostCategory extends ObjectModel
             }
             $result[$i]['created'] = $post['created'];
             
-            $post_format = $post['post_type'];
-            $result[$i]['post_format'] = $post_format;
-            
-            if(isset(smartblog::$post_meta_fields[$post_format]) 
-                    && !empty(smartblog::$post_meta_fields[$post_format])){
-                $importMetadata = array();
-                
-                foreach(smartblog::$post_meta_fields[$post_format] as $meta){
-                    $meta_key = "{$post_format}-{$meta['name']}";
-                    $id_lang = null;
-                    if(isset($meta['lang']) && $meta['lang']){
-                        $id_lang = $context->language->id;
-                    }
-                    $importMetadata[$meta_key] = BlogPostMeta::get((int)$post['id_smart_blog_post'], $meta_key, false, $id_lang);
-                }
-                $result[$i]['post_format_data'] = $importMetadata;
-            }
             
             $i++;
         }

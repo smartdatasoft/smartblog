@@ -129,35 +129,43 @@ class AdminBlogcommentController extends ModuleAdminController
         $this->_filterHaving = null;
         $this->_where = ' AND a.active = 0';
         $first_list = parent::renderList();
-
-        // second list : templates
-        $second_list = null;
-        $this->is_template_list = true;
-
-        //unset($this->fields_list['active'] );
-
-        unset($this->_where);
-        $this->_where = ' AND a.active = 1';
-
         // unsets actions
         $this->actions = array();
-
- 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
+        $this->is_template_list = true;
 
         // re-defines toolbar & buttons
         $this->toolbar_title = $this->l('APPROVED REVIEWS');
         $this->initToolbar();
 
+        unset($this->_orderBy);
+        $this->_orderBy = 'a.id_smart_blog_comment';
 
+        unset($this->list_id);
         $this->list_id = 'templates';
+
+        unset($this->_filterHaving);
         $this->_filterHaving = null;
+
+        unset($this->_where);
+        $this->_where = ' AND a.active = 1';
+
+        $second_list = null;
+
         // inits list
         $second_list = parent::renderList();
 
-        return $first_list . $second_list;
+        return $this->setPromotion() . $first_list . $second_list;
 
+    }
+
+    public function setPromotion(){
+        $this->context->smarty->assign(array(
+            'smartpromotion' => smartblog::getSmartPromotion('comment_list')
+        ));
+        $promotion = $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/promotion.tpl');
+        return $promotion;
     }
 
     public function renderForm()

@@ -29,7 +29,7 @@ include_once(dirname(__FILE__) . '/../../classes/controllers/FrontController.php
 class smartblogsearchModuleFrontController extends smartblogModuleFrontController
 {
 
-    public $ssl = true;
+     public $ssl = false;
 
     public function init()
     {
@@ -38,6 +38,7 @@ class smartblogsearchModuleFrontController extends smartblogModuleFrontControlle
 
     public function initContent()
     {
+  
 
         parent::initContent();
 
@@ -85,7 +86,6 @@ class smartblogsearchModuleFrontController extends smartblogModuleFrontControlle
    
         $smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
 
-
         $this->context->smarty->assign(array(
             'smartbloglink' => $smartbloglink,
             'postcategory' => $result,
@@ -106,7 +106,7 @@ class smartblogsearchModuleFrontController extends smartblogModuleFrontControlle
             'totalpages' => $totalpages
         ));
 
-        $template_name = 'searchresult.tpl';
+        $template_name = 'module:smartblog/views/templates/front/searchresult.tpl';
 
         $this->setTemplate($template_name);
     }

@@ -22,23 +22,48 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a>
-     {if $title_category != ''}
-    <span class="navigation-pipe">{$navigationPipe|escape:'htmlall':'UTF-8'}</span>{$title_category|escape:'htmlall':'UTF-8'}{/if}{/capture}
- 
+{extends file='page.tpl'}
+{block name='breadcrumb'}
+  {if isset($breadcrumb)}
+    <nav class="breadcrumb">
+      <ol>
+          <li>
+            <a href="{$breadcrumb.links[0].url}">
+              <span itemprop="name">{$breadcrumb.links[0].title}</span>
+            </a>
+          </li>
+          <li>
+            <a href="{smartblog::GetSmartBlogLink('smartblog')}">
+            <span itemprop="name">{l s='All Post' mod='smartblog'}</span>
+            </a>
+          </li>
+          {if $title_category != ''}
+          {assign var="link_category" value=null}
+          {$link_category.id_category = $id_category}
+          {$link_category.slug = $cat_link_rewrite}
+          <li>
+            <a href="{smartblog::GetSmartBlogLink('smartblog_category',$link_category)}">
+            <span itemprop="name">{$title_category}</span>
+            </a>
+          </li>
+        {/if}
+      </ol>
+    </nav>
+  {/if}
+{/block}
+{block name='page_content'}
     {if $postcategory == ''}
-        {include file="./search-not-found.tpl" postcategory=$postcategory}
+        {include file="module:smartblog/views/templates/front/search-not-found.tpl" postcategory=$postcategory}
     {else}
-    <div id="smartblogcat" class="block">
-{foreach from=$postcategory item=post}
-    {include file="./category_loop.tpl" postcategory=$postcategory}
-{/foreach}
-    </div>
- {/if}
- {if isset($smartcustomcss)}
-    <style>
-        {$smartcustomcss|escape:'htmlall':'UTF-8'}
-    </style>
-{/if}
-
+        <div id="smartblogcat" class="block">
+            {foreach from=$postcategory item=post}
+                {include file="module:smartblog/views/templates/front/category_loop.tpl" postcategory=$postcategory}
+            {/foreach}
+        </div>
+    {/if}
+    {if isset($smartcustomcss)}
+        <style>
+            {$smartcustomcss|escape:'htmlall':'UTF-8'}
+        </style>
+    {/if}
+{/block}

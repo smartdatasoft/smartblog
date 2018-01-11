@@ -34,24 +34,16 @@ class smartblogModuleFrontController extends ModuleFrontController
         $meta = array();
 
         parent::initContent();
-        $colums = Context::getContext()->theme->hasColumns(Context::getContext()->controller->page_name);
-        if ($colums) {
-            $hide_column_left = isset($colums['left_column']) && !empty($colums['left_column']) ? 0 : 1;
-            $hide_column_right = isset($colums['right_column']) && !empty($colums['right_column']) ? 0 : 1;
+        $hide_column_left = 0;
+        $hide_column_right = 0;
+        if (isset($this->php_self) && is_object(Context::getContext()->theme)) {
+            $colums = Context::getContext()->theme->hasColumns(Context::getContext()->controller->page_name);
+            if ($colums) {
+                $hide_column_left = isset($colums['left_column']) && !empty($colums['left_column']) ? 0 : 1;
+                $hide_column_right = isset($colums['right_column']) && !empty($colums['right_column']) ? 0 : 1;
+            }
         }
-      /*  if ( Tools::getvalue('id_category') && Tools::getvalue('id_category') != Null) {
-            $this->context->smarty->assign(BlogCategory::GetMetaByCategory(Tools::getvalue('id_category')));
-        }
-        if (Tools::getvalue('id_post') && Tools::getvalue('id_post') != Null) {
-            $this->context->smarty->assign(SmartBlogPost::GetPostMetaByPost(Tools::getvalue('id_post')));
-        }
-        if (Tools::getvalue('id_category') == Null && Tools::getvalue('id_post') == Null) {
-            $meta['meta_title'] = Configuration::get('smartblogmetatitle');
-            $meta['meta_description'] = Configuration::get('smartblogmetadescrip');
-            $meta['meta_keywords'] = Configuration::get('smartblogmetakeyword');
-            $this->context->smarty->assign($meta);
-        }
-        */
+
         $this->context->smarty->assign($meta);
         if (Configuration::get('smartshowcolumn') == 0) {
             $this->context->smarty->assign(array(

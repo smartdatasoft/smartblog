@@ -1122,6 +1122,8 @@ function getAccessoriesIds()	{
 									{/if}
 																	 
 									 {if $show_thumbnail}
+										{assign var='id' value=$input.name}
+										{assign var='max_files' value=1}
 										 <div class="form-group">
 											<div class="col-lg-12" id="{$id|escape:'html':'UTF-8'}-images-thumbnails">
 												 

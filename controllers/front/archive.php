@@ -40,6 +40,7 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
     {
         parent::initContent();
         $blogcomment = new Blogcomment();
+        $day = Tools::getvalue('day');
         $year = Tools::getvalue('year');
         $month = Tools::getvalue('month');
         $title_category = '';
@@ -50,7 +51,7 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
             $c = (int) Tools::getValue('page');
             $limit_start = $posts_per_page * ($c - 1);
         }
-        $result = SmartBlogPost::getArchiveResult($month, $year, $limit_start, $limit);
+        $result = SmartBlogPost::getArchiveResult($month, $year, $day, $limit_start, $limit);
         $total = count($result);
         $totalpages = ceil($total / $posts_per_page);
 
@@ -78,9 +79,20 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
    
             $smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
 
+        $month_name = '';
+        if($month){
+            $monthNum  = $month;
+            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+            $month_name = $dateObj->format('F');
+        }
+
         $this->context->smarty->assign(array(
             'smartbloglink' => $smartbloglink,
             'postcategory' => $result,
+            'year' => $year,
+            'month' => $month,
+            'month_name' => $month_name,
+            'day' => $day,
             'title_category' => $title_category,
             'smartshowauthorstyle' => Configuration::get('smartshowauthorstyle'),
             'limit' => isset($limit) ? $limit : 0,
@@ -97,7 +109,7 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
             'totalpages' => $totalpages
         ));
 
-        $template_name = 'archivecategory.tpl';
+        $template_name = 'module:smartblog/views/templates/front/archivecategory.tpl';
         $this->setTemplate($template_name);
     }
 

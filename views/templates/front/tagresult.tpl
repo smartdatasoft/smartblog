@@ -23,21 +23,26 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a>
-     {if $title_category != ''}
-    <span class="navigation-pipe">{$navigationPipe|escape:'htmlall':'UTF-8'}</span>{$keyword|escape:'htmlall':'UTF-8'}{/if}{/capture}
- 
-    {if $postcategory == ''}
-             <p class="error">{l s='No Post in This Tag' mod='smartblog'}</p>
-    {else}
-    <div id="smartblogcat" class="block">
-{foreach from=$postcategory item=post}
-    {include file="./category_loop.tpl" post=$post smartbloglink = $smartbloglink}
-{/foreach}
-    </div>
-{/if}
-{if isset($smartcustomcss)}
-    <style>
-        {$smartcustomcss|escape:'htmlall':'UTF-8'}
-    </style>
-{/if}
+
+{extends file='page.tpl'}
+
+{block name='page_content'}
+    {capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a>
+         {if $title_category != ''}
+        <span class="navigation-pipe"></span>{$keyword|escape:'htmlall':'UTF-8'}{/if}{/capture}
+     
+        {if $postcategory == ''}
+                 <p class="error">{l s='No Post in This Tag' mod='smartblog'}</p>
+        {else}
+        <div id="smartblogcat" class="block">
+    {foreach from=$postcategory item=post}
+        {include file="module:smartblog/views/templates/front/category_loop.tpl" post=$post smartbloglink = $smartbloglink}
+    {/foreach}
+        </div>
+    {/if}
+    {if isset($smartcustomcss)}
+        <style>
+            {$smartcustomcss|escape:'htmlall':'UTF-8'}
+        </style>
+    {/if}
+{/block}

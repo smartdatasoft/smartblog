@@ -42,14 +42,17 @@ class AdminAboutUsController extends ModuleAdminController
  
     public function initContent()
     {
- 
-        $data = array();
-
-        $htm = $this->context->smarty->createTemplate(_PS_MODULE_DIR_.'smartblog/views/templates/admin/aboutus.tpl', $data)->fetch();
-         
-
-        $this->content = $htm  ;
+        $this->content = $this->setPromotion();
         return parent::initContent();
+        
+    }
+
+    public function setPromotion(){
+        $this->context->smarty->assign(array(
+            'smartpromotion' => smartblog::getSmartPromotion('about_us')
+        ));
+        $promotion = $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/promotion.tpl');
+        return $promotion;
     }
 
 }

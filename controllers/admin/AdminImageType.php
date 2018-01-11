@@ -72,7 +72,20 @@ class AdminImageTypeController extends ModuleAdminController
         );
         parent::__construct();
     }
+    public function l($string, $class = null, $addslashes = false, $htmlentities = true){
+        $translated = Context::getContext()->getTranslator()->trans($string);
+        if ($translated !== $string) {
+            return $translated;
+        }
 
+        if ($class === null || $class == 'AdminTab') {
+            $class = substr(get_class($this), 0, -10);
+        } elseif (strtolower(substr($class, -10)) == 'controller') {
+            /* classname has changed, from AdminXXX to AdminXXXController, so we remove 10 characters and we keep same keys */
+            $class = substr($class, 0, -10);
+        }
+        return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
+    }
     public function renderForm()
     {
         $this->fields_form = array(
@@ -166,7 +179,15 @@ class AdminImageTypeController extends ModuleAdminController
     {
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        return parent::renderList();
+        return $this->setPromotion() . parent::renderList();
+    }
+
+    public function setPromotion(){
+        $this->context->smarty->assign(array(
+            'smartpromotion' => smartblog::getSmartPromotion('image_type_list')
+        ));
+        $promotion = $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/promotion.tpl');
+        return $promotion;
     }
 
     public function initToolbar()

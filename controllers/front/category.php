@@ -115,15 +115,30 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
             $limit_start = $posts_per_page * ($c - 1);
         }
         if (!$id_category ) {
+            $meta_title = Configuration::get('smartblogmetatitle');
+            $meta_keyword = Configuration::get('smartblogmetakeyword');
+            $meta_description = Configuration::get('smartblogmetadescrip');
+
             $allNews = $SmartBlogPost->getAllPost($this->context->language->id, $limit_start, $limit);
         } else {
             if (file_exists(_PS_MODULE_DIR_ . 'smartblog/images/category/' . $id_category . '.jpg')) {
                 $cat_image = $id_category;
+                $ssl = null;
+                $force_ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+                $base_ssl = ($force_ssl == 1) ? 'https://' : 'http://';
+                $uri_path = __PS_BASE_URI__ . 'modules/smartblog/images/category/' . $id_category . '.jpg';
+                $cat_image = $base_ssl.Tools::getMediaServer($uri_path).$uri_path;
             } else {
                 $cat_image = 'no';
             }
             $categoryinfo = $BlogCategory->getNameCategory($id_category); 
             $title_category = $categoryinfo[0]['name'];
+
+            $meta_title = $categoryinfo[0]['meta_title'];
+            $meta_keyword = $categoryinfo[0]['meta_keyword'];
+            $meta_description = $categoryinfo[0]['meta_description'];
+
+
             $category_status = $categoryinfo[0]['active'];
             $cat_link_rewrite = $categoryinfo[0]['link_rewrite'];
             if ($category_status == 1) {
@@ -160,17 +175,25 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
             $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
    
             $smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
-            
             $i=0;
-            foreach($allNews as $post){
-                $allNews[$i]['created'] =  Smartblog::displayDate($post['created']);
-                $i++;
+            if(count($allNews) >= 1){
+                if(is_array($allNews)){
+                    foreach($allNews as $post){
+                        $allNews[$i]['created'] =  Smartblog::displayDate($post['created']);
+                        if (new DateTime() >= new DateTime($post['created'])){
+                            $allNews[$i]['published'] = true;
+                        } else {
+                            unset($allNews[$i]);
+                            // $allNews[$i]['published'] = false;
+                        }
+                        $i++;
+                    }
+                }
             }
  
         parent::initContent();
 
        // $this->canonicalRedirection();
-        
 
         $this->context->smarty->assign(array(
             
@@ -197,8 +220,12 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
             'pagenums' => $totalpages - 1,
             'totalpages' => $totalpages
         ));
+        
+        $this->context->smarty->assign('meta_title',$meta_title);
+        $this->context->smarty->assign('meta_description',$meta_keyword);
+        $this->context->smarty->assign('meta_keywords',$meta_description);
 
-        $template_name = 'postcategory.tpl';
+        $template_name = 'module:smartblog/views/templates/front/postcategory.tpl';'';
 
         $this->setTemplate($template_name);
     }

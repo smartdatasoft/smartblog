@@ -129,7 +129,7 @@ class smartblogtagpostModuleFrontController extends smartblogModuleFrontControll
             'smartbloglink' => $smartbloglink,
         ));
 
-        $template_name = 'tagresult.tpl';
+        $template_name = 'module:smartblog/views/templates/front/tagresult.tpl';
 
         $this->setTemplate($template_name);
     }
