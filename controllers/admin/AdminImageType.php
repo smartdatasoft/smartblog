@@ -166,7 +166,15 @@ class AdminImageTypeController extends ModuleAdminController
     {
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        return parent::renderList();
+        return $this->setPromotion() . parent::renderList();
+    }
+
+    public function setPromotion(){
+        $this->context->smarty->assign(array(
+            'smartpromotion' => smartblog::getSmartPromotion('image_type_list')
+        ));
+        $promotion = $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/promotion.tpl');
+        return $promotion;
     }
 
     public function initToolbar()

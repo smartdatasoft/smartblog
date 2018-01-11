@@ -34,12 +34,11 @@
    			{$meta_title|escape:'htmlall':'UTF-8'}
    		</div>
 
-      <div class="sdsarticleHeader">          
-               
+      <div class="sdsarticleHeader">
                      <span>
                {if $smartshowauthor ==1} {l s='Posted by ' mod='smartblog'} &nbsp;<i class="icon icon-user"></i><span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>&nbsp;
                    
-                   <i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|date_format|escape:'htmlall':'UTF-8'}</span>{/if}
+                   <i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|escape:'htmlall':'UTF-8'}</span>{/if}
                    <span itemprop="articleSection">
                        
                        {$assocCats = BlogCategory::getPostCategoriesFull($post.id_post)}
@@ -69,17 +68,27 @@
           
           
           <div class="articleContent">                    
-                   {include file="./post_format.tpl" post=$post post_img = $post_img smartshownoimg=$smartshownoimg}
-        
+                    {if isset($ispost) && !empty($ispost)}
+                    <a itemprop="url" href="{$smartbloglink->getSmartBlogPostLink($post.id_post,$post.cat_link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$post.meta_title|escape:'htmlall':'UTF-8'}" class="imageFeaturedLink">    
+                    
+                    {/if}
+
+                    {if $smartbloglink->getImageLink($post.link_rewrite, $post.id_post, 'single-default') != 'false'}
+                        <img itemprop="image" alt="{$post.meta_title|escape:'htmlall':'UTF-8'}" src="{$smartbloglink->getImageLink($post.link_rewrite, $post.id_post, 'single-default')}" class="imageFeatured">                   
+                    {/if}
+                           
+                    {if isset($ispost) && !empty($ispost)}
+                    </a>
+                    {/if}
+                   <div class="sdsarticle-des" style="text-align: left;">
+                    {$post.short_description}
+                   </div>
+                   {$displayBackOfficeSmartBlog}
             </div>
                    
                    
             <div class="sdsarticle-des"> 
-               {if $post.post_format != 'quote'}
-                
-               {$blogcontent|escape:'quotes':'UTF-8'|replace:"\'":"'"}
-               
-               {/if}
+
             </div>
             {if $tags != ''}
                 <div class="sdstags-update">

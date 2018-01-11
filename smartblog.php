@@ -1,44 +1,23 @@
 <?php
-/**
- * 2007-2015 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2015 PrestaShop SA
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
- */
 if (!defined('_PS_VERSION_'))
     exit;
 
 define('_MODULE_SMARTBLOG_DIR_', _PS_MODULE_DIR_ . 'smartblog/images/');
 define('_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/');
 
-require_once (dirname(__FILE__) . '/classes/SmartBlogLink.php');
+require_once __DIR__.'/widgets/autoload.php';
+
+require_once (dirname(__FILE__) . '/classes/smartpromotion.php');
 require_once (dirname(__FILE__) . '/classes/BlogCategory.php');
-require_once (dirname(__FILE__) . '/classes/Blogcomment.php');
-require_once (dirname(__FILE__) . '/classes/BlogPostCategory.php');
+require_once (dirname(__FILE__) . '/classes/BlogImageType.php');
 require_once (dirname(__FILE__) . '/classes/BlogTag.php');
 require_once (dirname(__FILE__) . '/classes/SmartBlogPost.php');
-require_once (dirname(__FILE__) . '/classes/SmartBlogPostMeta.php');
-require_once (dirname(__FILE__) . '/classes/BlogImageType.php');
-require_once (dirname(__FILE__) . '/classes/SmartBlogGallaryImage.php');
+require_once (dirname(__FILE__) . '/classes/SmartBlogHelperTreeCategories.php');
+require_once (dirname(__FILE__) . '/classes/Blogcomment.php');
+require_once (dirname(__FILE__) . '/classes/BlogPostCategory.php');
+require_once (dirname(__FILE__) . '/classes/SmartBlogLink.php');
 require_once (dirname(__FILE__) . '/controllers/admin/AdminAboutUsController.php');
+
 
 class smartblog extends Module
 {
@@ -49,23 +28,21 @@ class smartblog extends Module
     public $capl;
     public $warl;
     public $sucl;
-    public $smartbloglink;
-    public static $post_meta_fields;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->name = 'smartblog';
         $this->tab = 'front_office_features';
-        $this->version = '2.1.4';
+        $this->version = '2.0.3';
         $this->author = 'SmartDataSoft';
         $this->need_upgrade = true;
-        $this->controllers = array('archive', 'category', 'details', 'search', 'tagpost');
+        // $this->controllers = array('archive', 'category', 'details', 'search', 'tagpost');
         $this->secure_key = Tools::encrypt($this->name);
         $this->smart_shop_id = Context::getContext()->shop->id;
         $this->bootstrap = true;
         parent::__construct();
 
         $this->displayName = $this->l('Smart Blog');
+
         $this->nrl = $this->l('Name is required');
         $this->crl = $this->l('Comment must be between 25 and 1500 characters!');
         $this->erl = $this->l('E-mail address not valid !');
@@ -76,27 +53,14 @@ class smartblog extends Module
         $this->description = $this->l('The Most Powerfull Prestashop Blog  Module - by smartdatasoft');
         $this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
         $this->module_key = '5679adf718951d4bc63422b616a9d75d';
-        self::$post_meta_fields = array(
-            'audio' => array(
-                array('name' => 'markup', 'type' => 'textarea', 'title' => $this->l('Audio Markup(HTML)')),
-            ),
-            'video' => array(
-                array('name' => 'markup', 'type' => 'textarea', 'title' => $this->l('Video Markup(HTML)')),
-            ),
-            'quote' => array(
-                array('name' => 'author', 'type' => 'text', 'title' => $this->l('Quote Author')),
-                array('name' => 'text', 'type' => 'textarea', 'title' => $this->l('Quote Text'), 'lang' => true),
-            ),
-            'link' => array(
-                array('name' => 'title', 'type' => 'text', 'title' => $this->l('Link Title'), 'lang' => true),
-                array('name' => 'url', 'type' => 'text', 'title' => $this->l('Hyperlink'), 'desc' => 'http://www.google.com', 'lang' => true),
-            ),
-        );
 
     }
 
     public function install()
     {
+
+        Configuration::updateGlobalValue('smartblogrootcat', '1');
+
         Configuration::updateGlobalValue('smartpostperpage', '5');
         Configuration::updateGlobalValue('smartshowauthorstyle', '1');
         Configuration::updateGlobalValue('smartshowauthor', '1');
@@ -107,7 +71,7 @@ class smartblog extends Module
         Configuration::updateGlobalValue('smartenableguestcomment', '1');
         Configuration::updateGlobalValue('smartcaptchaoption', '1');
         Configuration::updateGlobalValue('smartshowviewed', '1');
-        Configuration::updateGlobalValue('smartshownoimg', '1');
+        Configuration::updateGlobalValue('smartshownoimg', '0');
         Configuration::updateGlobalValue('smartshowcolumn', '3');
         Configuration::updateGlobalValue('smartacceptcomment', '1');
         Configuration::updateGlobalValue('smartcustomcss', '');
@@ -119,24 +83,18 @@ class smartblog extends Module
         Configuration::updateGlobalValue('smartblogmetakeyword', 'smart,blog,smartblog,prestashop blog,prestashop,blog');
         Configuration::updateGlobalValue('smartblogmetadescrip', 'Prestashop powerfull blog site developing module. It has hundrade of extra plugins. This module developed by SmartDataSoft.com');
         Configuration::updateGlobalValue('smartshowhomepost', 4);
-        Configuration::updateGlobalValue('smartshowrelatedproduct', 5);
-        Configuration::updateGlobalValue('smartshowrelatedproductpost', 5);
-        Configuration::updateGlobalValue('smart_update_period', 'hourly');
-        Configuration::updateGlobalValue('smart_update_frequency', '1');
-        Configuration::updateGlobalValue('smartshowrelatedpost', 3);
-        Configuration::updateGlobalValue('sort_category_by', 'id_desc');
-        Configuration::updateGlobalValue('latestnews_sort_by', 'id_desc');
+
+        
+
         
         
         $this->addquickaccess(); 
-
+        $this->htaccessCreate();
         if (!parent::install() || !$this->registerHook('displayHeader') || 
+            !$this->registerHook('header') ||
 			!$this->registerHook('moduleRoutes') ||
             !$this->registerHook('displayBackOfficeHeader') ||
-			!$this->registerHook('displaySmartBlogLeft') ||
-			!$this->registerHook('displaySmartBlogRight') ||
-			!$this->registerHook('displaySmartBeforePost') ||
-			!$this->registerHook('displaySmartAfterPost') ||
+
 			!$this->registerHook('actionsbnewpost') ||
 			!$this->registerHook('actionsbupdatepost') ||
 			!$this->registerHook('actionsbdeletepost') ||
@@ -151,7 +109,7 @@ class smartblog extends Module
 			!$this->registerHook('actionsbcat') ||
 			!$this->registerHook('actionsbsearch') ||
 			!$this->registerHook('actionsbheader') ||
-			!$this->registerHook('actionHtaccessCreate') 
+            !$this->registerHook('actionHtaccessCreate') 
         )
             return false;
         $sql = array();
@@ -167,45 +125,6 @@ class smartblog extends Module
         $this->SmartHookRegister();
 
         return true;
-    }
-            
-
-    public function hookactionShopDataDuplication($params = array())
-    {
-        return array('module' => $this->name);
-    }
-
-//    public function hookdisplayBackOfficeTop($params)
-//    {
-//        if(Tools::getValue('controller') == 'AdminBlogPost'){
-//        
-//            $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-//            $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
-//            $bo_theme = ((Validate::isLoadedObject($this->context->employee)
-//                && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
-//
-//            if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template')) {
-//                $bo_theme = 'default';
-//            }
-//            $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
-//
-//            $foundIndex = array_search($js_path, $this->context->controller->js_files);
-//            if(!empty($foundIndex))
-//                $this->context->controller->removeJS($js_path);
-//            
-//        }
-//        
-//    }
-
-    public function updateSiteHtaccess($match)
-    {
-        $htupdate = '';
-        require_once dirname(__FILE__) . '/htupdate.php';
-        $str = '';
-        if (isset($match[0])) {
-            $str .= "\n{$htupdate}\n\n{$match[0]}\n";
-        }
-        return $str;
     }
 
     public function hookactionHtaccessCreate()
@@ -228,6 +147,238 @@ class smartblog extends Module
         return $this->display(__FILE__, 'views/templates/admin/addjs.tpl');
     }
 
+    public function hookDisplayHeader($params)
+    {
+        $this->context->controller->addCSS($this->_path . 'views/css/smartblogstyle.css', 'all');
+
+        $smartblogurlpattern = (int) Configuration::get('smartblogurlpattern');
+        $id_post = null;
+
+        switch ($smartblogurlpattern) {
+            case 1:
+                $slug = Tools::getValue('slug');
+                $id_post = self::slug2id($slug);
+                break;
+            case 2:
+                $id_post = pSQL(Tools::getvalue('id_post'));
+                break;
+            case 3:
+                $id_post = pSQL(Tools::getvalue('id_post'));
+                break;
+            default:
+                $id_post = pSQL(Tools::getvalue('id_post'));
+        }
+        if($id_post){
+            $obj_post = new SmartBlogPost($id_post, true, $this->context->language->id, $this->context->shop->id);
+            $meta_title = $obj_post->meta_title;
+            $meta_keyword = $obj_post->meta_keyword;
+            $meta_description = $obj_post->meta_description;
+        } else {
+            $meta_title = 'SmartBlog Category';
+            $meta_keyword = 'smartblog, smartblogcategory';
+            $meta_description = 'Access SmartBlog Category';
+        }
+
+
+        $this->smarty->assign(array(
+            'feedUrl' => Tools::getShopDomain(true, true) . __PS_BASE_URI__ . 'modules/' . $this->name . '/rss.php',
+            'meta_title' => $meta_title,
+            'meta_keyword' => $meta_keyword,
+            'meta_description' => $meta_description
+        ));
+        return $this->display(__FILE__, 'views/templates/front/plugins/blogfeedheader.tpl');
+    }
+
+    public function htaccessCreate()
+    {
+        $content = file_get_contents(_PS_ROOT_DIR_ . '/.htaccess');
+        if (!preg_match('/\# Images Blog\n/', $content)) {
+            $content = preg_replace_callback('/\# Images\n/', array($this, 'updateSiteHtaccess'), $content);
+            @file_put_contents(_PS_ROOT_DIR_ . '/.htaccess', $content);
+        }
+    }
+
+    public function updateSiteHtaccess($match)
+    {
+        $htupdate = '';
+        require_once dirname(__FILE__) . '/htupdate.php';
+        $str = '';
+        if (isset($match[0])) {
+            $str .= "\n{$htupdate}\n\n{$match[0]}\n";
+        }
+        return $str;
+    }
+
+    public function addquickaccess()
+    {
+        $link = new Link();
+        $qa = new QuickAccess();
+        $qa->link = $link->getAdminLink('AdminModules') . '&configure=smartblog';
+        $languages = Language::getLanguages(false);
+        foreach ($languages as $language) {
+            $qa->name[$language['id_lang']] = 'Smart Blog Setting';
+        }
+        $qa->new_window = '0';
+        if ($qa->save()) {
+            Configuration::updateValue('smartblog_quick_access', $qa->id);
+        }
+    }
+
+    private function CreateSmartBlogTabs()
+    {
+
+        $langs = Language::getLanguages();
+        $smarttab = new Tab();
+        $smarttab->class_name = "AdminSmartBlog";
+        $smarttab->module = "";
+        $smarttab->id_parent = 0;
+        foreach ($langs as $l) {
+            $smarttab->name[$l['id_lang']] = $this->l('Blog');
+        }
+        $smarttab->save();
+        $tab_id = $smarttab->id;
+        @copy(dirname(__FILE__) . "/views/img/AdminSmartBlog.gif", _PS_ROOT_DIR_ . "/img/t/AdminSmartBlog.gif");
+
+        $tabvalue = array();
+        // assign tab value from include file
+        require_once(dirname(__FILE__) . '/sql/install_tab.php');
+        foreach ($tabvalue as $tab) {
+            $newtab = new Tab();
+            $newtab->class_name = $tab['class_name'];
+            if($tab['id_parent']==-1)
+                    $newtab->id_parent = $tab['id_parent'];
+                else
+            $newtab->id_parent = $tab_id;
+
+            $newtab->module = $tab['module'];
+            foreach ($langs as $l) {
+                $newtab->name[$l['id_lang']] = $this->l($tab['name']);
+            }
+            $newtab->save();
+        }
+        return true;
+    }
+
+    public function SampleDataInstall()
+    {
+        $damisql = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category (id_parent,level_depth,active) VALUES (0,0,1);";
+        Db::getInstance()->execute($damisql);
+
+        $damisql_1 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category (id_parent,level_depth,active) VALUES (1,1,1);";
+        Db::getInstance()->execute($damisql_1);
+
+        $damisq1l = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_shop (id_smart_blog_category,id_shop) VALUES (1,'" . (int) $this->smart_shop_id . "');";
+        Db::getInstance()->execute($damisq1l);
+
+        $damisq1l_1 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_shop (id_smart_blog_category,id_shop) VALUES (2,'" . (int) $this->smart_shop_id . "');";
+        Db::getInstance()->execute($damisq1l_1);
+
+        $languages = Language::getLanguages(false);
+        foreach ($languages as $language) {
+            $damisql2 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_lang (id_smart_blog_category,name,meta_title,id_lang,link_rewrite) VALUES (1,'Home','Home','" . (int) $language['id_lang'] . "','home');";
+            Db::getInstance()->execute($damisql2);
+
+            $damisql2_1 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_lang (id_smart_blog_category,name,meta_title,id_lang,link_rewrite) VALUES (2,'Politics','Politics','" . (int) $language['id_lang'] . "','politics');";
+            Db::getInstance()->execute($damisql2_1);
+        }
+        for ($i = 1; $i <= 4; $i++) {
+            Db::getInstance()->Execute('
+                                                INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post`(`id_author`, `id_category`, `position`, `active`, `available`, `created`, `viewed`, `comment_status`) 
+                                                VALUES(1,1,0,1,1,"' . Date('y-m-d H:i:s') . '",0,1)');
+        }
+
+        $languages = Language::getLanguages(false);
+        for ($i = 1; $i <= 4; $i++) {
+            if ($i == 1):
+                $title = 'From Now we are certified web agency';
+                $slug = 'from-now-we-are-certified-web-agency';
+                $des = 'Smartdatasoft is an offshore web development company located in Bangladesh. We are serving this sector since 2010. Our team is committed to develop high quality web based application and theme for our clients and also for the global marketplace. As your web development partner we will assist you in planning, development, implementation and upgrade! Why Smartdatasoft? Smartdatasoft released their first prestashop theme in November 2012. Till now we have 6+ prestashop theme which are getting sold on global renowned marketplace. Those themes are getting used in more than 400 customers eCommerce websites. Those themes are very user friendly and highly customize able from admin dashboard. For these reason these theme are very popular among the end users and developers';
+            elseif ($i == 2):
+                $title = 'What is Bootstrap? – The History and the Hype';
+                $slug = 'what-is-bootstrap';
+                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+            elseif ($i == 3):
+                $title = 'Answers to your Questions about PrestaShop 1.6';
+                $slug = 'question-about-prestashop';
+                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+            elseif ($i == 4):
+                $title = 'Share the Love for PrestaShop 1.6';
+                $slug = 'share-love-for-prestashop';
+                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+            elseif ($i == 5):
+                $title = 'Christmas Sale is here 5';
+                $slug = 'christmas-sale-is-here';
+                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+            elseif ($i == 6):
+                $title = 'Christmas Sale is here 6';
+                $slug = 'christmas-sale-is-here';
+                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+            elseif ($i == 7):
+                $title = 'Christmas Sale is here 7';
+                $slug = 'christmas-sale-is-here';
+                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+            endif;
+            foreach ($languages as $language) {
+                if (!Db::getInstance()->Execute('
+                       INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
+                        VALUES(' . $i . ',' . (int) $language['id_lang'] . ', 
+							"' . htmlspecialchars($title) . '", 
+							"' . htmlspecialchars($des) . '","' . Tools::substr($des, 0, 200) . '","' . htmlspecialchars($des) . '","' . $slug . '"
+						)'))
+                    return false;
+            }
+        }
+        for ($i = 1; $i <= 4; $i++) {
+            Db::getInstance()->Execute('
+                                                INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_shop`(`id_smart_blog_post`, `id_shop`) 
+                                                VALUES(' . $i . ',' . (int) $this->smart_shop_id . ')');
+        }
+        for ($i = 1; $i <= 7; $i++) {
+            if ($i == 1):
+                $type_name = 'home-default';
+                $width = '240';
+                $height = '160';
+                $type = 'post';
+            elseif ($i == 2):
+                $type_name = 'home-small';
+                $width = '65';
+                $height = '45';
+                $type = 'post';
+            elseif ($i == 3):
+                $type_name = 'single-default';
+                $width = '770';
+                $height = '385';
+                $type = 'post';
+            elseif ($i == 4):
+                $type_name = 'home-small';
+                $width = '65';
+                $height = '45';
+                $type = 'Category';
+            elseif ($i == 5):
+                $type_name = 'home-default';
+                $width = '240';
+                $height = '160';
+                $type = 'Category';
+            elseif ($i == 6):
+                $type_name = 'single-default';
+                $width = '770';
+                $height = '385';
+                $type = 'Category';
+            elseif ($i == 7):
+                $type_name = 'author-default';
+                $width = '54';
+                $height = '54';
+                $type = 'Author';
+            endif;
+            $damiimgtype = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_imagetype (type_name,width,height,type,active) VALUES ('" . $type_name . "','" . $width . "','" . $height . "','" . $type . "',1);";
+            Db::getInstance()->execute($damiimgtype);
+        }
+        return true;
+    }
+
+    public function hookHeader($params){
+        $this->smarty->assign('meta_title', 'This is Title'.' - '.'MName');
+    }
     public function SmartHookInsert()
     {
         $hookvalue = array();
@@ -274,6 +425,7 @@ class smartblog extends Module
             !Configuration::deleteByName('smartblogmetakeyword') ||
             !Configuration::deleteByName('smartblogmetadescrip') ||
             !Configuration::deleteByName('smartpostperpage') ||
+            !Configuration::deleteByName('smartblogrootcat') ||
             !Configuration::deleteByName('smartacceptcomment') ||
             !Configuration::deleteByName('smartusehtml') ||
             !Configuration::deleteByName('smartcaptchaoption') ||
@@ -289,9 +441,7 @@ class smartblog extends Module
             !Configuration::deleteByName('smartshowauthor') ||
             !Configuration::deleteByName('smartblogurlpattern') ||
             !Configuration::deleteByName('smartdataformat') ||
-            !Configuration::deleteByName('smartshowhomepost') ||
-            !Configuration::deleteByName('smartshowrelatedproduct') ||
-            !Configuration::deleteByName('smartshowrelatedproductpost')
+            !Configuration::deleteByName('smartshowhomepost')
         )
             return false;
 
@@ -317,546 +467,35 @@ class smartblog extends Module
         return true;
     }
 
-    public function SmartHookDelete()
-    {
-        $hookvalue = array();
-        require_once(dirname(__FILE__) . '/sql/addhook.php');
-        foreach ($hookvalue as $hkv) {
-            $hookid = Hook::getIdByName($hkv['name']);
-            if ($hookid) {
-                $dlt_hook = new Hook($hookid);
-                $dlt_hook->delete();
-            }
+    public static function getSmartPromotion($page){
+        $module = 'smartblog';// you need to set module name
+        $module = trim(preg_replace('/[\s\t\n\r\s]+/', '_', $module));
+        $page = trim(preg_replace('/[\s\t\n\r\s]+/', '_', $page));
+        $Smartpromotion = new Smartpromotion();
+        $timeout = Configuration::get('smartpromotion_update_timeout_'.$module.'_'.$page, false);
+        $now = time();
+        if($now > (int)$timeout) {
+            Configuration::updateValue('smartpromotion_'.$module.'_'.$page, $Smartpromotion->checkPromotion($module,$page));
+            $timelimit = 24*60*60;
+            Configuration::updateValue('smartpromotion_update_timeout_'.$module.'_'.$page, $now + $timelimit);
         }
+        $promotion = unserialize(Configuration::get('smartpromotion_'.$module.'_'.$page));
+        return html_entity_decode($promotion['content']);
     }
 
-    // we need to system the module routes to change from module settings page
-
-    public function hookModuleRoutes($params)
+    public function deletequickaccess()
     {
-        $alias = Configuration::get('smartmainblogurl');
-        $usehtml = (int) Configuration::get('smartusehtml');
-        if ($usehtml != 0) {
-            $html = '.html';
-        } else {
-            $html = '';
-        }
-
-        $smartblogurlpattern = (int) Configuration::get('smartblogurlpattern');
-
-        $my_link = array();
-
-        switch ($smartblogurlpattern) {
-
-            case 1:
-                $my_link = $this->urlPatterWithoutId($alias, $html);
-                break;
-            case 2:
-                $my_link = $this->urlPatterWithIdOne($alias, $html);
-                break; 
-
-            default:
-                $my_link = $this->urlPatterWithIdOne($alias, $html);
-        }
-        // echo "<pre>";
-        // print_r($my_link);
-
-        return $my_link;
+        $qa = new QuickAccess(Configuration::get('smartblog_quick_access'));
+        $qa->delete();
     }
 
-    public function urlPatterWithIdOne($alias, $html)
-    {
-        $my_link = array(
-            'smartblog' => array(
-                'controller' => 'category',
-                'rule' => $alias . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_list' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category' . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_list_module' => array(
-                'controller' => 'category',
-                'rule' => 'module/' . $alias . '/category' . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_list_pagination' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category/page/{page}' . $html,
-                // 'rule' => $alias . '/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_pagination' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_category_rule' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category/{id_category}_{slug}' . $html,
-                
-                'keywords' => array(
-                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-
-            'smartblog_post_rule' => array(
-                'controller' => 'details',
-                'rule' => $alias . '/{id_post}_{slug}' . $html,
-                'keywords' => array(
-                    'id_post' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
-                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-
-            'smartblog_category_pagination' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category/{id_category}_{slug}/page/{page}' . $html,
-                'keywords' => array(
-                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_cat_page_mod' => array(
-                'controller' => 'category',
-                'rule' => 'module/' . $alias . '/category/{id_category}_{slug}/page/{page}' . $html,
-                'keywords' => array(
-                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_post' => array(
-                'controller' => 'details',
-                'rule' => $alias . '/{id_post}_{slug}' . $html,
-                'keywords' => array(
-                    'id_post' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
-                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_search' => array(
-                'controller' => 'search',
-                'rule' => $alias . '/search' ,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_tag' => array(
-                'controller' => 'tagpost',
-                'rule' => $alias . '/tag/{tag}' . $html,
-                'keywords' => array(
-                    'tag' => array('regexp' => '[_a-zA-Z0-9-\pL\+]*', 'param' => 'tag'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_search_pagination' => array(
-                'controller' => 'search',
-                'rule' => $alias . '/search/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_archive' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive' . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_archive_pagination' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_month' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}/{month}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                    'month' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_month_pagination' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}/{month}/page/{page}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                    'month' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_year' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_year_pagination' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}/page/{page}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-        );
-        return $my_link;
-    }
-
-            
-
-    public function urlPatterWithoutId($alias, $html)
-    {
-        $my_link = array(
-            'smartblog' => array(
-                'controller' => 'category',
-                'rule' => $alias . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_list' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category' . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_list_module' => array(
-                'controller' => 'category',
-                'rule' => 'module/' . $alias . '/category' . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_list_pagination' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_pagination' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_category_rule' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category/{slug}' . $html,
-                'keywords' => array(
-                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
-                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_category_pagination' => array(
-                'controller' => 'category',
-                'rule' => $alias . '/category/{slug}/page/{page}' . $html,
-                'keywords' => array(
-                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_cat_page_mod' => array(
-                'controller' => 'category',
-                'rule' => 'module/' . $alias . '/category/{slug}/page/{page}' . $html,
-                'keywords' => array(
-                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_post_rule' => array(
-                'controller' => 'details',
-                'rule' => $alias . '/{slug}' . $html,
-                'keywords' => array(
-                    'id_post' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
-                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
-                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_search' => array(
-                'controller' => 'search',
-                'rule' => $alias . '/search',
-               'keywords' => array(
-                    'search_query' => array('regexp' => '[_a-zA-Z0-9-\pL\+]*', 'param' => 'search_query'),
-
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_tag' => array(
-                'controller' => 'tagpost',
-                'rule' => $alias . '/tag/{tag}' . $html,
-                'keywords' => array(
-                    'tag' => array('regexp' => '[_a-zA-Z0-9-\pL\+]*', 'param' => 'tag'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_search_pagination' => array(
-                'controller' => 'search',
-                'rule' => $alias . '/search/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_archive' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive' . $html,
-                'keywords' => array(),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_archive_pagination' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/page/{page}' . $html,
-                'keywords' => array(
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_month' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}/{month}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                    'month' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_month_pagination' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}/{month}/page/{page}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                    'month' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_year' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-            'smartblog_year_pagination' => array(
-                'controller' => 'archive',
-                'rule' => $alias . '/archive/{year}/page/{page}' . $html,
-                'keywords' => array(
-                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
-                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
-                ),
-                'params' => array(
-                    'fc' => 'module',
-                    'module' => 'smartblog',
-                ),
-            ),
-        );
-        return $my_link;
-    }
-
-    public function hookDisplayHeader($params)
-    {
-        $this->context->controller->addCSS($this->_path . 'views/css/gallery-styles.css', 'all');
-        $this->context->controller->addCSS($this->_path . 'views/css/smartblogstyle.css', 'all');
-
-
-
-        $this->smarty->assign(array(
-            'feedUrl' => Tools::getShopDomain(true, true) . __PS_BASE_URI__ . 'modules/' . $this->name . '/rss.php',
-        ));
-        return $this->display(__FILE__, 'views/templates/front/plugins/blogfeedheader.tpl');
-    }
-
-    private function CreateSmartBlogTabs()
-    {
-
-        $langs = Language::getLanguages();
-        $smarttab = new Tab();
-        $smarttab->class_name = "AdminSmartBlog";
-        $smarttab->module = "";
-        $smarttab->id_parent = 0;
-        foreach ($langs as $l) {
-            $smarttab->name[$l['id_lang']] = $this->l('Blog');
-        }
-        $smarttab->save();
-        $tab_id = $smarttab->id;
-        @copy(dirname(__FILE__) . "/views/img/AdminSmartBlog.gif", _PS_ROOT_DIR_ . "/img/t/AdminSmartBlog.gif");
-
-        $tabvalue = array();
-        // assign tab value from include file
-        require_once(dirname(__FILE__) . '/sql/install_tab.php');
-        foreach ($tabvalue as $tab) {
-            $newtab = new Tab();
-            $newtab->class_name = $tab['class_name'];
-            if($tab['id_parent']==-1)
-                    $newtab->id_parent = $tab['id_parent'];
-                else
-            $newtab->id_parent = $tab_id;
-
-            $newtab->module = $tab['module'];
-            foreach ($langs as $l) {
-                $newtab->name[$l['id_lang']] = $this->l($tab['name']);
-            }
-            $newtab->save();
-        }
-        return true;
-    }
 
     public function getContent()
     {
         $feed_url = _PS_BASE_URL_ . __PS_BASE_URI__ . 'modules/smartblog/rss.php';
         $feed_url_html = '<div class="row">
-		<div class="alert alert-info"><strong>Feed URL: </strong>' . $feed_url . '</div>
-	</div>';
+        <div class="alert alert-info"><strong>Feed URL: </strong>' . $feed_url . '</div>
+    </div>';
 
 
         $html = '';
@@ -869,6 +508,7 @@ class smartblog extends Module
             Configuration::updateValue('smartblogmetakeyword', Tools::getvalue('smartblogmetakeyword'));
             Configuration::updateValue('smartblogmetadescrip', Tools::getvalue('smartblogmetadescrip'));
             Configuration::updateValue('smartpostperpage', Tools::getvalue('smartpostperpage'));
+            Configuration::updateValue('smartblogrootcat', Tools::getvalue('smartblogrootcat'));
             Configuration::updateValue('smartblogurlpattern', Tools::getvalue('smartblogurlpattern'));
             Configuration::updateValue('smartacceptcomment', Tools::getvalue('smartacceptcomment'));
             Configuration::updateValue('smartcaptchaoption', Tools::getvalue('smartcaptchaoption'));
@@ -883,13 +523,10 @@ class smartblog extends Module
             Configuration::updateValue('smartdataformat', Tools::getvalue('smartdataformat'));
             Configuration::updateValue('smartcustomcss', Tools::getvalue('smartcustomcss'), true);
             Configuration::updateValue('smartshowhomepost', Tools::getvalue('smartshowhomepost'));
-            Configuration::updateValue('smartshowrelatedproduct', Tools::getvalue('smartshowrelatedproduct'));
-            Configuration::updateValue('smartshowrelatedproductpost', Tools::getvalue('smartshowrelatedproductpost'));
-            Configuration::updateValue('smart_update_period', Tools::getvalue('smart_update_period'));
-            Configuration::updateValue('smart_update_frequency', Tools::getvalue('smart_update_frequency'));
-            Configuration::updateValue('smartshowrelatedpost', Tools::getvalue('smartshowrelatedpost'));
-            Configuration::updateValue('sort_category_by', Tools::getvalue('sort_category_by'));
-            Configuration::updateValue('latestnews_sort_by', Tools::getvalue('latestnews_sort_by'));
+
+
+            
+
             
 
             $this->processImageUpload($_FILES);
@@ -994,6 +631,88 @@ class smartblog extends Module
             return $return;
         }else {
             return false;
+        }
+    }
+
+    protected function regenerateform()
+    {
+        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->fields_form[0]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Blog Thumblr Configuration'),
+            ),
+            'input' => array(
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Delete Old Thumblr'),
+                    'name' => 'isdeleteoldthumblr',
+                    'required' => false,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'active_on',
+                            'value' => 1,
+                            'label' => $this->l('Enabled')
+                        ),
+                        array(
+                            'id' => 'active_off',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')
+                        )
+                    )
+                )
+            ),
+            'submit' => array(
+                'title' => $this->l('Re Generate Thumblr'),
+            )
+        );
+
+        $helper = new HelperForm();
+        $helper->module = $this;
+        $helper->name_controller = $this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        foreach (Language::getLanguages(false) as $lang)
+            $helper->languages[] = array(
+                'id_lang' => $lang['id_lang'],
+                'iso_code' => $lang['iso_code'],
+                'name' => $lang['name'],
+                'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0)
+            );
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->default_form_language = $default_lang;
+        $helper->allow_employee_form_lang = $default_lang;
+        $helper->toolbar_scroll = true;
+        $helper->show_toolbar = false;
+        $helper->submit_action = 'generateimage';
+        $helper->fields_value['isdeleteoldthumblr'] = Configuration::get('isdeleteoldthumblr');
+        return $helper;
+    }
+
+    public function processImageUpload($FILES)
+    {
+        if (isset($FILES['avatar']) && isset($FILES['avatar']['tmp_name']) && !empty($FILES['avatar']['tmp_name'])) {
+            if (ImageManager::validateUpload($FILES['avatar'], 4000000))
+                return $this->displayError($this->l('Invalid image'));
+            else {
+                $ext = Tools::substr($FILES['avatar']['name'], strrpos($FILES['avatar']['name'], '.') + 1);
+                $file_name = 'avatar.' . $ext;
+                $path = _PS_MODULE_DIR_ . 'smartblog/images/avatar/' . $file_name;
+                if (!move_uploaded_file($FILES['avatar']['tmp_name'], $path))
+                    return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
+                else {
+                    $author_types = BlogImageType::GetImageAllType('author');
+                    foreach ($author_types as $image_type) {
+                        $dir = _PS_MODULE_DIR_ . 'smartblog/images/avatar/avatar-' . Tools::stripslashes($image_type['type_name']) . '.jpg';
+                        if (file_exists($dir))
+                            unlink($dir);
+                    }
+                    $images_types = BlogImageType::GetImageAllType('author');
+                    foreach ($images_types as $image_type) {
+                        ImageManager::resize($path, _PS_MODULE_DIR_ . 'smartblog/images/avatar/avatar-' . Tools::stripslashes($image_type['type_name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height']
+                        );
+                    }
+                }
+            }
         }
     }
 
@@ -1207,6 +926,7 @@ class smartblog extends Module
                 array(
                     'type' => 'switch',
                     'label' => $this->l('Show Author Name Style'),
+                    'desc' => 'YES : \'First Name Last Name\'<br> NO : \'Last Name First Name\'',
                     'name' => 'smartshowauthorstyle',
                     'required' => false,
                     'values' => array(
@@ -1231,7 +951,7 @@ class smartblog extends Module
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Show No Image'),
+                    'label' => $this->l('Show \'No Image\''),
                     'name' => 'smartshownoimg',
                     'required' => false,
                     'is_bool' => true,
@@ -1298,135 +1018,7 @@ class smartblog extends Module
                         )
                     )
                 ),
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Sort Sidebar Category List By'),
-                    'name' => 'sort_category_by',
-                    'desc' => 'Blog category list that is shown in the blog page sidebars',
-                    'required' => false,
-                    'options' => array(
-                        'query' => array( 
-                            array(
-                                'id_option' => 'name_ASC',
-                                'name' => 'Name ASC (A-Z)'
-                            ),
-                            array(
-                                'id_option' => 'name_DSC',
-                                'name' => 'Name DESC (Z-A)'
-                            ),
-                            array(
-                                'id_option' => 'id_ASC',
-                                'name' => 'Id ASC'
-                            ),
-                            array(
-                                'id_option' => 'id_ASC',
-                                'name' => 'Id DESC'
-                            ),
-                        ),
-                        'id' => 'id_option',
-                        'name' => 'name'
-                    )
-                ),
-                array(
-                    'type' => 'text',
-                    'desc' => 'Leatest blog post that is diplayed in the home',
-                    'label' => $this->l('Number of posts to dispay in Lastest News'),
-                    'name' => 'smartshowhomepost',
-                    'size' => 15,
-                    'required' => true
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Sort Latest News By'),
-                    'name' => 'latestnews_sort_by',
-                    'required' => false,
-                    'options' => array(
-                        'query' => array( 
-                            array(
-                                'id_option' => 'name_ASC',
-                                'name' => 'Name ASC (A-Z)'
-                            ),
-                            array(
-                                'id_option' => 'name_DSC',
-                                'name' => 'Name DESC (Z-A)'
-                            ),
-                            array(
-                                'id_option' => 'id_ASC',
-                                'name' => 'Id ASC'
-                            ),
-                            array(
-                                'id_option' => 'id_ASC',
-                                'name' => 'Id DESC'
-                            ),
-                        ),
-                        'id' => 'id_option',
-                        'name' => 'name'
-                    )
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Show Number Of Related Product'),
-                    'desc' => 'When related products are selected in a blog post thiese shows under the post',
-                    'name' => 'smartshowrelatedproduct',
-                    'size' => 15,
-                    'required' => true
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Show Number Of Related Post'),
-                    'desc' => 'These are the number of related post in the same category',
-                    'name' => 'smartshowrelatedpost',
-                    'size' => 15,
-                    'required' => true
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Show Number Of Related Product Post'),
-                    'desc' => 'Number of related post in a regarding that product',
-                    'name' => 'smartshowrelatedproductpost',
-                    'size' => 15,
-                    'required' => true
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Bloog Feed Update Period'),
-                    'name' => 'smart_update_period',
-                    'required' => false,
-                    'options' => array(
-                        'query' => array(
-                            array(
-                                'id_option' => 'hourly',
-                                'name' => 'Hourly'
-                            ),
-                            array(
-                                'id_option' => 'daily',
-                                'name' => 'Daily'
-                            ),
-                            array(
-                                'id_option' => 'weekly',
-                                'name' => 'Weekly'
-                            ),
-                            array(
-                                'id_option' => 'monthly',
-                                'name' => 'Monthly'
-                            ),
-                            array(
-                                'id_option' => 'yearly',
-                                'name' => 'Yearly'
-                            )
-                        ),
-                        'id' => 'id_option',
-                        'name' => 'name'
-                    )
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Blog Feed Update Frequency'),
-                    'name' => 'smart_update_frequency',
-                    'size' => 60,
-                    'required' => false,
-                    'desc' => $this->l('Update Duration')
-                ),
+
                 array(
                     'type' => 'textarea',
                     'label' => $this->l('Custom CSS'),
@@ -1466,6 +1058,8 @@ class smartblog extends Module
         $helper->toolbar_scroll = true;
         $helper->submit_action = 'save' . $this->name;
 
+
+        
         $helper->fields_value['smartpostperpage'] = Configuration::get('smartpostperpage');
         $helper->fields_value['smartdataformat'] = Configuration::get('smartdataformat');
         $helper->fields_value['smartacceptcomment'] = Configuration::get('smartacceptcomment');
@@ -1486,202 +1080,11 @@ class smartblog extends Module
         $helper->fields_value['smartcaptchaoption'] = Configuration::get('smartcaptchaoption');
         $helper->fields_value['smartblogurlpattern'] = Configuration::get('smartblogurlpattern');
         $helper->fields_value['smartshowhomepost'] = Configuration::get('smartshowhomepost');
-        $helper->fields_value['smartshowrelatedproduct'] = Configuration::get('smartshowrelatedproduct');
-        $helper->fields_value['smartshowrelatedproductpost'] = Configuration::get('smartshowrelatedproductpost');
-        $helper->fields_value['smart_update_period'] = Configuration::get('smart_update_period');
-        $helper->fields_value['smart_update_frequency'] = Configuration::get('smart_update_frequency');
-        $helper->fields_value['smartshowrelatedpost'] = Configuration::get('smartshowrelatedpost');
-         $helper->fields_value['sort_category_by'] = Configuration::get('sort_category_by');
-          $helper->fields_value['latestnews_sort_by'] = Configuration::get('latestnews_sort_by');
+        
+        
+        
+
         return $helper;
-    }
-
-    protected function regenerateform()
-    {
-        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-        $this->fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $this->l('Blog Thumblr Configuration'),
-            ),
-            'input' => array(
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Delete Old Thumblr'),
-                    'name' => 'isdeleteoldthumblr',
-                    'required' => false,
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => 'active_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id' => 'active_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled')
-                        )
-                    )
-                )
-            ),
-            'submit' => array(
-                'title' => $this->l('Re Generate Thumblr'),
-            )
-        );
-
-        $helper = new HelperForm();
-        $helper->module = $this;
-        $helper->name_controller = $this->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        foreach (Language::getLanguages(false) as $lang)
-            $helper->languages[] = array(
-                'id_lang' => $lang['id_lang'],
-                'iso_code' => $lang['iso_code'],
-                'name' => $lang['name'],
-                'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0)
-            );
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
-        $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
-        $helper->toolbar_scroll = true;
-        $helper->show_toolbar = false;
-        $helper->submit_action = 'generateimage';
-        $helper->fields_value['isdeleteoldthumblr'] = Configuration::get('isdeleteoldthumblr');
-        return $helper;
-    }
-
-    public function processImageUpload($FILES)
-    {
-        if (isset($FILES['avatar']) && isset($FILES['avatar']['tmp_name']) && !empty($FILES['avatar']['tmp_name'])) {
-            if (ImageManager::validateUpload($FILES['avatar'], 4000000))
-                return $this->displayError($this->l('Invalid image'));
-            else {
-                $ext = Tools::substr($FILES['avatar']['name'], strrpos($FILES['avatar']['name'], '.') + 1);
-                $file_name = 'avatar.' . $ext;
-                $path = _PS_MODULE_DIR_ . 'smartblog/images/avatar/' . $file_name;
-                if (!move_uploaded_file($FILES['avatar']['tmp_name'], $path))
-                    return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
-                else {
-                    $author_types = BlogImageType::GetImageAllType('author');
-                    foreach ($author_types as $image_type) {
-                        $dir = _PS_MODULE_DIR_ . 'smartblog/images/avatar/avatar-' . Tools::stripslashes($image_type['type_name']) . '.jpg';
-                        if (file_exists($dir))
-                            unlink($dir);
-                    }
-                    $images_types = BlogImageType::GetImageAllType('author');
-                    foreach ($images_types as $image_type) {
-                        ImageManager::resize($path, _PS_MODULE_DIR_ . 'smartblog/images/avatar/avatar-' . Tools::stripslashes($image_type['type_name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height']
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    public function SampleDataInstall()
-    {
-        $damisql = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category (id_parent,level_depth,active) VALUES (0,0,1);";
-        Db::getInstance()->execute($damisql);
-        $damisq1l = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_shop (id_smart_blog_category,id_shop) VALUES (1,'" . (int) $this->smart_shop_id . "');";
-        Db::getInstance()->execute($damisq1l);
-        $languages = Language::getLanguages(false);
-        foreach ($languages as $language) {
-            $damisql2 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_lang (id_smart_blog_category,name,meta_title,id_lang,link_rewrite) VALUES (1,'Home','Home','" . (int) $language['id_lang'] . "','home');";
-            Db::getInstance()->execute($damisql2);
-        }
-        for ($i = 1; $i <= 4; $i++) {
-            Db::getInstance()->Execute('
-                                                INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post`(`id_author`, `id_category`, `position`, `active`, `available`, `created`, `viewed`, `comment_status`, `post_type`) 
-                                                VALUES(1,1,0,1,1,"' . Date('y-m-d H:i:s') . '",0,1,0)');
-        }
-
-        $languages = Language::getLanguages(false);
-        for ($i = 1; $i <= 4; $i++) {
-            if ($i == 1):
-                $title = 'From Now we are certified web agency';
-                $slug = 'from-now-we-are-certified-web-agency';
-                $des = 'Smartdatasoft is an offshore web development company located in Bangladesh. We are serving this sector since 2010. Our team is committed to develop high quality web based application and theme for our clients and also for the global marketplace. As your web development partner we will assist you in planning, development, implementation and upgrade! Why Smartdatasoft? Smartdatasoft released their first prestashop theme in November 2012. Till now we have 6+ prestashop theme which are getting sold on global renowned marketplace. Those themes are getting used in more than 400 customers eCommerce websites. Those themes are very user friendly and highly customize able from admin dashboard. For these reason these theme are very popular among the end users and developers';
-            elseif ($i == 2):
-                $title = 'What is Bootstrap? – The History and the Hype';
-                $slug = 'what-is-bootstrap';
-                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-            elseif ($i == 3):
-                $title = 'Answers to your Questions about PrestaShop 1.6';
-                $slug = 'question-about-prestashop';
-                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-            elseif ($i == 4):
-                $title = 'Share the Love for PrestaShop 1.6';
-                $slug = 'share-love-for-prestashop';
-                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-            elseif ($i == 5):
-                $title = 'Christmas Sale is here 5';
-                $slug = 'christmas-sale-is-here';
-                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-            elseif ($i == 6):
-                $title = 'Christmas Sale is here 6';
-                $slug = 'christmas-sale-is-here';
-                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-            elseif ($i == 7):
-                $title = 'Christmas Sale is here 7';
-                $slug = 'christmas-sale-is-here';
-                $des = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-            endif;
-            foreach ($languages as $language) {
-                if (!Db::getInstance()->Execute('
-                       INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
-                        VALUES(' . $i . ',' . (int) $language['id_lang'] . ', 
-							"' . htmlspecialchars($title) . '", 
-							"' . htmlspecialchars($des) . '","' . Tools::substr($des, 0, 200) . '","' . htmlspecialchars($des) . '","' . $slug . '"
-						)'))
-                    return false;
-            }
-        }
-        for ($i = 1; $i <= 4; $i++) {
-            Db::getInstance()->Execute('
-                                                INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_shop`(`id_smart_blog_post`, `id_shop`) 
-                                                VALUES(' . $i . ',' . (int) $this->smart_shop_id . ')');
-        }
-        for ($i = 1; $i <= 7; $i++) {
-            if ($i == 1):
-                $type_name = 'home-default';
-                $width = '240';
-                $height = '160';
-                $type = 'post';
-            elseif ($i == 2):
-                $type_name = 'home-small';
-                $width = '65';
-                $height = '45';
-                $type = 'post';
-            elseif ($i == 3):
-                $type_name = 'single-default';
-                $width = '770';
-                $height = '385';
-                $type = 'post';
-            elseif ($i == 4):
-                $type_name = 'home-small';
-                $width = '65';
-                $height = '45';
-                $type = 'Category';
-            elseif ($i == 5):
-                $type_name = 'home-default';
-                $width = '240';
-                $height = '160';
-                $type = 'Category';
-            elseif ($i == 6):
-                $type_name = 'single-default';
-                $width = '770';
-                $height = '385';
-                $type = 'Category';
-            elseif ($i == 7):
-                $type_name = 'author-default';
-                $width = '54';
-                $height = '54';
-                $type = 'Author';
-            endif;
-            $damiimgtype = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_imagetype (type_name,width,height,type,active) VALUES ('" . $type_name . "','" . $width . "','" . $height . "','" . $type . "',1);";
-            Db::getInstance()->execute($damiimgtype);
-        }
-        return true;
     }
 
     public static function GetSmartBlogUrl()
@@ -1712,7 +1115,6 @@ class smartblog extends Module
 
     public static function GetSmartBlogLink($rewrite = 'smartblog', $params = null, $id_shop = null, $id_lang = null)
     {
-
         $url = smartblog::GetSmartBlogUrl();
         $dispatcher = Dispatcher::getInstance();
         $id_lang = (int) Context::getContext()->language->id;
@@ -1725,69 +1127,502 @@ class smartblog extends Module
         }
     }
 
-    public function addquickaccess()
+    public function hookModuleRoutes($params)
     {
-        $link = new Link();
-        $qa = new QuickAccess();
-        $qa->link = $link->getAdminLink('AdminModules') . '&configure=smartblog';
-        $languages = Language::getLanguages(false);
-        foreach ($languages as $language) {
-            $qa->name[$language['id_lang']] = 'Smart Blog Setting';
+        $alias = Configuration::get('smartmainblogurl');
+        $usehtml = (int) Configuration::get('smartusehtml');
+        if ($usehtml != 0) {
+            $html = '.html';
+        } else {
+            $html = '';
         }
-        $qa->new_window = '0';
-        if ($qa->save()) {
-            Configuration::updateValue('smartblog_quick_access', $qa->id);
+
+        $smartblogurlpattern = (int) Configuration::get('smartblogurlpattern');
+
+        $my_link = array();
+
+        switch ($smartblogurlpattern) {
+
+            case 1:
+                $my_link = $this->urlPatterWithoutId($alias, $html);
+                break;
+            case 2:
+                $my_link = $this->urlPatterWithIdOne($alias, $html);
+                break; 
+
+            default:
+                $my_link = $this->urlPatterWithIdOne($alias, $html);
         }
+
+        return $my_link;
     }
 
-    public static function getToltalFeed($id_lang)
+    public function urlPatterWithoutId($alias, $html)
     {
-        $result = array();
-        $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_lang pl, ' . _DB_PREFIX_ . 'smart_blog_post p 
-                WHERE pl.id_lang=' . $id_lang . ' and p.active = 1 AND pl.id_smart_blog_post=p.id_smart_blog_post 
-                ORDER BY p.id_smart_blog_post DESC';
+        $my_link = array(
+            'smartblog' => array(
+                'controller' => 'category',
+                'rule' => $alias . $html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_list' => array(
+                'controller' => 'category',
+                'rule' => $alias . '/category' . $html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_list_module' => array(
+                'controller' => 'category',
+                'rule' => 'module/' . $alias . '/category' . $html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_list_pagination' => array(
+                'controller' => 'category',
+                'rule' => $alias . '/category/page/{page}' . $html,
+                'keywords' => array(
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_pagination' => array(
+                'controller' => 'category',
+                'rule' => $alias . '/page/{page}' . $html,
+                'keywords' => array(
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_category_rule' => array(
+                'controller' => 'category',
+                'rule' => $alias . '/category/{slug}' . $html,
+                'keywords' => array(
+                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
+                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_category' => array(
+                'controller' => 'category',
+                'rule' => $alias . '/category/{slug}' . $html,
+                'keywords' => array(
+                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
+                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_category_pagination' => array(
+                'controller' => 'category',
+                'rule' => $alias . '/category/{slug}/page/{page}' . $html,
+                'keywords' => array(
+                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_cat_page_mod' => array(
+                'controller' => 'category',
+                'rule' => 'module/' . $alias . '/category/{slug}/page/{page}' . $html,
+                'keywords' => array(
+                    'id_category' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_search' => array(
+                'controller' => 'search',
+                'rule' => $alias .  '/search',
+               'keywords' => array(
+                    'search_query' => array('regexp' => '[_a-zA-Z0-9-\pL\+]*', 'param' => 'search_query'),
 
-        if (!$posts = Db::getInstance()->executeS($sql))
-            return false;
-
-        $i = 0;
-        $BlogCategory = new BlogCategory();
-        foreach ($posts as $post) {
-            $result[$i]['id_post'] = $post['id_smart_blog_post'];
-            $result[$i]['viewed'] = $post['viewed'];
-            $result[$i]['meta_title'] = $post['meta_title'];
-            $result[$i]['meta_description'] = $post['meta_description'];
-            $result[$i]['short_description'] = $post['short_description'];
-            $result[$i]['content'] = $post['content'];
-            $result[$i]['meta_keyword'] = $post['meta_keyword'];
-            //$result[$i]['id_category'] = $post['id_category'];
-            $result[$i]['link_rewrite'] = $post['link_rewrite'];
-            //$result[$i]['cat_link_rewrite'] = $BlogCategory->getCatLinkRewrite($post['id_category']);
-            $employee = new Employee($post['id_author']);
-
-            $result[$i]['lastname'] = $employee->lastname;
-            $result[$i]['firstname'] = $employee->firstname;
-            if (file_exists(_PS_MODULE_DIR_ . 'smartblog/images/' . $post['id_smart_blog_post'] . '.jpg')) {
-                $image = $post['id_smart_blog_post'];
-                $result[$i]['post_img'] = $image;
-            } else {
-                $result[$i]['post_img'] = 'no';
-            }
-            $options = array();
-            $options['id_post'] = $post['id_smart_blog_post'];
-            $options['slug'] = $post['link_rewrite'];
-            $result[$i]['created'] = $post['created'];
-            $result[$i]['blink'] = smartblog::GetSmartBlogLink('smartblog_post', $options);
-            $i++;
-        }
-
-        return $result;
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_tag' => array(
+                'controller' => 'tagpost',
+                'rule' => $alias . '/tag/{tag}' . $html,
+                'keywords' => array(
+                    'tag' => array('regexp' => '[_a-zA-Z0-9-\pL\+]*', 'param' => 'tag'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_search_pagination' => array(
+                'controller' => 'search',
+                'rule' => $alias . '/search/page/{page}' . $html,
+                'keywords' => array(
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_post_rule' => array(
+                'controller' => 'details',
+                'rule' => $alias . '/{slug}' . $html,
+                'keywords' => array(
+                    'id_post' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
+                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
+                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_post' => array(
+                'controller' => 'details',
+                'rule' => $alias . '/{slug}' . $html,
+                'keywords' => array(
+                    'id_post' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
+                    'slug' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'slug'),
+                    'meta_keywords' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                    'meta_title' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_archive' => array(
+                'controller' => 'archive',
+                'rule' => $alias . '/archive' . $html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_archive_pagination' => array(
+                'controller' => 'archive',
+                'rule' => $alias . '/archive/page/{page}' . $html,
+                'keywords' => array(
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_month' => array(
+                'controller' => 'archive',
+                'rule' => $alias . '/archive/{year}/{month}' . $html,
+                'keywords' => array(
+                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                    'month' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_month_pagination' => array(
+                'controller' => 'archive',
+                'rule' => $alias . '/archive/{year}/{month}/page/{page}' . $html,
+                'keywords' => array(
+                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                    'month' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_year' => array(
+                'controller' => 'archive',
+                'rule' => $alias . '/archive/{year}' . $html,
+                'keywords' => array(
+                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_year_pagination' => array(
+                'controller' => 'archive',
+                'rule' => $alias . '/archive/{year}/page/{page}' . $html,
+                'keywords' => array(
+                    'year' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                    'page' => array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+        );
+        return $my_link;
     }
 
-    public function deletequickaccess()
-    {
-        $qa = new QuickAccess(Configuration::get('smartblog_quick_access'));
-        $qa->delete();
+    public function urlPatterWithIdOne($alias, $html) {
+        $my_link = array(
+            'smartblog' => array(
+                'controller' => 'category',
+                'rule' => $alias.$html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_list' => array(
+                'controller' => 'category',
+                'rule' => $alias.'/category'.$html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_list_module' => array(
+                'controller' => 'category',
+                'rule' => 'module/'.$alias.'/category'.$html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_list_pagination' => array(
+                'controller' => 'category',
+                'rule' =>       $alias.'/category/page/{page}'.$html,
+                'keywords' => array(
+                    'page' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_pagination' => array(
+                'controller' => 'category',
+                'rule' =>       $alias.'/page/{page}'.$html,
+                'keywords' => array(
+                    'page' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_category' => array(
+                'controller' => 'category',
+                'rule' =>        $alias.'/category/{id_category}_{slug}'.$html,
+                'keywords' => array(
+                    'id_category' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'slug'       =>   array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_category_rule' => array(
+                'controller' => 'category',
+                'rule' =>        $alias.'/category/{id_category}_{slug}'.$html,
+                'keywords' => array(
+                    'id_category' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'slug'       =>   array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_category_pagination' => array(
+                'controller' => 'category',
+                'rule' =>       $alias.'/category/{id_category}_{slug}/page/{page}'.$html,
+                'keywords' => array(
+                    'id_category' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'page' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                    'slug'       =>   array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_cat_page_mod' => array(
+                'controller' => 'category',
+                'rule' =>       'module/'.$alias.'/category/{id_category}_{slug}/page/{page}'.$html,
+                'keywords' => array(
+                    'id_category' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_category'),
+                    'page' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                    'slug'       =>   array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_search' => array(
+                'controller' => 'search',
+                'rule' => $alias.'/search'.$html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_tag' => array(
+                'controller' => 'tagpost',
+                'rule' => $alias.'/tag/{tag}'.$html,
+                'keywords' => array(
+                    'tag' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'tag'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_search_pagination' => array(
+                'controller' => 'search',
+                'rule' =>       $alias.'/search/page/{page}'.$html,
+                'keywords' => array(
+                    'page' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_post' => array(
+                'controller' => 'details',
+                'rule' =>       $alias.'/{id_post}_{slug}'.$html,
+                'keywords' => array(
+                    'id_post' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
+                    'slug'       =>   array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_post_rule' => array(
+                'controller' => 'details',
+                'rule' =>       $alias.'/{id_post}_{slug}'.$html,
+                'keywords' => array(
+                    'id_post' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'id_post'),
+                    'slug'       =>   array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_archive' => array(
+                'controller' => 'archive',
+                'rule' => $alias.'/archive'.$html,
+                'keywords' => array(),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_archive_pagination' => array(
+                'controller' => 'archive',
+                'rule' =>       $alias.'/archive/page/{page}'.$html,
+                'keywords' => array(
+                    'page' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_month' => array(
+                'controller' => 'archive',
+                'rule' =>       $alias.'/archive/{year}/{month}'.$html,
+                'keywords' => array(
+                    'year' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                    'month' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_month_pagination' => array(
+                'controller' => 'archive',
+                'rule' =>       $alias.'/archive/{year}/{month}/page/{page}'.$html,
+                'keywords' => array(
+                    'year' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                    'month' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'month'),
+                    'page' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_year' => array(
+                'controller' => 'archive',
+                'rule' =>       $alias.'/archive/{year}'.$html,
+                'keywords' => array(
+                    'year' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+            'smartblog_year_pagination' => array(
+                'controller' => 'archive',
+                'rule' =>       $alias.'/archive/{year}/page/{page}'.$html,
+                'keywords' => array(
+                    'year' =>    array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'year'),
+                    'page' =>   array('regexp' => '[_a-zA-Z0-9-\pL]*', 'param' => 'page'),
+                ),
+                'params' => array(
+                    'fc' => 'module',
+                    'module' => 'smartblog',
+                ),
+            ),
+        );
+        return $my_link;
     }
 
     public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
@@ -1815,49 +1650,29 @@ class smartblog extends Module
         return date($date_format, $time);
     }
 
-    public static function slug2id($slug)
-    {
-        $sql = 'SELECT p.id_smart_blog_post 
-				FROM `' . _DB_PREFIX_ . 'smart_blog_post_lang` p 
-				WHERE p.link_rewrite =  "' . pSQL($slug) . '"';
-
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
-            return false;
-        return $result[0]['id_smart_blog_post'];
-    }
-
     public static function categoryslug2id($slug)
     {
         $sql = 'SELECT p.id_smart_blog_category 
-				FROM `' . _DB_PREFIX_ . 'smart_blog_category_lang` p 
-				WHERE p.link_rewrite =  "' . pSQL($slug) . '"';
+                FROM `' . _DB_PREFIX_ . 'smart_blog_category_lang` p 
+                WHERE p.link_rewrite =  "' . pSQL($slug) . '"';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
             return false;
         return $result[0]['id_smart_blog_category'];
     }
 
-    public static function tagslug2id($slug)
+    public static function slug2id($slug)
     {
-        $sql = 'SELECT p.id_tag 
-				FROM `' . _DB_PREFIX_ . 'smart_blog_tag` p 
-				WHERE p.name =  "' . pSQL($slug) . '"';
+        $sql = 'SELECT p.id_smart_blog_post 
+                FROM `' . _DB_PREFIX_ . 'smart_blog_post_lang` p 
+                WHERE p.link_rewrite =  "' . pSQL($slug) . '"';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
             return false;
-        return $result[0]['id_tag'];
+        return $result[0]['id_smart_blog_post'];
     }
 
-    public static function gallerypathbyid($id)
-    {
-        $temp = preg_replace_callback('/\d{1}/', array(__CLASS__, "gallerypathbyidreplacecb"), $id);
-        return $temp . $id;
-    }
 
-    public static function gallerypathbyidreplacecb($match)
-    {
-        return isset($match[0]) ? $match[0] . '/' : null;
-    }
 
     public function smartblogcategoriesHookLeftColumn($params)
     {
@@ -1887,25 +1702,7 @@ class smartblog extends Module
         return $this->display(__FILE__, 'views/templates/front/plugins/smartblogcategories.tpl');
     }
 
-    public function hookLeftColumn($params)
-    {
-        return $this->smartblogcategoriesHookLeftColumn($params);
-    }
-
-    public function hookRightColumn($params)
-    {
-        return $this->hookLeftColumn($params);
-    }
-
-    public function hookdisplaySmartBlogLeft($params)
-    {
-        return $this->hookLeftColumn($params);
-    }
-
-    public function hookdisplaySmartBlogRight($params)
-    {
-        return $this->hookLeftColumn($params);
-    }
+ 
 
     public function hookactionsbdeletecat($params)
     {
@@ -1927,35 +1724,8 @@ class smartblog extends Module
         return $this->DeleteCache();
     }
 
-    public function smartbloghomelatestnewsHookDisplayHome($params)
-    {
-        /* Server Params */
-        $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-        $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 
-        $smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
-
-
-        if (!$this->isCached('plugins/smartblog_latest_news.tpl')) {
-            $view_data['posts'] = SmartBlogPost::GetPostLatestHome(Configuration::get('smartshowhomepost'));
-            $this->smarty->assign(array(
-                'smartbloglink' => $smartbloglink,
-                'view_data' => $view_data['posts']
-            ));
-        }
-        return $this->display(__FILE__, 'views/templates/front/plugins/smartblog_latest_news.tpl');
-    }
-
-    public function hookDisplayHome($params)
-    {
-        return $this->smartbloghomelatestnewsHookDisplayHome($params);
-    }
-
-    public function smartbloghomelatestnewsDeleteCache()
-    {
-        return $this->_clearCache('plugins/smartblog_latest_news.tpl');
-    }
-
+  
     public function hookactionsbdeletepost($params)
     {
         return $this->DeleteCache();
@@ -1983,76 +1753,9 @@ class smartblog extends Module
         $this->_clearCache('plugins/smartblogrelatedproduct.tpl');
     }
 
-    public function smartblogrelatedproductHookdisplaySmartAfterPost($params)
-    {
-        if (!$this->isCached('plugins/smartblogrelatedproduct.tpl')) {
-            //  $id_cat = BlogCategory::getCategoryNameByPost(Tools::getvalue('id_post'));
-            $id_lang = $this->context->language->id;
-            //$posts = SmartBlogPost::getRelatedProduct($id_lang, Tools::getvalue('id_post'));
 
-            $id_post = (int)Tools::getvalue('id_post');
-       
-            if($id_post==''){
-                $slug = Tools::getvalue('slug');
-                $id_post = $this->slug2id($slug);
-            }
 
-            if ($id_post != null) {
-                $proucts = SmartBlogPost::getRelatedProduct($id_lang, $id_post);
-                $this->smarty->assign(array(
-                    'products' => $proucts,
-                ));
-            }
-        }
-        return $this->display(__FILE__, 'views/templates/front/plugins/smartblogrelatedproduct.tpl');
-    }
 
-    public function hookdisplaySmartAfterPost($params)
-    { 
-        $html = '';
-        $html .= $this->smartblogrelatedproductHookdisplaySmartAfterPost($params);
-        $html .= $this->smartblogrelatedpostsHookdisplaySmartAfterPost($params);
-        return $html;
-    }
-
-    public function smartblogrelatedpostsHookdisplaySmartAfterPost($params)
-    {
-        
-       if(Tools::getvalue('controller')=='category' || Tools::getvalue('controller')=='tagpost'){
-           return;
-       }
-       $id_post = pSQL(Tools::getvalue('id_post'));
-       
-       if($id_post==''){
-           $slug = Tools::getvalue('slug');
-            $id_post = $this->slug2id($slug);
-       }
-            
-        if (!$this->isCached('plugins/smartblogrelatedposts.tpl', $this->getCacheId())) {
-            
-            
-            $posts = SmartBlogPost::getRelatedPostsById_post($id_post);
-            
-         $i=0;
-            foreach($posts as $i => &$post){
-                $posts[$i]['created'] =  Smartblog::displayDate($post['created']);
-                
-                $employee = new Employee((int)$post['id_author']);
-
-                $post['lastname'] = $employee->lastname;
-                $post['firstname'] = $employee->firstname;
-
-            }
-            
-            
-            $this->smarty->assign(array(
-                'posts' => $posts
-            ));
-        }
-            
-        
-        return $this->display(__FILE__, 'views/templates/front/plugins/smartblogrelatedposts.tpl');
-    }
 
     public function smartblogrelatedproductHookdisplayProductTab($params)
     {

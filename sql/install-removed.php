@@ -99,7 +99,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_post` (
   `viewed` int(11) DEFAULT NULL,
   `is_featured` int(11) DEFAULT NULL,
   `comment_status` int(11) DEFAULT NULL,
-  `post_type` varchar(45) DEFAULT NULL,
   `image` varchar(245) DEFAULT NULL,
   `associations` TEXT NULL,
   PRIMARY KEY (`id_smart_blog_post`)
@@ -161,23 +160,5 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_imagetype`(
   `type` varchar(45) DEFAULT NULL,
   `active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_smart_blog_imagetype`)
-) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
-
-
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_gallary_images` (
-  `id_smart_blog_gallary_images` int(11) NOT NULL,
-  `id_smart_blog_post` int(11) NOT NULL,
-  `position` int(11) NOT NULL,
-   PRIMARY KEY (`id_smart_blog_gallary_images`,`id_smart_blog_post`)
-) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
-
-
-
-
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_gallary_images_lang` (
-  `id_smart_blog_gallary_images` int(11) NOT NULL,
-  `id_lang` int(11) NOT NULL,
-  `legend` varchar(256) NOT NULL,
-  PRIMARY KEY (`id_smart_blog_gallary_images`,`id_lang`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 ?>

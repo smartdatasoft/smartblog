@@ -35,6 +35,8 @@ class smartblogModuleFrontController extends ModuleFrontController
 
         parent::initContent();
         $colums = Context::getContext()->theme->hasColumns(Context::getContext()->controller->page_name);
+        $hide_column_left = 0;
+        $hide_column_right = 0;
         if ($colums) {
             $hide_column_left = isset($colums['left_column']) && !empty($colums['left_column']) ? 0 : 1;
             $hide_column_right = isset($colums['right_column']) && !empty($colums['right_column']) ? 0 : 1;

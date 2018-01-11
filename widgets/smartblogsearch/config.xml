@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>smartblogsearch</name>
+	<displayName><![CDATA[Smart Blog Search]]></displayName>
+	<version><![CDATA[2.0.1]]></version>
+	<description><![CDATA[The Most Powerfull Presta shop Blog Search Module&#039;s - by smartdatasoft]]></description>
+	<author><![CDATA[SmartDataSoft]]></author>
+	<tab><![CDATA[front_office_features]]></tab>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

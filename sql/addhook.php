@@ -46,13 +46,13 @@ $hookvalue = array(
         'position' => 1,
         'live_edit' => 0,
     ),
-    array(
-        'name' => 'displaySmartAfterPost',
-        'title' => 'displaySmartAfterPost',
-        'description' => 'This is blog Single page after blog post',
-        'position' => 1,
-        'live_edit' => 0,
-    ),
+    // array(
+    //     'name' => 'displaySmartAfterPost',
+    //     'title' => 'displaySmartAfterPost',
+    //     'description' => 'This is blog Single page after blog post',
+    //     'position' => 1,
+    //     'live_edit' => 0,
+    // ),
     array(
         'name' => 'actionsbnewpost',
         'title' => 'actionsbnewpost',

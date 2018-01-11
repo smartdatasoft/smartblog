@@ -156,10 +156,16 @@ class AdminBlogcommentController extends ModuleAdminController
         // inits list
         $second_list = parent::renderList();
 
-        return $first_list . $second_list;
+        return $this->setPromotion() . $first_list . $second_list;
 
     }
-
+    public function setPromotion(){
+        $this->context->smarty->assign(array(
+            'smartpromotion' => smartblog::getSmartPromotion('comment_list')
+        ));
+        $promotion = $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/promotion.tpl');
+        return $promotion;
+    }
     public function renderForm()
     {
         $this->fields_form = array(

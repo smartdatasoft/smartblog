@@ -63,13 +63,26 @@ $smartshowauthorstyle != 0}{$post.firstname|escape:'htmlall':'UTF-8'}
  
 
                 <div class="articleContent">
-                    {include file="./post_format.tpl" ispost=$post.id_post post=$post cameFromLoop= 'true' smartshownoimg=$smartshownoimg}
+                    {if isset($ispost) && !empty($ispost)}
+                    <a itemprop="url" href="{$smartbloglink->getSmartBlogPostLink($post.id_post,$post.cat_link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$post.meta_title|escape:'htmlall':'UTF-8'}" class="imageFeaturedLink">    
+                    
+                    {/if}
+                        {if $smartbloglink->getImageLink($post.link_rewrite, $post.id_post, 'single-default') != 'false'}
+                            <img itemprop="image" alt="{$post.meta_title|escape:'htmlall':'UTF-8'}" src="{$smartbloglink->getImageLink($post.link_rewrite, $post.id_post, 'single-default')}" class="imageFeatured">
+                        {/if}                   
+                           
+                    {if isset($ispost) && !empty($ispost)}
+                    </a>
+                    {/if}
+                   <div class="sdsarticle-des" style="text-align: left;">
+                    {$post.short_description}
+                   </div>
                 </div>
-               {if $post.post_format != 'quote' && $post.post_format != 'link'}
+
                 <div class="sdsreadMore">  
                     <a title="{$post.meta_title|escape:'htmlall':'UTF-8'}" href="{$smartbloglink->getSmartBlogPostLink($post.id_post,$post.link_rewrite)|escape:'htmlall':'UTF-8'}" class="r_more btn btn-default button button-small"><span>{l s='Read more' mod='smartblog'}<i class="icon-chevron-right right"></i></span></a>
                 </div>
-                {/if}
+
                 
                 
             </div>

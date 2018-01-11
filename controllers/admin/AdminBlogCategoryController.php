@@ -1,36 +1,13 @@
 <?php
-/**
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2015 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
 
 class AdminBlogCategoryController extends AdminController
 {
 
     public $module;
  
-  /** @var object smart_blog_category() instance for navigation*/
     protected   $smart_blog_category = null;
+
+    protected static $category = null;
 
     public function __construct()
     {
@@ -38,12 +15,19 @@ class AdminBlogCategoryController extends AdminController
         $this->className = 'BlogCategory';
         $this->module = 'smartblog';
         $this->lang = true;
- 
-       
 
         $this->image_dir = '../modules/smartblog/images/category';
         $this->bootstrap = true;
   
+        $id_smart_blog_category = (int)Tools::getValue('id_smart_blog_category', Tools::getValue('id_smart_blog_category_parent', 1));
+        self::$category = new BlogCategory($id_smart_blog_category);
+        if (!Validate::isLoadedObject(self::$category)) {
+            die('Category cannot be loaded');
+        }
+
+        $this->addRowAction('view');
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -53,38 +37,49 @@ class AdminBlogCategoryController extends AdminController
             )
         );
 
-      $this->tpl_list_vars['icon'] = 'icon-folder-close';
+        $this->tpl_list_vars['icon'] = 'icon-folder-close';
         $this->tpl_list_vars['title'] = $this->l('Categories');
+
         $this->fields_list = array(
-        'id_smart_blog_category' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-         'name' => array('title' => $this->l('Name'), 'width' => 'auto',
-          //'callback' => 'hideSMARTBLOGCategoryPosition', 'callback_object' => 'SMARTBLOGCMSCategory'
-          ),
-        'description' => array('title' => $this->l('Description'), 'maxlength' => 90, 'orderby' => false),
-        'position' => array('title' => $this->l('Position'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
-        'active' => array(
-            'title' => $this->l('Displayed'), 'class' => 'fixed-width-sm', 'active' => 'status',
-            'align' => 'center','type' => 'bool', 'orderby' => false
-        ));
+            'id_smart_blog_category' => array(
+                'title' => $this->l('ID'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs'
+            ),
+            'name' => array(
+                'title' => $this->l('Name'),
+                'width' => 'auto'
+            ),
+            'description' => array(
+                'title' => $this->l('Description'),
+                'maxlength' => 90,
+                'orderby' => false,
+                'callback' => 'removeHtmlTags'
+            ),
+            'position' => array(
+                'title' => $this->l('Position'),
+                'filter_key' => 'position',
+                'align' => 'center',
+                'class' => 'fixed-width-sm',
+                'position' => 'position'
+            ),
+            'active' => array(
+                'title' => $this->l('Displayed'),
+                'class' => 'fixed-width-sm',
+                'active' => 'status',
+                'align' => 'center',
+                'type' => 'bool',
+                'orderby' => false
+            )
+        );
 
-       /* $id_smart_blog_category = (int)Tools::getValue('id_smart_blog_category', Tools::getValue('id_smart_blog_category', 1));
-
-        $this->smart_blog_category = new BlogCategory($id_smart_blog_category);
-
- 
-
-        $this->context = Context::getContext();
-   
-  
-        $this->_where = ' AND `id_parent` = '.(int)$this->smart_blog_category->id;
-        */
         $this->_select = 'position ';
         $this->_orderBy = 'position';
       
-     if (Shop::isFeatureActive())
+        if (Shop::isFeatureActive())
             Shop::addTableAssociation($this->table, array('type' => 'shop'));
 
-    $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_category_shop sbs ON a.id_smart_blog_category=sbs.id_smart_blog_category && sbs.id_shop IN(' . implode(',', Shop::getContextListShopID()) . ')';
+        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_category_shop sbs ON a.id_smart_blog_category=sbs.id_smart_blog_category && sbs.id_shop IN(' . implode(',', Shop::getContextListShopID()) . ')';
 
         $this->_select = 'sbs.id_shop';
         $this->_defaultOrderBy = 'a.id_smart_blog_category';
@@ -94,28 +89,42 @@ class AdminBlogCategoryController extends AdminController
             $this->_group = 'GROUP BY a.id_smart_blog_category';
         }
       
-          parent::__construct();
 
-   
+        $this->blog_category = self::getCurrentBlogCategory();
+        $this->_where = ' AND `id_parent` = '.(int)$this->blog_category->id;
+        $this->_select = 'position ';
+
+        parent::__construct();
     }
-  public function renderList()
+    public function removeHtmlTags($val){
+        return substr(strip_tags($val),0,110) . "...";
+    }
+    public static function getCurrentBlogCategory()
     {
-      if (isset($this->_filter) && trim($this->_filter) == '') {
+        return self::$category;
+    }
+
+    public function renderList()
+    {
+
+        if (isset($this->_filter) && trim($this->_filter) == '') {
             $this->_filter = $this->original_filter;
         }
 
-              $this->_group = 'GROUP BY a.`id_smart_blog_category`';
+        $this->_group = 'GROUP BY a.`id_smart_blog_category`';
         if (isset($this->toolbar_btn['new'])) {
             $this->toolbar_btn['new']['href'] .= '&id_parent='.(int)pSQL(Tools::getValue('id_smart_blog_category'));
         }
-        $this->addRowAction('view');
-        $this->addRowAction('add');
-        $this->addRowAction('edit');
-        $this->addRowAction('delete');
 
-
-  
         return parent::renderList();
+    }
+
+    public function setPromotion(){
+        $this->context->smarty->assign(array(
+            'smartpromotion' => smartblog::getSmartPromotion('category_list')
+        ));
+        $promotion = $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/promotion.tpl');
+        return $promotion;
     }
 
     public function renderView()
@@ -124,6 +133,85 @@ class AdminBlogCategoryController extends AdminController
         return $this->renderList();
     }
 
+    public function initContent()
+    {
+        $this->initTabModuleList();
+        $this->renderPageHeaderToolbar();
+        if (Tools::getValue('add'.$this->table) !== false || Tools::getValue('update'.$this->table) !== false) {
+            $this->content .= $this->renderForm();
+        } else {
+            $id_smart_blog_category = (int)Tools::getValue('id_smart_blog_category');
+            if (!$id_smart_blog_category) {
+                $id_smart_blog_category = 1;
+            }
+
+            $smartcmsblog_tabs = array('blog_category', 'smartblog');
+            // Cleaning links
+            $cat_bar_index = self::$currentIndex;
+            foreach ($smartcmsblog_tabs as $tab) {
+                if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) {
+                    $cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+                }
+            }
+
+            $this->context->smarty->assign(array(
+                'smartblog_breadcrumb' => BlogCategory::getPath($cat_bar_index, $id_smart_blog_category, '', '', 'smartblog'),
+                'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+                'page_header_toolbar_title' => $this->toolbar_title,
+            ));
+
+            // smartblog_breadcrumb
+            $this->content .= $this->context->smarty->fetch(_PS_MODULE_DIR_.'smartblog/views/templates/admin/breadcrumb.tpl');
+            $this->content .= $this->renderList();
+        }
+        $this->context->smarty->assign(array(
+            'content' => $this->setPromotion().$this->content
+        ));
+    }
+
+    public function renderPageHeaderToolbar()
+    {
+
+        $id_smart_blog_category = (int)Tools::getValue('id_smart_blog_category');
+        $id_smart_cmsblog_post = Tools::getValue('id_smart_cmsblog_post');
+
+        if (!$id_smart_blog_category) {
+            $id_smart_blog_category = 1;
+        }
+
+        $this->show_page_header_toolbar = true;
+
+        if (Tools::getValue('add'.$this->table) !== false) {
+            $this->toolbar_title[] = $this->l('New Category');
+        } elseif(Tools::getValue('update'.$this->table) !== false) {
+            $this->toolbar_title[] = $this->l('Update Category');
+        } else {
+            $this->toolbar_title[] = $this->l('Category');
+
+            $this->page_header_toolbar_btn['new_smart_cmsblog_category'] = array(
+                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
+                'desc' => $this->l('Add new category', null, null, false),
+                'icon' => 'process-icon-new'
+            );
+
+        }
+
+        $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title);
+
+        if (is_array($this->page_header_toolbar_btn)
+            && $this->page_header_toolbar_btn instanceof Traversable
+            || trim($this->page_header_toolbar_title) != '') {
+            $this->show_page_header_toolbar = true;
+        }
+
+        $this->context->smarty->assign(array(
+            'show_page_header_toolbar' => $this->show_page_header_toolbar,
+            'title' => $this->page_header_toolbar_title,
+            'toolbar_btn' => $this->page_header_toolbar_btn,
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+            'page_header_toolbar_title' => $this->toolbar_title,
+        ));
+    }
 
     public function renderForm()
     {
@@ -145,13 +233,6 @@ class AdminBlogCategoryController extends AdminController
         $html_categories = BlogCategory::recurseCMSCategory($categories, $categories[0][1], 1, $this->getFieldValue($this->object, 'id_parent'), 1);
 
 
-      $html_categories = '<div class="col-lg-9">
-                        <div class="row">
-                          <select name="id_parent">
-                            '.$html_categories.'
-                          </select>
-                        </div>
-                      </div>';
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->l('Blog Category'),
@@ -166,14 +247,12 @@ class AdminBlogCategoryController extends AdminController
                     'lang' => true,
                     'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
                 ),
-
-                // custom template
                 array(
                     'type' => 'html',
                     'label' => $this->l('Parent Blog Category'),
                     'name' => 'id_parent',
-                    'html_content' => $html_categories,
- 
+                    'col' => '4',
+                    'html_content' => '<select name="id_parent">'.$html_categories.'</select>'
                 ),
                 array(
                     'type' => 'textarea',
@@ -277,62 +356,46 @@ class AdminBlogCategoryController extends AdminController
             'image' => $image ? $image : false,
             'size' => $image ? filesize(_MODULE_SMARTBLOG_DIR_ . 'category/' . $BlogCategory->id_smart_blog_category . '.jpg') / 1000 : false
         );
+
+
         $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int) Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 
         return parent::renderForm();
     }
-    
-    public function processDelete()
-    {
-        $id_parent = BlogCategory::getRootCategory();
-        $id_parent = $id_parent['id_smart_blog_category'];
-        
-        if((int)Tools::getValue('id_smart_blog_category') == (int) $id_parent)
-            $this->errors[] = $this->l('You cannot delete this category because it is the root category');
-        else
-            parent::processDelete();
 
-    }
-
- 
     public function postProcess()
     {
         if (!($object = $this->loadObject(true))) {
             return;
         }
 
- 
         if (!in_array($this->display, array('edit', 'add')))
         $this->multishop_context_group = false;
 
-        if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['category_image']) && $_FILES['category_image']['size'] > 0) || Tools::getValue('deleteImage')) {
-            $this->processForceDeleteImage();
-            if (Tools::isSubmit('forcedeleteImage'))
-                Tools::redirectAdmin(self::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminCategories') . '&conf=7');
-        }
-         else if (Tools::isSubmit('submitAdd'.$this->table)) {
-            $this->action = 'save';
-            
-            if ($id_smart_blog_category = (int)pSQL(Tools::getValue('id_smart_blog_category'))) {
-                $this->id_object = $id_smart_blog_category;
-                if (!BlogCategory::checkBeforeMove($id_smart_blog_category, (int)pSQL(Tools::getValue('id_parent')))) {
-                    $this->errors[] = Tools::displayError('The Blog Category cannot be moved here.');
-                   
-                   Tools::redirectAdmin(self::$currentIndex.'&updatesmart_blog_category&viewsmart_blog_category&id_smart_blog_category='.(int)$object->id.'&token='.pSQL(Tools::getValue('token')));
 
-                     return false;
+        if (Tools::isSubmit('submitAdd'.$this->table)) {
+            $this->action = 'save';
+            if ($id_smart_blog_category = (int)Tools::getValue('id_smart_blog_category')) {
+                $this->id_object = $id_smart_blog_category;
+                if (!BlogCategory::checkBeforeMove($id_smart_blog_category, (int)Tools::getValue('id_parent'))) {
+                    $this->errors[] = Tools::displayError('The CMS Category cannot be moved here.');
+                    Tools::redirectAdmin(self::$currentIndex.'&updatesmart_blog_category&viewsmart_blog_category&id_smart_blog_category='.(int)$object->id.'&token='.pSQL(Tools::getValue('token')));
+                    return false;
                 }
             }
             $object = parent::postProcess();
             $this->updateAssoShop((int)Tools::getValue('id_smart_blog_category'));
             if ($object !== false) {
-                Tools::redirectAdmin(self::$currentIndex.'&conf=3&viewsmart_blog_category&id_smart_blog_category='.(int)$object->id.'&token='.pSQL(Tools::getValue('token')));
+                Tools::redirectAdmin(self::$currentIndex.'&conf=3&id_smart_blog_category='.(int)$object->id.'&token='.Tools::getValue('token'));
             }
             return $object;
         }
-
- 
-        return parent::postProcess();
+        elseif (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['category_image']) && $_FILES['category_image']['size'] > 0) || Tools::getValue('deleteImage')) {
+            $this->processForceDeleteImage();
+            if (Tools::isSubmit('forcedeleteImage'))
+                Tools::redirectAdmin(self::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminCategories') . '&conf=7');
+        }
+        $object = parent::postProcess();
     }
 
     public function processForceDeleteImage()
@@ -345,7 +408,6 @@ class AdminBlogCategoryController extends AdminController
         }
     }
 
- 
     public function deleteImage($id_smart_blog_category)
     {
 
@@ -380,15 +442,6 @@ class AdminBlogCategoryController extends AdminController
         return true;
     }
 
-  
-    public function initToolbar()
-    {
-        $this->context->smarty->assign(array(
-            'showad' => '0', 
-        ));
-         parent::initToolbar();
-    }
-
     protected function postImage($id)
     {
 
@@ -419,5 +472,4 @@ class AdminBlogCategoryController extends AdminController
             }
         }
     }
-
 }

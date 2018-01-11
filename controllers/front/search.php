@@ -29,7 +29,7 @@ include_once(dirname(__FILE__) . '/../../classes/controllers/FrontController.php
 class smartblogsearchModuleFrontController extends smartblogModuleFrontController
 {
 
-    public $ssl = true;
+     public $ssl = false;
 
     public function init()
     {
@@ -38,6 +38,7 @@ class smartblogsearchModuleFrontController extends smartblogModuleFrontControlle
 
     public function initContent()
     {
+  
 
         parent::initContent();
 

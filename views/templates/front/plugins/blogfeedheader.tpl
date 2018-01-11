@@ -24,3 +24,8 @@
 *}
 
 <link rel="alternate" type="application/rss+xml" title="{$meta_title|escape:html:'UTF-8'}" href="{$feedUrl}" />
+
+
+  <meta name="title" content="{$meta_title}">
+  <meta name="keywords" content="{$meta_keyword}">
+  <meta name="description" content="{$meta_description}">

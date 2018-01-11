@@ -38,7 +38,6 @@ class SmartBlogPost extends ObjectModel
     public $short_description;
     public $viewed;
     public $comment_status = 1;
-    public $post_type;
     public $associations;
     public $meta_title;
     public $meta_keyword;
@@ -63,7 +62,6 @@ class SmartBlogPost extends ObjectModel
             'viewed' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
             'is_featured' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
             'comment_status' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
-            'post_type' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'associations' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'image' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'meta_title' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'lang' => true, 'required' => true),
@@ -81,6 +79,70 @@ class SmartBlogPost extends ObjectModel
         parent::__construct($id, $id_lang, $id_shop);
     }
 
+    //Related Product....
+    public static function getRelatedProduct($id_lang = null, $id_post = null)
+    {
+        if ($id_lang == null) {
+            $id_lang = (int) Context::getContext()->language->id;
+        }
+        if (Configuration::get('smartshowrelatedproduct') != '' && Configuration::get('smartshowrelatedproduct') != null) {
+            $limit = Configuration::get('smartshowrelatedproduct');
+        } else {
+            $limit = 5;
+        }
+
+        if ($id_post == null) {
+            $id_post = 1;
+        }
+        
+        $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post WHERE id_smart_blog_post = '. $id_post;
+        $postDetails = Db::getInstance()->executeS($sql); 
+        $currentPost = $postDetails[0]; 
+        $product_ids = explode('-',$currentPost['associations']);  
+        $productIdString='';
+        $limitcount = 0;
+        foreach($product_ids as $product_id){
+            if(empty($product_id)) continue;
+            if($limitcount >= $limit) continue;
+            $limitcount++;
+            $productIdString.= $product_id . ',';
+        }
+        $productIdString = substr_replace($productIdString, '', -1); 
+        
+        $products=self::getProductsByProductIDS((string) $productIdString);
+        
+         return $products;
+    }
+
+    public static function getRelatedPostsById_post($id_post = null)
+    {
+        if (Configuration::get('smartshowrelatedpost') != '' && Configuration::get('smartshowrelatedpost') != null) {
+            $limit = Configuration::get('smartshowrelatedpost');
+        } else {
+            $limit = 5;
+        }
+        
+        
+        $sql = 'SELECT itl.*,it.* FROM `' . _DB_PREFIX_ . 'smart_blog_post` it,`' . _DB_PREFIX_ . 'smart_blog_post_category` itc1, `' . _DB_PREFIX_ . 'smart_blog_post_category` itc2 ,`' . _DB_PREFIX_ . 'smart_blog_post_lang` itl, `' . _DB_PREFIX_ . 'smart_blog_post_shop` its'
+
+                . ' WHERE it.id_smart_blog_post = itc2.id_smart_blog_post AND itl.id_smart_blog_post = itc2.id_smart_blog_post AND  itc1.id_smart_blog_category =itc2.id_smart_blog_category  AND itc1.id_smart_blog_post ='.(int)$id_post.' AND itc2.id_smart_blog_post <>'.(int)$id_post.' AND it.active =1 AND itl.id_lang = '.(int) Context::getContext()->language->id.' AND its.id_smart_blog_post = it.id_smart_blog_post AND its.id_shop = '.(int) Context::getContext()->shop->id. ' ORDER BY it.id_smart_blog_post DESC LIMIT 0,' . $limit;
+
+
+            
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql); 
+            
+            $id_posts = array();
+            
+            foreach($result as $id_item){
+                
+                if(!in_array($id_item, $id_posts)){
+                    $id_posts[]=$id_item;
+                }
+                
+            }
+            return $id_posts;
+    }
+
     public static function getPost($id_post, $id_lang = null)
     {
         $result = array();
@@ -95,6 +157,20 @@ class SmartBlogPost extends ObjectModel
 
         if (!$post = Db::getInstance()->executeS($sql))
             return false;
+
+        $selected_cat = BlogCategory::getPostCategoriesFull((int) $post[0]['id_smart_blog_post'], Context::getContext()->language->id);
+
+        $result['id_category'] = 1;
+        $result['cat_link_rewrite'] = '';
+        $result['cat_name'] = '';
+
+        foreach ($selected_cat as $key => $value) {
+            $result['id_category'] = $selected_cat[$key]['id_category'];
+            $result['cat_link_rewrite'] = $selected_cat[$key]['link_rewrite'];
+            $result['cat_name'] = $selected_cat[$key]['name'];
+        }
+
+        
         $result['id_post'] = $post[0]['id_smart_blog_post'];
         $result['meta_title'] = $post[0]['meta_title'];
         $result['meta_description'] = $post[0]['meta_description'];
@@ -120,8 +196,6 @@ class SmartBlogPost extends ObjectModel
         $result['comment_status'] = $post[0]['comment_status'];
         $result['viewed'] = $post[0]['viewed'];
         $result['is_featured'] = $post[0]['is_featured'];
-        $result['post_type'] = $post[0]['post_type'];
-        $result['id_category'] = $post[0]['id_category'];
         $employee = new Employee($post[0]['id_author']);
         $result['lastname'] = $employee->lastname;
         $result['firstname'] = $employee->firstname;
@@ -132,23 +206,6 @@ class SmartBlogPost extends ObjectModel
             $result['post_img'] = NULL;
         }
         
-    //            post format code
-        $post_format = $post[0]['post_type'];
-        $result['post_format'] = $post_format;
-        if(isset(smartblog::$post_meta_fields[$post_format]) 
-                && !empty(smartblog::$post_meta_fields[$post_format])){
-            $importMetadata = array();
-
-            foreach(smartblog::$post_meta_fields[$post_format] as $meta){
-                $meta_key = "{$post_format}-{$meta['name']}";
-                $id_lang = null;
-                if(isset($meta['lang']) && $meta['lang']){
-                    $id_lang = Context::getContext()->language->id;
-                }
-                $importMetadata[$meta_key] = BlogPostMeta::get((int)$post[0]['id_smart_blog_post'], $meta_key, false, $id_lang);
-            }
-            $result['post_format_data'] = $importMetadata;
-        }
         
         return $result;
     }
@@ -158,7 +215,7 @@ class SmartBlogPost extends ObjectModel
         if ($id_lang == null) {
             $id_lang = (int) Context::getContext()->language->id;
         }
-        if ($limit_start == '')
+        if ($limit_start == '' || $limit_start < 0)
             $limit_start = 0;
         if ($limit == '')
             $limit = 5;
@@ -176,6 +233,26 @@ class SmartBlogPost extends ObjectModel
         $BlogCategory = new BlogCategory();
         $i = 0;
         foreach ($posts as $post) {
+
+            if (new DateTime() >= new DateTime($post['created'])){
+                
+            } else {
+                continue;
+            }
+
+            $selected_cat = BlogCategory::getPostCategoriesFull((int) $post['id_smart_blog_post'], Context::getContext()->language->id);
+
+            $result[$i]['id_category'] = 1;
+            $result[$i]['cat_link_rewrite'] = '';
+            $result[$i]['cat_name'] = '';
+
+            foreach ($selected_cat as $key => $value) {
+                $result[$i]['id_category'] = $selected_cat[$key]['id_category'];
+                $result[$i]['cat_link_rewrite'] = $selected_cat[$key]['link_rewrite'];
+                $result[$i]['cat_name'] = $selected_cat[$key]['name'];
+            }
+
+
             $result[$i]['id_post'] = $post['id_smart_blog_post'];
             $result[$i]['is_featured'] = $post['is_featured'];
             $result[$i]['viewed'] = $post['viewed'];
@@ -197,23 +274,7 @@ class SmartBlogPost extends ObjectModel
             }
             $result[$i]['created'] = $post['created'];
             
-//            post format code
-            $post_format = $post['post_type'];
-            $result[$i]['post_format'] = $post_format;
-            if(isset(smartblog::$post_meta_fields[$post_format]) 
-                    && !empty(smartblog::$post_meta_fields[$post_format])){
-                $importMetadata = array();
-                
-                foreach(smartblog::$post_meta_fields[$post_format] as $meta){
-                    $meta_key = "{$post_format}-{$meta['name']}";
-                    $id_lang = null;
-                    if(isset($meta['lang']) && $meta['lang']){
-                        $id_lang = Context::getContext()->language->id;
-                    }
-                    $importMetadata[$meta_key] = BlogPostMeta::get((int)$post['id_smart_blog_post'], $meta_key, false, $id_lang);
-                }
-                $result[$i]['post_format_data'] = $importMetadata;
-            }
+
             
             $i++;
         }
@@ -232,7 +293,18 @@ class SmartBlogPost extends ObjectModel
                 AND p.active= 1';
         if (!$posts = Db::getInstance()->executeS($sql))
             return false;
-        return count($posts);
+
+        $return_count = 0;
+
+        foreach ($posts as $post) {
+            if (new DateTime() >= new DateTime($post['created'])){
+                $return_count++;
+            } else {
+                continue;
+            }
+        }
+        
+        return $return_count;
     }
 
     public static function getToltalByCategory($id_lang = null, $id_category = null)
@@ -391,60 +463,6 @@ class SmartBlogPost extends ObjectModel
         return $result;
     }
 
-    public static function getRelatedPosts($id_lang = null, $id_cat = null, $id_post = null)
-    {
-        if ($id_lang == null) {
-            $id_lang = (int) Context::getContext()->language->id;
-        }
-        if (Configuration::get('smartshowrelatedpost') != '' && Configuration::get('smartshowrelatedpost') != null) {
-            $limit = Configuration::get('smartshowrelatedpost');
-        } else {
-            $limit = 5;
-        }
-        if ($id_cat == null) {
-            $id_cat = 1;
-        }
-        if ($id_post == null) {
-            $id_post = 1;
-        }
-        $sql = 'SELECT  p.id_smart_blog_post,p.created,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
-                ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
-                ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
-                WHERE pl.id_lang=' . $id_lang . '  AND p.active = 1 AND p.id_category = ' . $id_cat . ' AND p.id_smart_blog_post != ' . $id_post . ' ORDER BY p.id_smart_blog_post DESC LIMIT 0,' . $limit;
-
-        if (!$posts = Db::getInstance()->executeS($sql))
-            return false;
-        return $posts;
-    }
-
-    public static function getRelatedPostsById_post($id_post = null)
-    {
-        if (Configuration::get('smartshowrelatedpost') != '' && Configuration::get('smartshowrelatedpost') != null) {
-            $limit = Configuration::get('smartshowrelatedpost');
-        } else {
-            $limit = 5;
-        }
-        
-        
-        $sql = 'SELECT itl.*,it.* FROM `' . _DB_PREFIX_ . 'smart_blog_post` it,`' . _DB_PREFIX_ . 'smart_blog_post_category` itc1, `' . _DB_PREFIX_ . 'smart_blog_post_category` itc2 ,`' . _DB_PREFIX_ . 'smart_blog_post_lang` itl, `' . _DB_PREFIX_ . 'smart_blog_post_shop` its'
-
-                . ' WHERE it.id_smart_blog_post = itc2.id_smart_blog_post AND itl.id_smart_blog_post = itc2.id_smart_blog_post AND  itc1.id_smart_blog_category =itc2.id_smart_blog_category  AND itc1.id_smart_blog_post ='.(int)$id_post.' AND itc2.id_smart_blog_post <>'.(int)$id_post.' AND it.active =1 AND itl.id_lang = '.(int) Context::getContext()->language->id.' AND its.id_smart_blog_post = it.id_smart_blog_post AND its.id_shop = '.(int) Context::getContext()->shop->id. ' ORDER BY it.id_smart_blog_post DESC LIMIT 0,' . $limit;
-
-
-            
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql); 
-            
-            $id_posts = array();
-            
-            foreach($result as $id_item){
-                
-                if(!in_array($id_item, $id_posts)){
-                    $id_posts[]=$id_item;
-                }
-                
-            }
-            return $id_posts;
-    }
     public static function getRecentPosts($id_lang = null)
     {
         
@@ -459,7 +477,7 @@ class SmartBlogPost extends ObjectModel
             }
          
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT  p.id_author,p.post_type,p.id_smart_blog_post,p.created,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT  p.id_author,p.id_smart_blog_post,p.created,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
                 WHERE pl.id_lang=' . $id_lang . '  AND p.active = 1 ORDER BY p.id_smart_blog_post DESC LIMIT 0,' . $limit);
@@ -518,23 +536,6 @@ class SmartBlogPost extends ObjectModel
             }
             $result[$i]['created'] = $post['created'];
             
-            $post_format = $post['post_type'];
-            $result[$i]['post_format'] = $post_format;
-            
-            if(isset(smartblog::$post_meta_fields[$post_format]) 
-                    && !empty(smartblog::$post_meta_fields[$post_format])){
-                $importMetadata = array();
-                
-                foreach(smartblog::$post_meta_fields[$post_format] as $meta){
-                    $meta_key = "{$post_format}-{$meta['name']}";
-                    $id_lang = null;
-                    if(isset($meta['lang']) && $meta['lang']){
-                        $id_lang = Context::getContext()->language->id;
-                    }
-                    $importMetadata[$meta_key] = BlogPostMeta::get((int)$post['id_smart_blog_post'], $meta_key, false, $id_lang);
-                }
-                $result[$i]['post_format_data'] = $importMetadata;
-            }
             
             $i++;
         }
@@ -596,24 +597,7 @@ class SmartBlogPost extends ObjectModel
                 $result[$i]['post_img'] = 'no';
             }
             $result[$i]['created'] = $post['created'];
-            
-            $post_format = $post['post_type'];
-            $result[$i]['post_format'] = $post_format;
-            
-            if(isset(smartblog::$post_meta_fields[$post_format]) 
-                    && !empty(smartblog::$post_meta_fields[$post_format])){
-                $importMetadata = array();
-                
-                foreach(smartblog::$post_meta_fields[$post_format] as $meta){
-                    $meta_key = "{$post_format}-{$meta['name']}";
-                    $id_lang = null;
-                    if(isset($meta['lang']) && $meta['lang']){
-                        $id_lang = Context::getContext()->language->id;
-                    }
-                    $importMetadata[$meta_key] = BlogPostMeta::get((int)$post['id_smart_blog_post'], $meta_key, false, $id_lang);
-                }
-                $result[$i]['post_format_data'] = $importMetadata;
-            }
+
             
             $i++;
         }
@@ -690,9 +674,6 @@ class SmartBlogPost extends ObjectModel
 
         foreach ($posts as $post) {
 
-
- 
-            $result[$i]['post_format'] = $post['post_type'];
 
             $result[$i]['id_post'] = $post['id_smart_blog_post'];
             $result[$i]['viewed'] = $post['viewed'];
@@ -831,10 +812,11 @@ class SmartBlogPost extends ObjectModel
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
                 WHERE pl.id_lang=' . $id_lang . ' 		
-                AND p.active= 1 ORDER BY p.id_smart_blog_post DESC 
+                AND p.active= 1 ORDER BY  '.$orderby.' '.$orderway.'
                 LIMIT ' . $limit;
+
         $posts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        if (empty($posts)) {
+      /*  if (empty($posts)) {
             $sql2 = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post  AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
@@ -842,7 +824,7 @@ class SmartBlogPost extends ObjectModel
                 AND p.active= 1 ORDER BY '.$orderby.' '.$orderway.' 
                 LIMIT ' . pSQL($limit);
             $posts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql2);
-        }
+        }*/
         $i = 0;
         foreach ($posts as $post) {
             $result[$i]['id'] = $post['id_smart_blog_post'];
@@ -851,7 +833,7 @@ class SmartBlogPost extends ObjectModel
             $result[$i]['short_description'] = strip_tags($post['short_description']);
             $result[$i]['content'] = strip_tags($post['content']);
             $result[$i]['category'] = $post['id_category'];
-            $result[$i]['date_added'] = Smartblog::displayDate ($post['created']); ;
+            $result[$i]['date_added'] = Smartblog::displayDate($post['created']); ;
             $result[$i]['viewed'] = $post['viewed'];
             $result[$i]['is_featured'] = $post['is_featured'];
             $result[$i]['link_rewrite'] = $post['link_rewrite'];
@@ -968,71 +950,7 @@ class SmartBlogPost extends ObjectModel
             return false;
         return $posts_previous;
     }
-    
-//    public static function getRelatedProduct($id_lang = null, $id_post = null)
-//    {
-//        if ($id_lang == null) {
-//            $id_lang = (int) Context::getContext()->language->id;
-//        }
-//        if (Configuration::get('smartshowrelatedproduct') != '' && Configuration::get('smartshowrelatedproduct') != null) {
-//            $limit = Configuration::get('smartshowrelatedproduct');
-//        } else {
-//            $limit = 5;
-//        }
-//
-//        if ($id_post == null) {
-//            $id_post = 1;
-//        }
-//        $sql = 'SELECT p.`id_product` 
-//       FROM `' . _DB_PREFIX_ . 'smart_blog_product_related` as b_pr
-//       LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product`= b_pr.`id_product`)
-//       LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-//         p.`id_product` = pl.`id_product`
-//         AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
-//       ) WHERE `id_smart_blog_post` = ' . (int) $id_post . ' ORDER BY b_pr.id_smart_blog_post DESC LIMIT 0,' . $limit;
-//        $product_reductions = Db::getInstance()->executeS($sql);
-//        $ids = array();
-//        $j = 0;
-//        foreach ($product_reductions as $value) {
-//            $ids[$j] = $value['id_product'];
-//            $j++;
-//        }
-//        $Id_product = implode(",", $ids);
-//        $productdata = self::getProductsByProductIDS($Id_product);
-//        return $productdata;
-//    }
 
-    //Related Product....
-    public static function getRelatedProduct($id_lang = null, $id_post = null)
-    {
-        if ($id_lang == null) {
-            $id_lang = (int) Context::getContext()->language->id;
-        }
-        if (Configuration::get('smartshowrelatedproduct') != '' && Configuration::get('smartshowrelatedproduct') != null) {
-            $limit = Configuration::get('smartshowrelatedproduct');
-        } else {
-            $limit = 5;
-        }
-
-        if ($id_post == null) {
-            $id_post = 1;
-        }
-        
-        $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post WHERE id_smart_blog_post = '. $id_post;
-        $postDetails = Db::getInstance()->executeS($sql); 
-        $currentPost = $postDetails[0]; 
-        $product_ids = explode('-',$currentPost['associations']);  
-        $productIdString='';
-        foreach($product_ids as $product_id){
-            if(empty($product_id)) continue;
-            $productIdString.= $product_id . ',';
-            }
-        $productIdString = substr_replace($productIdString, '', -1); 
-        
-        $products=self::getProductsByProductIDS((string) $productIdString);
-        
-         return $products;
-    }
 
     public static function getProductsByProductIDS($product_ids = '')
     {
@@ -1066,72 +984,6 @@ class SmartBlogPost extends ObjectModel
             return $productdata;
         }
     }
-//public static function getProductsByProductIDS($product_ids = '')
-//    {
-//        if ($product_ids) {
-//            $sql = 'SELECT p.*, pl.* FROM `' . _DB_PREFIX_ . 'product` p
-//      ' . Shop::addSqlAssociation('product', 'p') . '
-//      LEFT JOIN ' . _DB_PREFIX_ . 'product_attribute pa ON (pa.id_product = p.id_product)
-//      ' . Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on=1') . '
-//      ' . Product::sqlStock('p', 0, false) . '
-//      LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-//       p.`id_product` = pl.`id_product`
-//       AND pl.`id_lang` = ' . (int) Context::getContext()->language->id . Shop::addSqlRestrictionOnLang('pl') . '
-//      )
-//      LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = p.`id_product`)' .
-//                    Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1') . '
-//      LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) Context::getContext()->language->id . ')
-//      LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-//      WHERE  p.`id_product` IN(' . $product_ids . ') 
-//                               AND product_shop.`active` = 1
-//      AND product_shop.`show_price` = 1
-//      AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-//      AND (pa.id_product_attribute IS NULL OR product_attribute_shop.default_on = 1)';
-//            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-//            $productdata = Product::getProductsProperties((int) Context::getContext()->language->id, $result);
-//            return $productdata;
-//        }
-//    }
-
-//    public static function getRelatedPostsByProduct($id_lang = null, $id_product = null)
-//    {
-//        if ($id_lang == null) {
-//            $id_lang = (int) Context::getContext()->language->id;
-//        }
-//        if (Configuration::get('smartshowrelatedproductpost') != '' && Configuration::get('smartshowrelatedproductpost') != null) {
-//            $limit = Configuration::get('smartshowrelatedproductpost');
-//        } else {
-//            $limit = 5;
-//        }
-//
-//        if ($id_product == null) {
-//            $id_product = 1;
-//        }
-//
-//        $sql = 'SELECT `id_smart_blog_post` FROM ' . _DB_PREFIX_ . 'smart_blog_product_related WHERE `id_product`=' . $id_product;
-//
-//        $posts1 = Db::getInstance()->executeS($sql);
-//        $ids = array();
-//        $j = 0;
-//        foreach ($posts1 as $value) {
-//            $ids[$j] = $value['id_smart_blog_post'];
-//            $j++;
-//        }
-//        $id_smart_blog_post = implode(",", $ids);
-//
-//        if ($id_smart_blog_post) {
-//            $sql1 = 'SELECT  p.id_smart_blog_post,p.created,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
-//                  ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
-//                  ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
-//                  WHERE pl.id_lang=' . $id_lang . '  AND p.active = 1  AND p.`id_smart_blog_post` IN(' . $id_smart_blog_post . ') ORDER BY p.id_smart_blog_post DESC LIMIT 0,' . $limit;
-//
-//            if (!$posts = Db::getInstance()->executeS($sql1))
-//                return false;
-//            return $posts;
-//        }
-//    }
-    
-    
     public static function getRelatedPostsByProduct($id_lang = null, $id_product = null)
     {
         if ($id_lang == null) {
@@ -1175,5 +1027,4 @@ class SmartBlogPost extends ObjectModel
      //   print_r($relatedPosts[0]);die();
       return $relatedPosts;
     }
-
 }

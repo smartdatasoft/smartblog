@@ -28,9 +28,9 @@
     <span class="navigation-pipe">{$navigationPipe|escape:'htmlall':'UTF-8'}</span>{$title_category|escape:'htmlall':'UTF-8'}{/if}{/capture}
     {if $postcategory == ''}
         {if $title_category != ''}
-             <p class="error">{l s='No Post in Category' mod='smartblog'}</p>
+              <div class="alert alert-danger"><p>There is 1 error</p><ol><li>{l s='No Post in Category' mod='smartblog'}</li></ol></div>
         {else}
-             <p class="error">{l s='No Post in Blog' mod='smartblog'}</p>
+          <div class="alert alert-danger"><p>There is 1 error</p><ol><li>{l s='No Post in Blog' mod='smartblog'}</li></ol></div>
         {/if}
     {else}
 	{if $smartdisablecatimg == '1'}
@@ -45,20 +45,22 @@
         {else} 
                 
                 {if ($cat_image != "no" && $activeimgincat == 0) || $activeimgincat == 1}
-                <img alt="{$category.meta_title|escape:'htmlall':'UTF-8'}" src="{$smartbloglink->getImageLink($cat_link_rewrite, $cat_image, 'single-default')}" class="imageFeatured">
+                <img alt="{$category.meta_title|escape:'htmlall':'UTF-8'}" src="{$cat_image}" class="imageFeatured">
                
                {/if}
         {/if}
                
                
-               {$category.description|escape:'htmlall':'UTF-8'}
+               {$category.description}
             </div>
              {/foreach}  
         {/if}
     {/if}
     <div id="smartblogcat" class="block">
 {foreach from=$postcategory item=post}
-    {include file="./category_loop.tpl" postcategory=$postcategory}
+  
+      {include file="./category_loop.tpl" postcategory=$postcategory}
+  
 {/foreach}
     </div>
     {if !empty($pagenums)}
@@ -89,7 +91,7 @@
                 <div class="results">{l s='Showing' mod='smartblog'} {if $limit_start!=0}{$limit_start|escape:'htmlall':'UTF-8'}{else}1{/if} {l s='to' mod='smartblog'} {if $limit_start+$limit >= $total}{$total|escape:'htmlall':'UTF-8'}{else}{$limit_start+$limit|escape:'htmlall':'UTF-8'}{/if} {l s='of' mod='smartblog'} {$total|escape:'htmlall':'UTF-8'} ({$c|escape:'htmlall':'UTF-8'} {l s='Pages' mod='smartblog'})</div>
             </div>
   </div>
-  </div> {/if}
+   {/if}
  {/if}
 {if isset($smartcustomcss)}
     <style>
