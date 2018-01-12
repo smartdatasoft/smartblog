@@ -27,7 +27,7 @@ class smartbloghomelatestnews extends Module {
                  if (!parent::install() || !$this->registerHook('displayHome'))
             return false;
                  Configuration::updateValue('smartshowhomepost',4);
-                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_DESC');
+                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_desc');
                  return true;
             }
             
@@ -49,7 +49,6 @@ class smartbloghomelatestnews extends Module {
 
         if (!$this->isCached('smartblog_latest_news.tpl')) {
             $view_data['posts'] = SmartBlogPost::GetPostLatestHome(Configuration::get('smartshowhomepost'));
-      
             $this->smarty->assign(array(
                 'smartbloglink' => $smartbloglink,
                 'view_data' => $view_data['posts']
@@ -113,7 +112,7 @@ class smartbloghomelatestnews extends Module {
                                 'name' => 'Name ASC (A-Z)'
                             ),
                             array(
-                                'id_option' => 'name_DESC',
+                                'id_option' => 'name_DSC',
                                 'name' => 'Name DESC (Z-A)'
                             ),
                             array(
@@ -121,7 +120,7 @@ class smartbloghomelatestnews extends Module {
                                 'name' => 'Id ASC'
                             ),
                             array(
-                                'id_option' => 'id_DESC',
+                                'id_option' => 'id_ASC',
                                 'name' => 'Id DESC'
                             ),
                         ),
