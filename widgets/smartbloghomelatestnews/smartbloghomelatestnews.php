@@ -26,7 +26,7 @@ class smartbloghomelatestnews extends Module {
                 $id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
                  if (!parent::install() || !$this->registerHook('displayHome'))
             return false;
-                 Configuration::updateValue('smartshowhomepost',4);
+                 Configuration::updateValue('smartshowhomepost',3);
                  Configuration::updateGlobalValue('latestnews_sort_by', 'id_DESC');
                  return true;
             }
