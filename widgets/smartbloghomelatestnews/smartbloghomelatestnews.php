@@ -26,8 +26,8 @@ class smartbloghomelatestnews extends Module {
                 $id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
                  if (!parent::install() || !$this->registerHook('displayHome'))
             return false;
-                 Configuration::updateValue('smartshowhomepost',4);
-                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_desc');
+                 Configuration::updateValue('smartshowhomepost',3);
+                 Configuration::updateGlobalValue('latestnews_sort_by', 'id_DESC');
                  return true;
             }
             
@@ -112,7 +112,7 @@ class smartbloghomelatestnews extends Module {
                                 'name' => 'Name ASC (A-Z)'
                             ),
                             array(
-                                'id_option' => 'name_DSC',
+                                'id_option' => 'name_DESC',
                                 'name' => 'Name DESC (Z-A)'
                             ),
                             array(
@@ -120,7 +120,7 @@ class smartbloghomelatestnews extends Module {
                                 'name' => 'Id ASC'
                             ),
                             array(
-                                'id_option' => 'id_ASC',
+                                'id_option' => 'id_DESC',
                                 'name' => 'Id DESC'
                             ),
                         ),
