@@ -2,7 +2,7 @@
 <module>
 	<name>smartblog</name>
 	<displayName><![CDATA[Smart Blog]]></displayName>
-	<version><![CDATA[3.0.0]]></version>
+	<version><![CDATA[2.0.3]]></version>
 	<description><![CDATA[The Most Powerfull Prestashop Blog  Module - by smartdatasoft]]></description>
 	<author><![CDATA[SmartDataSoft]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
