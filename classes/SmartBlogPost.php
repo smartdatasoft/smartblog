@@ -366,7 +366,9 @@ class SmartBlogPost extends ObjectModel
 		INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_tag` (`id_tag`, `id_post`)
 		VALUES ' . $data);
     }
-
+    public static function subStr($string, $length){
+        return strlen($string) > $length ? substr($string,0,$length)."..." : $string;
+    }
     public function add($autodate = true, $null_values = false)
     {
         if (!parent::add($autodate, $null_values))
