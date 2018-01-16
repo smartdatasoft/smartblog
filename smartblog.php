@@ -32,7 +32,7 @@ class smartblog extends Module
     public function __construct(){
         $this->name = 'smartblog';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.3';
+        $this->version = '2.2.0';
         $this->author = 'SmartDataSoft';
         $this->need_upgrade = true;
         // $this->controllers = array('archive', 'category', 'details', 'search', 'tagpost');
