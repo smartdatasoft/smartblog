@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>smartblog</name>
-	<displayName><![CDATA[Smart Blog]]></displayName>
-	<version><![CDATA[2.0.3]]></version>
-	<description><![CDATA[The Most Powerfull Prestashop Blog  Module - by smartdatasoft]]></description>
+	<name>smartblogpopularposts</name>
+	<displayName><![CDATA[Smart Blog Popular Posts]]></displayName>
+	<version><![CDATA[2.0.1]]></version>
+	<description><![CDATA[The Most Powerfull Presta shop Blog  Module&#039;s Popular Posts - by smartdatasoft]]></description>
 	<author><![CDATA[SmartDataSoft]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
 	<confirmUninstall><![CDATA[Are you sure you want to delete your details ?]]></confirmUninstall>

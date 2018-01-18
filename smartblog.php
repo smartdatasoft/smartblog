@@ -32,7 +32,7 @@ class smartblog extends Module
     public function __construct(){
         $this->name = 'smartblog';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.3';
+        $this->version = '2.2.0';
         $this->author = 'SmartDataSoft';
         $this->need_upgrade = true;
         // $this->controllers = array('archive', 'category', 'details', 'search', 'tagpost');
@@ -71,7 +71,7 @@ class smartblog extends Module
         Configuration::updateGlobalValue('smartenableguestcomment', '1');
         Configuration::updateGlobalValue('smartcaptchaoption', '1');
         Configuration::updateGlobalValue('smartshowviewed', '1');
-        Configuration::updateGlobalValue('smartshownoimg', '0');
+        Configuration::updateGlobalValue('smartshownoimg', '1');
         Configuration::updateGlobalValue('smartshowcolumn', '3');
         Configuration::updateGlobalValue('smartacceptcomment', '1');
         Configuration::updateGlobalValue('smartcustomcss', '');
@@ -121,10 +121,60 @@ class smartblog extends Module
 
         $this->CreateSmartBlogTabs();
         $this->SampleDataInstall();
+        $this->installDummyData();
         $this->SmartHookInsert();
         $this->SmartHookRegister();
 
         return true;
+    }
+
+    public function installDummyData(){
+        $image_types = BlogImageType::GetImageAllType('post');
+        $id_smart_blog_posts = $this->getAllPost();
+        $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+        $langs = Language::getLanguages();
+
+        $arrayImg = array();
+        foreach (scandir(__DIR__.'/dummy_data') as $images) {
+            if (in_array($images, ['.', '..'])) {
+                continue;
+            }
+            $arrayImg[] = $images;
+        }
+        $img_count = 0;
+        foreach ($id_smart_blog_posts as $id_smart_blog_post) {
+            $files_to_delete = array();
+
+            $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg';
+            $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg';
+
+            foreach ($langs as $l)
+            {
+                $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post['id_smart_blog_post'] . '_' . $l['id_lang'] . '.jpg';
+                $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post['id_smart_blog_post'] . '_' . $l['id_lang'] . '.jpg';
+            }
+
+            foreach ($files_to_delete as $file)
+                if (file_exists($file)) @unlink($file);
+
+            Tools::Copy(__DIR__."/dummy_data/".$arrayImg[$img_count], _PS_MODULE_DIR_."/smartblog/images/".$id_smart_blog_post['id_smart_blog_post'].'.jpg');
+            foreach ($image_types as $image_type) {
+                ImageManager::resize(__DIR__."/dummy_data/".$arrayImg[$img_count], _PS_MODULE_DIR_ . 'smartblog/images/' . $id_smart_blog_post['id_smart_blog_post'] . '-' . stripslashes($image_type['type_name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height']
+                );
+            }
+            $img_count = (count($arrayImg) > $img_count)? $img_count+1 : 0;
+        }
+        
+    }
+
+    public static function getAllPost()
+    {
+        $sql = 'SELECT p.id_smart_blog_post 
+                FROM `' . _DB_PREFIX_ . 'smart_blog_post_lang` p';
+
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
+            return false;
+        return $result;
     }
 
     public function hookactionHtaccessCreate()
@@ -1671,7 +1721,6 @@ class smartblog extends Module
             return false;
         return $result[0]['id_smart_blog_post'];
     }
-
 
 
     public function smartblogcategoriesHookLeftColumn($params)

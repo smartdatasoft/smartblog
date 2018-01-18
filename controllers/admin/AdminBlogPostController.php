@@ -579,8 +579,23 @@ class AdminBlogPostController extends ModuleAdminController {
                 }
 
                 $posts_types = BlogImageType::GetImageAllType('post');
+                $langs = Language::getLanguages();
                 foreach ($posts_types as $image_type) {
-                    $dir = _PS_MODULE_DIR_ . 'smartblog/images/' . $id . '-' . stripslashes($image_type['type_name']) . '.jpg';
+                        $files_to_delete = array();
+
+                        $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id . '.jpg';
+                        $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id . '.jpg';
+
+                        foreach ($langs as $l)
+                        {
+                            $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id . '_' . $l['id_lang'] . '.jpg';
+                            $files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id . '_' . $l['id_lang'] . '.jpg';
+                        }
+
+                        $dir = '';
+                        foreach ($files_to_delete as $file)
+                            if (file_exists($file) && !@unlink($file))
+                                $dir = _PS_MODULE_DIR_ . 'smartblog/images/' . $id . '-' . stripslashes($image_type['type_name']) . '.jpg';
                     if (file_exists($dir))
                         unlink($dir);
                 }

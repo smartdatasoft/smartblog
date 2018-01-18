@@ -70,14 +70,12 @@ class SmartBlogLink
      */
     public function getImageLink($name, $ids, $type = null)
     {
-        
+
+       if(Configuration::get('smartshownoimg')){
+
+       }
         $not_default = false;
 
-        // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        /* if (Configuration::get('WATERMARK_LOGGED') && (Module::isInstalled('watermark') && Module::isEnabled('watermark')) && isset(Context::getContext()->customer->id)) {
-          $type .= '-'.Configuration::get('WATERMARK_HASH');
-          }
-         */
         // legacy mode or default image
         $theme = ((Shop::isFeatureActive() && file_exists(_MODULE_SMARTBLOG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->id_theme . '.jpg')) ? '-' . Context::getContext()->shop->id_theme : '');
         if ((Configuration::get('PS_LEGACY_IMAGES') && (file_exists(_MODULE_SMARTBLOG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg'))) || ($not_default = strpos($ids, 'default') !== false)) {
@@ -99,14 +97,47 @@ class SmartBlogLink
 
             }
         }
-
+// echo $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path.'<br>';
         if (@getimagesize($this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path)) {
-            return $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path;
+            $return_val = $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path;
         } else {
-            if(Configuration::get('smartshownoimg'))
-                return __PS_BASE_URI__ . 'modules/smartblog/images/no-single-default.jpg';
-            return "false";
+            $split_ids = explode('-', $ids);
+            $id_image = (isset($split_ids[1]) ? $split_ids[1] : $split_ids[0]);
+            
+            $tmp_main_img = __PS_BASE_URI__ . 'modules/smartblog/images/'.$id_image.'.jpg';
+            if(@getimagesize($this->protocol_content . Tools::getMediaServer($tmp_main_img) . $tmp_main_img)){
+                $posts_types = BlogImageType::GetImageAllType('post');
+                foreach ($posts_types as $image_type) {
+                    if(stripslashes($image_type['type_name']) == $type){
+                        ImageManager::resize(__DIR__."/../images/".$id_image.".jpg", _PS_MODULE_DIR_ . 'smartblog/images/'.$id_image.'-' . stripslashes($image_type['type_name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height']);
+                    }
+                }
+            } else {
+                if(Configuration::get('smartshownoimg')){
+                    $no_img = __PS_BASE_URI__ . 'modules/smartblog/images/no.jpg';
+                    if ($this->allow == 1) {
+                        $return_val = __PS_BASE_URI__ . 'blog/' . 'no' . ($type ? '-' . $type : '') . '/' . $name . '.jpg';;
+                    } else {
+                        $return_val = __PS_BASE_URI__ . 'modules/smartblog/images/no' . ($type ? '-' . $type : '') . '.jpg';
+                    }
+                    $return_val = $this->protocol_content . Tools::getMediaServer($return_val) . $return_val;
+                    if (!@getimagesize($return_val) AND @getimagesize($this->protocol_content . Tools::getMediaServer($no_img) . $no_img)) {
+                        $posts_types = BlogImageType::GetImageAllType('post');
+
+                        foreach ($posts_types as $image_type) {
+                            if(stripslashes($image_type['type_name']) == $type){
+                                ImageManager::resize(__DIR__."/../images/no.jpg", _PS_MODULE_DIR_ . 'smartblog/images/no-' . stripslashes($image_type['type_name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height']);
+
+                            }
+                        }
+                    }
+                } else {
+                    $return_val = "false";
+                }
+            }
         }
+
+        return (isset($return_val))? $return_val : '';
     }
 
     public  function getSmartBlogPostLink($blogpost, $alias = null, $ssl = null, $id_lang = null, $id_shop = null, $relative_protocol= false)
