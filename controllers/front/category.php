@@ -222,8 +222,8 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
         ));
         
         $this->context->smarty->assign('meta_title',$meta_title);
-        $this->context->smarty->assign('meta_description',$meta_keyword);
-        $this->context->smarty->assign('meta_keywords',$meta_description);
+        $this->context->smarty->assign('meta_description',$meta_description);
+        $this->context->smarty->assign('meta_keywords',$meta_keyword);
 
         $template_name = 'module:smartblog/views/templates/front/postcategory.tpl';'';
 
