@@ -81,7 +81,7 @@
                     </a>
                     {/if}
                    <div class="sdsarticle-des" style="text-align: left;">
-                    {$post.short_description}
+                    {$post.content}
                    </div>
                    {$displayBackOfficeSmartBlog}
             </div>
