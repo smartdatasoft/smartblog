@@ -76,6 +76,10 @@ class SmartBlogLink
 
        }
         $not_default = false;
+        if(Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')){
+            $this->protocol_content = 'https://';
+        }
+
 
         // legacy mode or default image
         $theme = ((Shop::isFeatureActive() && file_exists(_MODULE_SMARTBLOG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
