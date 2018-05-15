@@ -120,6 +120,7 @@ class smartblog extends Module
         endforeach;
 
         $this->CreateSmartBlogTabs();
+	$this->RequiredDataInstall();
         $this->SampleDataInstall();
         $this->installDummyData();
         $this->SmartHookInsert();
@@ -309,33 +310,43 @@ class smartblog extends Module
         }
         return true;
     }
-
-    public function SampleDataInstall()
+	
+    public function RequiredDataInstall()
     {
-        $damisql = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category (id_parent,level_depth,active) VALUES (0,0,1);";
-        Db::getInstance()->execute($damisql);
+        Db::getInstance()->execute(
+            'INSERT INTO `'._DB_PREFIX_.'smart_blog_category` (`id_parent`,`level_depth`,`position`,`active`,`created`) VALUES (0,0,0,1,NOW())'
+        );
 
-        $damisql_1 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category (id_parent,level_depth,active) VALUES (1,1,1);";
-        Db::getInstance()->execute($damisql_1);
-
-        $damisq1l = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_shop (id_smart_blog_category,id_shop) VALUES (1,'" . (int) $this->smart_shop_id . "');";
-        Db::getInstance()->execute($damisq1l);
-
-        $damisq1l_1 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_shop (id_smart_blog_category,id_shop) VALUES (2,'" . (int) $this->smart_shop_id . "');";
-        Db::getInstance()->execute($damisq1l_1);
+        Db::getInstance()->execute(
+            "INSERT INTO `"._DB_PREFIX_."smart_blog_category_shop` (`id_smart_blog_category`,`id_shop`) VALUES (1,'".(int)$this->smart_shop_id."')"
+        );
 
         $languages = Language::getLanguages(false);
         foreach ($languages as $language) {
-            $damisql2 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_lang (id_smart_blog_category,name,meta_title,id_lang,link_rewrite) VALUES (1,'Home','Home','" . (int) $language['id_lang'] . "','home');";
-            Db::getInstance()->execute($damisql2);
+            Db::getInstance()->execute(
+                "INSERT INTO `"._DB_PREFIX_."smart_blog_category_lang` (`id_smart_blog_category`,`name`,`meta_title`,`id_lang`,`link_rewrite`) VALUES (1,'Home','Home','".(int)$language['id_lang']."','home')"
+            );
+        }
+    }
 
-            $damisql2_1 = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_category_lang (id_smart_blog_category,name,meta_title,id_lang,link_rewrite) VALUES (2,'Politics','Politics','" . (int) $language['id_lang'] . "','politics');";
-            Db::getInstance()->execute($damisql2_1);
+    public function SampleDataInstall()
+    {
+        Db::getInstance()->execute(
+            'INSERT INTO `'._DB_PREFIX_.'smart_blog_category` (`id_parent`,`level_depth`,`position`,`desc_limit`,`active`,`created`) VALUES (1,1,0,0,1,NOW())'
+        );
+
+        Db::getInstance()->execute(
+            "INSERT INTO `"._DB_PREFIX_."smart_blog_category_shop` (`id_smart_blog_category`,`id_shop`) VALUES (2,'".(int)$this->smart_shop_id."')"
+        );
+
+        $languages = Language::getLanguages(false);
+        foreach ($languages as $language) {
+            Db::getInstance()->execute(
+                "INSERT INTO `"._DB_PREFIX_."smart_blog_category_lang` (`id_smart_blog_category`,`name`,`meta_title`,`id_lang`,`link_rewrite`) VALUES (1,'Politics','Politics','".(int)$language['id_lang']."','politics')"
+            );
         }
         for ($i = 1; $i <= 4; $i++) {
-            Db::getInstance()->Execute('
-                                                INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post`(`id_author`, `id_category`, `position`, `active`, `available`, `created`, `viewed`, `comment_status`) 
-                                                VALUES(1,1,0,1,1,"' . Date('y-m-d H:i:s') . '",0,1)');
+            Db::getInstance()->Execute('INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post`(`id_author`, `id_category`, `position`, `active`, `available`, `created`, `viewed`, `comment_status`) VALUES(1,1,0,1,1,NOW(),0,1)');
         }
 
         $languages = Language::getLanguages(false);
