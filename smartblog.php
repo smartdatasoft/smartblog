@@ -84,48 +84,46 @@ class smartblog extends Module
         Configuration::updateGlobalValue('smartblogmetadescrip', 'Prestashop powerfull blog site developing module. It has hundrade of extra plugins. This module developed by SmartDataSoft.com');
         Configuration::updateGlobalValue('smartshowhomepost', 4);
 
-        
+        $ret = (bool)parent::install();
+        $ret &= $this->addquickaccess();
+        $ret &= $this->htaccessCreate();
+        $ret &= $this->registerHook('displayHeader') &&
+                $this->registerHook('header') &&
+                $this->registerHook('moduleRoutes')  &&
+                $this->registerHook('displayBackOfficeHeader') &&
+                $this->registerHook('actionsbnewpost') &&
+                $this->registerHook('actionsbupdatepost') &&
+                $this->registerHook('actionsbdeletepost') &&
+                $this->registerHook('actionsbtogglepost') &&
+                $this->registerHook('actionsbnewcat') &&
+                $this->registerHook('actionsbupdatecat') &&
+                $this->registerHook('actionsbdeletecat') &&
+                $this->registerHook('actionsbtogglecat') &&
+                $this->registerHook('actionsbpostcomment') &&
+                $this->registerHook('actionsbappcomment') &&
+                $this->registerHook('actionsbsingle') &&
+                $this->registerHook('actionsbcat') &&
+                $this->registerHook('actionsbsearch') &&
+                $this->registerHook('actionsbheader') &&
+                $this->registerHook('actionHtaccessCreate');
 
-        
-        
-        $this->addquickaccess(); 
-        $this->htaccessCreate();
-        if (!parent::install() || !$this->registerHook('displayHeader') || 
-            !$this->registerHook('header') ||
-			!$this->registerHook('moduleRoutes') ||
-            !$this->registerHook('displayBackOfficeHeader') ||
+        $ret &= $this->installSql();
+        $ret &= $this->CreateSmartBlogTabs();
+        $ret &= $this->requiredDataInstall();
+        $ret &= $this->sampleDataInstall();
+        $ret &= $this->installDummyData();
+        $ret &= $this->SmartHookInsert();
+        $ret &= $this->SmartHookRegister();
+        return $ret;
+    }
 
-			!$this->registerHook('actionsbnewpost') ||
-			!$this->registerHook('actionsbupdatepost') ||
-			!$this->registerHook('actionsbdeletepost') ||
-			!$this->registerHook('actionsbtogglepost') ||
-			!$this->registerHook('actionsbnewcat') ||
-			!$this->registerHook('actionsbupdatecat') ||
-			!$this->registerHook('actionsbdeletecat') ||
-			!$this->registerHook('actionsbtogglecat') ||
-			!$this->registerHook('actionsbpostcomment') ||
-			!$this->registerHook('actionsbappcomment') ||
-			!$this->registerHook('actionsbsingle') ||
-			!$this->registerHook('actionsbcat') ||
-			!$this->registerHook('actionsbsearch') ||
-			!$this->registerHook('actionsbheader') ||
-            !$this->registerHook('actionHtaccessCreate') 
-        )
-            return false;
+    protected function installSql(){
         $sql = array();
         require_once(dirname(__FILE__) . '/sql/install.php');
         foreach ($sql as $sq) :
             if (!Db::getInstance()->Execute($sq))
                 return false;
         endforeach;
-
-        $this->CreateSmartBlogTabs();
-	$this->RequiredDataInstall();
-        $this->SampleDataInstall();
-        $this->installDummyData();
-        $this->SmartHookInsert();
-        $this->SmartHookRegister();
-
         return true;
     }
 
@@ -165,7 +163,7 @@ class smartblog extends Module
             }
             $img_count = (count($arrayImg) > $img_count)? $img_count+1 : 0;
         }
-        
+
     }
 
     public static function getAllPost()
@@ -276,7 +274,7 @@ class smartblog extends Module
         }
     }
 
-    private function CreateSmartBlogTabs()
+    protected function CreateSmartBlogTabs()
     {
 
         $langs = Language::getLanguages();
@@ -310,26 +308,69 @@ class smartblog extends Module
         }
         return true;
     }
-	
-    public function RequiredDataInstall()
+
+    public function requiredDataInstall()
     {
-        Db::getInstance()->execute(
+        $ret = true;
+        $ret &= Db::getInstance()->execute(
             'INSERT INTO `'._DB_PREFIX_.'smart_blog_category` (`id_parent`,`level_depth`,`position`,`active`,`created`) VALUES (0,0,0,1,NOW())'
         );
 
-        Db::getInstance()->execute(
+        $ret &= Db::getInstance()->execute(
             "INSERT INTO `"._DB_PREFIX_."smart_blog_category_shop` (`id_smart_blog_category`,`id_shop`) VALUES (1,'".(int)$this->smart_shop_id."')"
         );
 
         $languages = Language::getLanguages(false);
         foreach ($languages as $language) {
-            Db::getInstance()->execute(
+            $ret &= Db::getInstance()->execute(
                 "INSERT INTO `"._DB_PREFIX_."smart_blog_category_lang` (`id_smart_blog_category`,`name`,`meta_title`,`id_lang`,`link_rewrite`) VALUES (1,'Home','Home','".(int)$language['id_lang']."','home')"
             );
         }
+
+        for ($i = 1; $i <= 7; $i++) {
+            if ($i == 1):
+                $type_name = 'home-default';
+                $width = '240';
+                $height = '160';
+                $type = 'post';
+            elseif ($i == 2):
+                $type_name = 'home-small';
+                $width = '65';
+                $height = '45';
+                $type = 'post';
+            elseif ($i == 3):
+                $type_name = 'single-default';
+                $width = '770';
+                $height = '385';
+                $type = 'post';
+            elseif ($i == 4):
+                $type_name = 'home-small';
+                $width = '65';
+                $height = '45';
+                $type = 'Category';
+            elseif ($i == 5):
+                $type_name = 'home-default';
+                $width = '240';
+                $height = '160';
+                $type = 'Category';
+            elseif ($i == 6):
+                $type_name = 'single-default';
+                $width = '770';
+                $height = '385';
+                $type = 'Category';
+            elseif ($i == 7):
+                $type_name = 'author-default';
+                $width = '54';
+                $height = '54';
+                $type = 'Author';
+            endif;
+            $damiimgtype = "INSERT INTO " . _DB_PREFIX_ . "smart_blog_imagetype (type_name,width,height,type,active) VALUES ('" . $type_name . "','" . $width . "','" . $height . "','" . $type . "',1);";
+            $ret &= Db::getInstance()->execute($damiimgtype);
+        }
+        return $ret;
     }
 
-    public function SampleDataInstall()
+    public function sampleDataInstall()
     {
         Db::getInstance()->execute(
             'INSERT INTO `'._DB_PREFIX_.'smart_blog_category` (`id_parent`,`level_depth`,`position`,`desc_limit`,`active`,`created`) VALUES (1,1,0,0,1,NOW())'
@@ -586,9 +627,9 @@ class smartblog extends Module
             Configuration::updateValue('smartcustomcss', Tools::getvalue('smartcustomcss'), true);
             Configuration::updateValue('smartshowhomepost', Tools::getvalue('smartshowhomepost'));
 
-            
 
-            
+
+
 
             $this->processImageUpload($_FILES);
             $html = $this->displayConfirmation($this->l('The settings have been updated successfully.'));
@@ -598,7 +639,7 @@ class smartblog extends Module
             $helper = $this->regenerateform();
             $html .= $helper->generateForm($this->fields_form);
             $auc = new AdminAboutUsController();
-            
+
             return $html;
         } elseif (Tools::isSubmit('generateimage')) {
             if (Tools::getvalue('isdeleteoldthumblr') != 1) {
@@ -609,7 +650,7 @@ class smartblog extends Module
                 $helper = $this->regenerateform();
                 $html .= $helper->generateForm($this->fields_form);
                 $auc = new AdminAboutUsController();
-                
+
                 return $html;
             } else {
                 BlogImageType::ImageDelete();
@@ -620,7 +661,7 @@ class smartblog extends Module
                 $helper = $this->regenerateform();
                 $html .= $helper->generateForm($this->fields_form);
                 $auc = new AdminAboutUsController();
-                
+
                 return $html;
             }
         } else {
@@ -629,7 +670,7 @@ class smartblog extends Module
             $helper = $this->regenerateform();
             $html .= $helper->generateForm($this->fields_form);
             $auc = new AdminAboutUsController();
-            
+
             return $html;
         }
     }
@@ -801,7 +842,7 @@ class smartblog extends Module
                     'label' => $this->l('Meta Keyword'),
                     'name' => 'smartblogmetakeyword',
                     'size' => 70,
-                    'required' => true
+                    'required' => false
                 ),
                 array(
                     'type' => 'textarea',
@@ -854,7 +895,7 @@ class smartblog extends Module
                             'id' => 'smartblogurlpattern_b',
                             'value' => 2,
                             'label' => $this->l('alias/{id_post}_{slug}html ( ex: alias/1_share-the-love-for-prestashop-1-6.html)')
-                        ), 
+                        ),
                     )
                 ),
                 array(
@@ -1049,7 +1090,7 @@ class smartblog extends Module
                         )
                     )
                 ),
-                
+
                 array(
                     'type' => 'textarea',
                     'label' => $this->l('Custom CSS'),
@@ -1090,7 +1131,7 @@ class smartblog extends Module
         $helper->submit_action = 'save' . $this->name;
 
 
-        
+
         $helper->fields_value['smartpostperpage'] = Configuration::get('smartpostperpage');
         $helper->fields_value['smartdataformat'] = Configuration::get('smartdataformat');
         $helper->fields_value['smartacceptcomment'] = Configuration::get('smartacceptcomment');
@@ -1111,8 +1152,8 @@ class smartblog extends Module
         $helper->fields_value['smartcaptchaoption'] = Configuration::get('smartcaptchaoption');
         $helper->fields_value['smartblogurlpattern'] = Configuration::get('smartblogurlpattern');
         $helper->fields_value['smartshowhomepost'] = Configuration::get('smartshowhomepost');
-        
-        
+
+
 
         return $helper;
     }
@@ -1178,7 +1219,7 @@ class smartblog extends Module
                 break;
             case 2:
                 $my_link = $this->urlPatterWithIdOne($alias, $html);
-                break; 
+                break;
 
             default:
                 $my_link = $this->urlPatterWithIdOne($alias, $html);
@@ -1774,7 +1815,7 @@ class smartblog extends Module
             }
             $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-   
+
             $smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
 
 
@@ -1786,7 +1827,7 @@ class smartblog extends Module
         return $this->display(__FILE__, 'views/templates/front/plugins/smartblogcategories.tpl');
     }
 
- 
+
 
     public function hookactionsbdeletecat($params)
     {
@@ -1809,7 +1850,7 @@ class smartblog extends Module
     }
 
 
-  
+
     public function hookactionsbdeletepost($params)
     {
         return $this->DeleteCache();
