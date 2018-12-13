@@ -116,8 +116,8 @@ class AdminBlogPostController extends ModuleAdminController {
         return $promotion;
     }
 
-    public function setMedia() {
-        parent::setMedia();
+    public function setMedia($isNewTheme = false) {
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin(array('tagify', 'tablednd', 'autocomplete'));
     }
 
