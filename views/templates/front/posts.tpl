@@ -54,7 +54,7 @@
 {block name='page_content'}
 		{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a><span class="navigation-pipe"></span>{$meta_title|escape:'htmlall':'UTF-8'}{/capture}
 		<div id="content" class="block">
-			<div itemtype="#" itemscope="" id="sdsblogArticle" class="blog-post">
+			<div itemtype="http://schema.org/BlogPosting" itemscope="" id="sdsblogArticle" class="blog-post">
 				<div class="title_block">{$meta_title|escape:'htmlall':'UTF-8'}</div>
 				<div class="sdsarticleHeader">
 					<span>
