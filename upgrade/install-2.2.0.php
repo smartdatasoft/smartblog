@@ -2,7 +2,7 @@
 if (!defined('_PS_VERSION_'))
     exit;
 
-function upgrade_module_2_0_3($object){
+function upgrade_module_2_2_0($object){
     $smartblog = new smartblog();
     Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'smart_blog_category` ADD `level_depth` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0 AFTER `id_smart_blog_category`;');
 
