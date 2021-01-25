@@ -61,7 +61,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 
         
         $category_status = '';
-        $totalpages = '';
+        $totalpages = 0;
         $cat_image = 'no';
         $categoryinfo = '';
         $title_category = '';

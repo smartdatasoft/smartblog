@@ -383,14 +383,17 @@ class AdminBlogPostController extends ModuleAdminController {
 
         $this->fields_value = array(
             'image' => $image ? $image : false,
-            'size' => $image ? filesize(_MODULE_SMARTBLOG_DIR_ . $SmartBlogPost->id_smart_blog_post . '.jpg') / 1000 : false
+            'size' => $image ? filesize(_MODULE_SMARTBLOG_DIR_ . $SmartBlogPost->id_smart_blog_post . '.jpg') / 1000 : false,
+            'id_author' => $SmartBlogPost->id_author ? $SmartBlogPost->id_author : $this->context->employee->id,
         );
         if (Tools::getvalue('id_smart_blog_post') != '' && Tools::getvalue('id_smart_blog_post') != NULL) {
             foreach (Language::getLanguages(false) as $lang) {
                 $this->fields_value['tags'][(int) $lang['id_lang']] = SmartBlogPost::getProductTagsBylang((int) Tools::getvalue('id_smart_blog_post'), (int) $lang['id_lang']);
             }
         }
-
+        
+        $this->fields_value['id_author'] = $SmartBlogPost->id_author ? $SmartBlogPost->id_author : $this->context->employee->id;
+        
         $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int) Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 
 
