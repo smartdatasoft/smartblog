@@ -1190,6 +1190,9 @@ class smartblog extends Module
         $dispatcher = Dispatcher::getInstance();
         $id_lang = (int) Context::getContext()->language->id;
         $force_routes = (bool) Configuration::get('PS_REWRITING_SETTINGS');
+        if (Tools::isSubmit('savesmartblog')) {
+            return $url . Tools::getvalue('smartmainblogurl');
+        }
         if ($params != null) {
             return $url . $dispatcher->createUrl($rewrite, $id_lang, $params, $force_routes);
         } else {
