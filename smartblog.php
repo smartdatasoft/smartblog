@@ -29,6 +29,18 @@ class smartblog extends Module
     public $warl;
     public $sucl;
 
+
+
+
+
+
+
+
+
+
+
+
+
     public function __construct(){
         $this->name = 'smartblog';
         $this->tab = 'front_office_features';
