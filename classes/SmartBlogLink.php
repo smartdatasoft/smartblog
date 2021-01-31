@@ -104,7 +104,8 @@ class SmartBlogLink
         }
 // echo $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path.'<br>';
         if (@getimagesize($this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path)) {
-            $return_val = $this->protocol_content . Tools::getMediaServer($uri_path) . $uri_path;
+            $protocol_content = ($this->ssl_enable) ? 'https://' : 'http://'; 
+            $return_val = $protocol_content . Tools::getMediaServer($uri_path) . $uri_path;
         } else {
             $split_ids = explode('-', $ids);
             $id_image = (isset($split_ids[1]) ? $split_ids[1] : $split_ids[0]);
@@ -156,6 +157,8 @@ class SmartBlogLink
 
         //$url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
         $url = smartblog::GetSmartBlogUrl();
+
+        
 
         $dispatcher = Dispatcher::getInstance();
 
