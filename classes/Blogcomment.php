@@ -88,8 +88,10 @@ class Blogcomment extends ObjectModel
                 $child_comments[$key]['content'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$ch_comment['content']);
                 if ($this->comment_child_loop <= $this->comment_child_loop_depth) {
                     $coments_2 = $this->getChildComment($ch_comment['id_smart_blog_comment']);
-                    if (count($coments_2) > 0)
-                        $child_comments[$j]['child_comments'] = $coments_2;
+                        if ($coments_2){
+                            if (count($coments_2) > 0)
+                                $child_comments[$j]['child_comments'] = $coments_2;
+                        }
                 }
                 $j++;
                 $this->comment_child_loop++;
@@ -109,10 +111,10 @@ class Blogcomment extends ObjectModel
         foreach ($comments as $key => $comment) {
             $comments[$key]['content'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br/>",$comment['content']);
             $coments = $this->getChildComment($comment['id_smart_blog_comment']);
-
-            if (count($coments) > 0)
-                $comments[$i]['child_comments'] = $coments;
-
+            if ($coments){
+                if (count($coments) > 0)
+                    $comments[$i]['child_comments'] = $coments;
+            }
             $i++;
             $this->comment_child_loop++;
         }
