@@ -1,0 +1,203 @@
+                    .bootstrap select[multiple],
+                .bootstrap select[size] {
+                    height: 250px;
+                }
+                
+                .bootstrap .specific_product_class.fixed-width-xl,
+                .bootstrap .cat_specify_class.fixed-width-xl,
+                .bootstrap .cms_specify_class.fixed-width-xl {
+                    width: 450px !important;
+                }
+                /* Start Dashboard Presents Product Area */
+                
+                .panel.dashboard-presents-product-area {
+                    background-color: #fff;
+                    border: 1px solid #d3d8db;
+                    border-radius: 5px;
+                    margin-bottom: 20px;
+                    padding: 20px;
+                    position: relative;
+                }
+                
+                .dashboard-presents-product-top-content {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                }
+                
+                .dashboard-presents-product-top-left-content {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .dashboard-presents-product-top-left-content h4 {
+                    font-size: 18px;
+                    font-weight: 400;
+                    margin-left: 10px;
+                    font-style: italic;
+                }
+                
+                .dashboard-presents-product-top-by-content {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .dashboard-presents-product-bottom-content {
+                    display: flex;
+                    margin-top: 10px;
+                }
+                
+                .dashboar-single-presents-item {
+                    width: 50%;
+                    float: left;
+                    overflow: hidden;
+                }
+                
+                .dashboar-single-presents-item a img {
+                    width: 100%;
+                    height: auto;
+                }
+                
+                .dashboar-single-presents-item.db-first-item a img {
+                    padding-right: 15px;
+                }
+                
+                .dashboar-single-presents-item.db-second-item a img {
+                    padding-left: 15px;
+                }
+                
+                .dashboard-presents-product-top-by-content a img {
+                    width: 100px;
+                    height: auto;
+                }
+                
+                .dashboard-presents-product-top-by-content h4 {
+                    font-size: 18px;
+                    font-weight: 400;
+                    margin-right: 10px;
+                    font-style: italic;
+                }
+                /* End Dashboard Presents Product Area */
+                /* Start Crazy Elements Customize Area */
+                
+                .crazy-elements-customize-ad-area {
+                    padding-bottom: 10px;
+                }
+                
+                .crazy-elements-customize-ad-images img {
+                    width: auto;
+                    height: auto;
+                    border-radius: 4px;
+                }
+                /* End Crazy Elements Customize Area */
+                /* Update Area */
+                
+                .update-content-area {
+                    background-color: #fff;
+                    border: 1px solid #d3d8db;
+                    border-radius: 5px;
+                    margin-bottom: 20px;
+                    padding: 15px 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                
+                .update-content-area a {
+                    text-transform: capitalize !important;
+                    margin-left: 20px;
+                }
+                
+                .update-logo-and-text {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .update-logo-and-text img {
+                    margin-right: 12px;
+                }
+                
+                .classy-update-bt {
+                    background-color: #2664d2 !important;
+                    border-color: #2664d2 !important;
+                }
+                
+                .classy-update-bt:hover {
+                    background-color: #fff !important;
+                    border-color: #2664d2 !important;
+                    color: #2664d2 !important;
+                }
+                
+                .update-header-text-and-version h4 {
+                    line-height: 16px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: #000;
+                }
+                
+                .update-header-text-and-version h6 {
+                    line-height: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    background: #0f2585;
+                    display: table;
+                    padding: 8px;
+                    color: white;
+                    border-radius: 3px;
+                }
+                /* ajax loder area */
+                
+                .update-content-area {
+                    position: relative;
+                }
+                
+                .update-ajax-loader {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, .8);
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    border-radius: 5px;
+                }
+                
+                .lds-dual-ring {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                
+                .lds-dual-ring:after {
+                    content: " ";
+                    display: block;
+                    width: 64px;
+                    height: 64px;
+                    margin: 8px;
+                    border-radius: 50%;
+                    border: 6px solid #fff;
+                    border-color: #fff transparent #fff transparent;
+                    animation: lds-dual-ring 1.2s linear infinite;
+                }
+                
+                @keyframes lds-dual-ring {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+                
+                .error-block {
+                    color: #8b0000;
+                    font-style: italic;
+                    padding: 5px 1px;
+                    font-weight: 600;
+                }
+                
+                .success-block {
+                    color: #43a037;
+                    font-style: italic;
+                    padding: 5px 1px;
+                    font-weight: 600;
