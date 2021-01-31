@@ -11,4 +11,4 @@ After a long time we SmartDataSoft is back to dedicated PrestaShop development a
 # Check out [Classy Product Extra Tabs](https://classydevs.com/free-modules/classy-product-extra-tab/?utm_source=sbloggithub&utm_medium=sbloggithubredmi&utm_campaign=sbloggithubredmi) 
 The best FREE module to add extra tabs to the products of you PrestaShop site.
 
-<img src="Frame 8.png" alt="Logo" width="80" height="80">
+<img src="Frame 8.png" alt="Logo" width="500" height="500">
