@@ -82,9 +82,9 @@
           {/if}
         {/if}
         <div id="smartblogcat" class="block">
-          {foreach from=$postcategory item=post}
-            {include file="module:smartblog/views/templates/front/category_loop.tpl" postcategory=$postcategory}
-          {/foreach}
+            {foreach from=$postcategory item=post}
+                {include file="module:smartblog/views/templates/front/category_loop.tpl" postcategory=$postcategory}
+            {/foreach}
         </div>
         {if !empty($pagenums)}
           <div class="row bottom-pagination-content">

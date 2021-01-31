@@ -303,6 +303,14 @@ class SmartBlogPost extends ObjectModel {
 		$i            = 0;
 		foreach ( $posts as $post ) {
 
+			// if ( new DateTime() >= new DateTime( $post['created'] ) ) {
+
+			// } else {
+            //     die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
+
+			// 	continue;
+			// }
+
 			$selected_cat = BlogCategory::getPostCategoriesFull( (int) $post['id_smart_blog_post'], Context::getContext()->language->id );
 
 			$result[ $i ]['id_category']      = 1;
