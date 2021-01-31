@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+
 //session_start();
 require_once(dirname(__FILE__) . '../../../config/config.inc.php');
 require_once (_PS_MODULE_DIR_ . 'smartblog/smartblog.php');
