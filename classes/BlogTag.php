@@ -37,7 +37,8 @@ class BlogTag extends ObjectModel
         'fields' => array(
             'id_tag' => array('type' => self::TYPE_BOOL, 'validate' => 'isunsignedInt'),
             'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString')
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+            'slug' => array('type' => self::TYPE_STRING, 'validate' => 'isString')
         ),
     );
 

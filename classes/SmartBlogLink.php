@@ -309,7 +309,7 @@ class SmartBlogLink
     {
         $rewrite = 'smartblog_tag';
         $params = array();
-        $params['tag'] = $tagName; 
+        $params['tag'] =  str_replace(" ","-",$tagName) ; 
         $url = smartblog::GetSmartBlogUrl();
         $dispatcher = Dispatcher::getInstance();
         $id_lang = (int) Context::getContext()->language->id;
