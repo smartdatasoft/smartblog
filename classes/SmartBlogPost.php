@@ -306,9 +306,9 @@ class SmartBlogPost extends ObjectModel {
 			// if ( new DateTime() >= new DateTime( $post['created'] ) ) {
 
 			// } else {
-            //     die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
+			// die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
 
-			// 	continue;
+			// continue;
 			// }
 
 			$selected_cat = BlogCategory::getPostCategoriesFull( (int) $post['id_smart_blog_post'], Context::getContext()->language->id );
@@ -936,23 +936,26 @@ class SmartBlogPost extends ObjectModel {
 			return false;
 		}
 
-		if ( $post[0]['meta_title'] == '' && $post[0]['meta_title'] == null ) {
-			$meta['meta_title'] = Configuration::get( 'smartblogmetatitle' );
+		$the_post = $post[0];
+
+		if ( isset( $the_post['meta_title'] ) && $the_post['meta_title'] != '' ) {
+			$meta['title'] = $the_post['meta_title'];
 		} else {
-			$meta['meta_title'] = $post[0]['meta_title'];
+			$meta['title'] = Configuration::get( 'smartblogmetatitle' );
 		}
 
-		if ( $post[0]['meta_description'] == '' && $post[0]['meta_description'] == null ) {
-			$meta['meta_description'] = Configuration::get( 'smartblogmetadescrip' );
+		if ( isset( $the_post['meta_description'] ) && $the_post['meta_description'] != '' ) {
+			$meta['description'] = $the_post['meta_description'];
 		} else {
-			$meta['meta_description'] = $post[0]['meta_description'];
+			$meta['description'] = Configuration::get( 'smartblogmetadescrip' );
 		}
 
-		if ( $post[0]['meta_keyword'] == '' && $post[0]['meta_keyword'] == null ) {
-			$meta['meta_keywords'] = Configuration::get( 'smartblogmetakeyword' );
+		if ( isset( $the_post['meta_keyword'] ) && $the_post['meta_keyword'] != '' ) {
+			$meta['keywords'] = $the_post['meta_keyword'];
 		} else {
-			$meta['meta_keywords'] = $post[0]['meta_keyword'];
+			$meta['keywords'] = Configuration::get( 'smartblogmetakeyword' );
 		}
+
 		return $meta;
 	}
 

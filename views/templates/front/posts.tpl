@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file='page.tpl'}
+
 {block name='breadcrumb'}
 	{if isset($breadcrumb)}
 		<nav class="breadcrumb">
@@ -31,7 +32,7 @@
 		        <a href="{$breadcrumb.links[0].url}">
 		          <span>{$breadcrumb.links[0].title}</span>
 		        </a>
-		      </li>
+		      </li> 
 		      <li>
 		        <a href="{smartblog::GetSmartBlogLink('smartblog')}">
 		        <span>{l s='All Post' mod='smartblog'}</span>
