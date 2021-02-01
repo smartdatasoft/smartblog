@@ -303,6 +303,14 @@ class SmartBlogPost extends ObjectModel {
 		$i            = 0;
 		foreach ( $posts as $post ) {
 
+			// if ( new DateTime() >= new DateTime( $post['created'] ) ) {
+
+			// } else {
+            //     die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
+
+			// 	continue;
+			// }
+
 			$selected_cat = BlogCategory::getPostCategoriesFull( (int) $post['id_smart_blog_post'], Context::getContext()->language->id );
 
 			$result[ $i ]['id_category']      = 1;
@@ -407,6 +415,7 @@ class SmartBlogPost extends ObjectModel {
 					$tag_obj = new BlogTag( null, $tag, (int) $id_lang );
 					if ( ! Validate::isLoadedObject( $tag_obj ) ) {
 						$tag_obj->name    = $tag;
+						$tag_obj->slug    = str_replace(" ","-",$tag);
 						$tag_obj->id_lang = (int) $id_lang;
 						$tag_obj->add();
 					}
@@ -480,7 +489,7 @@ class SmartBlogPost extends ObjectModel {
 		$id_lang = (int) Context::getContext()->language->id;
 		if ( ! $tmp = Db::getInstance( _PS_USE_SQL_SLAVE_ )->executeS(
 			'
-		SELECT  t.`name`
+		SELECT  t.`name`,t.`slug`
 		FROM ' . _DB_PREFIX_ . 'smart_blog_tag t
 		LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . $id_lang . ')
 		WHERE pt.`id_post`=' . (int) $id_post
@@ -575,7 +584,7 @@ class SmartBlogPost extends ObjectModel {
                 ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON pl.id_smart_blog_post = pt.id_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_tag t ON pt.id_tag=t.id_tag 
                 WHERE pl.id_lang=' . pSQL( $id_lang ) . '  AND p.active = 1 	 		
-                AND t.name="' . pSQL( $tags ) . '"';
+                AND t.slug="' . pSQL( $tags ) . '"';
 
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;

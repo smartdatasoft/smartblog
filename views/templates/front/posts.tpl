@@ -108,7 +108,7 @@
 		                <div class="sdstags-update">
 		                    <span class="tags"><b>{l s='Tags:' mod='smartblog'} </b> 
 		                        {foreach from=$tags item=tag}
-		                          <a title="tag" href="{$smartbloglink->getSmartBlogTag($tag.name|urlencode)|escape:'htmlall':'UTF-8'}">{$tag.name|escape:'htmlall':'UTF-8'}</a>
+		                          <a title="tag" href="{$smartbloglink->getSmartBlogTag($tag.slug)|escape:'htmlall':'UTF-8'}">{$tag.name|escape:'htmlall':'UTF-8'}</a>
 		                        
 		                        {/foreach}
 		                    </span>
