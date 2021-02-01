@@ -34,6 +34,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 	private $_postsObject;
 	protected $post;
 
+
 	public function canonicalRedirection( $canonicalURL = '' ) {
 		if ( Tools::getValue( 'live_edit' ) ) {
 			return;
@@ -53,6 +54,10 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 
 		parent::init();
 	}
+
+
+
+
 
 	public function initContent() {
 
@@ -83,6 +88,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 
 			$this->post = new SmartBlogPost( $id_post, true, $this->context->language->id, $this->context->shop->id );
 
+			$this->post_id        = $id_post;
 				$meta_title       = $this->post->meta_title;
 				$meta_description = $this->post->meta_description;
 				$meta_keyword     = $this->post->meta_keyword;
@@ -197,9 +203,15 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 			$this->context->smarty->assign( 'HOOK_SMART_BLOG_POST_FOOTER', Hook::exec( 'displaySmartAfterPost' ) );
 		}
 
-		$this->context->smarty->assign( 'meta_title', $meta_title );
-		$this->context->smarty->assign( 'meta_description', $meta_description );
-		$this->context->smarty->assign( 'meta_keywords', $meta_keyword );
+		// echo '<pre>';
+		// print_r( $meta_description );
+		// echo '</pre>';
+		// die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
+
+		$this->context->smarty->assign( 'meta_title', isset( $meta_title ) ? $meta_title : '' );
+		$this->context->smarty->assign( 'meta_description', isset( $meta_description ) ? $meta_description : '' );
+		$this->context->smarty->assign( 'meta_keywords', isset( $meta_keyword ) ? $meta_keyword : '' );
+		$this->context->smarty->assign( SmartBlogPost::GetPostMetaByPost( $id_post ) );
 
 		$this->setTemplate( 'module:smartblog/views/templates/front/posts.tpl' );
 	}
