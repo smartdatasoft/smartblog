@@ -460,14 +460,14 @@ class smartblog extends Module {
 			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
 		 endif;
 		 foreach ( $languages as $language ) {
-            if ( ! Db::getInstance()->Execute(
+			 if ( ! Db::getInstance()->Execute(
 				'
                        INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
                         VALUES(' . $i . ',' . (int) $language['id_lang'] . ', 
 							"' . htmlspecialchars( $title ) . '", 
 							"' . htmlspecialchars( $des ) . '","' . Tools::substr( $des, 0, 200 ) . '","' . htmlspecialchars( $des ) . '","' . $slug . '"
 						)'
-			 )
+            )
 			 ) {
 				 return false;
 			 }
@@ -873,8 +873,8 @@ class smartblog extends Module {
 	public function SettingForm() {
 		$blog_url                     = self::GetSmartBlogLink( 'smartblog' );
 		$img_desc                     = '';
-		$img_desc                    .= '' . $this->l( 'Upload a Avatar from your computer.<br/>N.B : Only jpg image is allowed' );
-		$img_desc                    .= '<img style="clear:both;border:1px solid black;" alt="" src="' . __PS_BASE_URI__ . 'modules/smartblog/images/avatar/avatar.jpg" height="100" width="100"/><br />';
+		$img_desc                    .= '' . $this->l( 'Upload a Avatar from your computer. N.B : Only jpg image is allowed' );
+		$img_desc                    .= '<br/><img style="clear:both;border:1px solid black;" alt="" src="' . __PS_BASE_URI__ . 'modules/smartblog/images/avatar/avatar.jpg" height="100" width="100"/><br />';
 		$default_lang                 = (int) Configuration::get( 'PS_LANG_DEFAULT' );
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
