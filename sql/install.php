@@ -148,6 +148,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'smart_blog_tag` (
   `id_tag` int(11) NOT NULL auto_increment,
   `id_lang` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
+  `slug` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_tag`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
