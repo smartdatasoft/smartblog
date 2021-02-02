@@ -17,40 +17,40 @@
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-if (!defined('_PS_VERSION_')) {
-    exit;
+if ( ! defined( '_PS_VERSION_' ) ) {
+	exit;
 }
 
-if (!Module::isInstalled('smartblog')) {
-    return;
+if ( ! Module::isInstalled( 'smartblog' ) ) {
+	return;
 }
 
-foreach (scandir(__DIR__) as $module) {
-    if (in_array($module, ['.', '..']) || !is_dir(__DIR__.'/'.$module)) {
-        continue;
-    }
+foreach ( scandir( __DIR__ ) as $module ) {
+	if ( in_array( $module, array( '.', '..' ) ) || ! is_dir( __DIR__ . '/' . $module ) ) {
+		continue;
+	}
 
-    if (!Module::isInstalled($module) || !file_exists(_PS_MODULE_DIR_."$module/$module.php")) {
-        if (!file_exists(_PS_MODULE_DIR_."$module/$module.php")) {
-            Tools::deleteDirectory(_PS_MODULE_DIR_.$module, true);
-            Tools::recurseCopy(__DIR__."/$module/", _PS_MODULE_DIR_.$module, false);
-        }
+	// if (!Module::isInstalled($module) || !file_exists(_PS_MODULE_DIR_."$module/$module.php")) {
+	// if (!file_exists(_PS_MODULE_DIR_."$module/$module.php")) {
+	// Tools::deleteDirectory(_PS_MODULE_DIR_.$module, true);
+	// Tools::recurseCopy(__DIR__."/$module/", _PS_MODULE_DIR_.$module, false);
+	// }
 
-        if (function_exists('opcache_invalidate')) {
-            opcache_invalidate(_PS_MODULE_DIR_."$module/$module.php");
-        }
+	// if (function_exists('opcache_invalidate')) {
+	// opcache_invalidate(_PS_MODULE_DIR_."$module/$module.php");
+	// }
 
-        // Wait a moment on slow servers
-        $wait = 10;
-        while (!file_exists(_PS_MODULE_DIR_."$module/$module.php") && $wait > 0) {
-            $wait--;
-            // Wait half a second
-            usleep(500000);
-        }
-        require_once _PS_MODULE_DIR_."$module/$module.php";
+	// Wait a moment on slow servers
+	// $wait = 10;
+	// while (!file_exists(_PS_MODULE_DIR_."$module/$module.php") && $wait > 0) {
+	// $wait--;
+	// Wait half a second
+	// usleep(500000);
+	// }
+	// require_once _PS_MODULE_DIR_."$module/$module.php";
 
-        /** @var Module $mod */
-        $mod = new $module();
-        $mod->install();
-    }
+	// ** @var Module $mod */
+	// $mod = new $module();
+	// $mod->install();
+	// }
 }

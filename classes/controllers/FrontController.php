@@ -101,17 +101,24 @@ class smartblogModuleFrontController extends ModuleFrontController {
 		$controller_name = Tools::getValue( 'controller' );
 
 		if ( $controller_name == 'category' ) {
-			$metas = BlogCategory::GetMetaByCategory( $this->post_id );
+			$metas                       = BlogCategory::GetMetaByCategory( $this->post_id );
+			$page['meta']['title']       = $metas['title'];
+			$page['meta']['description'] = $metas['description'];
+			$page['meta']['keywords']    = $metas['keywords'];
 		} elseif ( $controller_name == 'details' ) {
-			$metas = SmartBlogPost::GetPostMetaByPost( $this->post_id );
+			$metas                       = SmartBlogPost::GetPostMetaByPost( $this->post_id );
+			$page['meta']['title']       = $metas['title'];
+			$page['meta']['description'] = $metas['description'];
+			$page['meta']['keywords']    = $metas['keywords'];
 		} elseif ( $controller_name == 'tagpost' ) {
-			$metas = BlogTag::GetTagsMeta( $this->post_id );
+			$metas                 = BlogTag::GetTagsMeta( $this->post_id );
+			$page['meta']['title'] = $metas['title'];
+		} elseif ( $controller_name == 'search' ) {
+			$metas                 = BlogCategory::GetMetaForSearch();
+			$page['meta']['title'] = $metas['title'];
 		}
 
-		$page['meta']['title']       = $metas['title'];
-		$page['meta']['description'] = $metas['description'];
-		$page['meta']['keywords']    = $metas['keywords'];
-		$page['meta']['robots']      = 'noindex';
+		$page['meta']['robots'] = 'noindex';
 
 		return $page;
 	}
