@@ -73,3 +73,4 @@ class BlogTag extends ObjectModel {
 		return $meta;
 	}
 
+}
