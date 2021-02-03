@@ -138,7 +138,7 @@ class SmartBlogPost extends ObjectModel {
 			'link_rewrite'      => array(
 				'type'     => self::TYPE_STRING,
 				'lang'     => true,
-				'validate' => 'isString',
+				'validate' => 'isLinkRewrite',
 				'required' => false,
 			),
 		),

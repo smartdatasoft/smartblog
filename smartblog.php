@@ -1264,6 +1264,7 @@ class smartblog extends Module {
 
 		$my_link = array();
 
+	
 		switch ( $smartblogurlpattern ) {
 
 			case 1:
@@ -1276,7 +1277,6 @@ class smartblog extends Module {
 			default:
 				$my_link = $this->urlPatterWithIdOne( $alias, $html );
 		}
-
 		return $my_link;
 	}
 
@@ -1484,7 +1484,8 @@ class smartblog extends Module {
 					'module' => 'smartblog',
 				),
 			),
-			'smartblog_post'                => array(
+
+			'module-smartblog-details'                => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{slug}' . $html,
 				'keywords'   => array(
@@ -1504,6 +1505,7 @@ class smartblog extends Module {
 					'module' => 'smartblog',
 				),
 			),
+
 			'smartblog_archive'             => array(
 				'controller' => 'archive',
 				'rule'       => $alias . '/archive' . $html,
@@ -1828,6 +1830,8 @@ class smartblog extends Module {
 					'module' => 'smartblog',
 				),
 			),
+
+			
 			'smartblog_post_rule'           => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{id_post}_{slug}' . $html,
