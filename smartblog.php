@@ -1184,8 +1184,6 @@ class smartblog extends Module {
 		$helper->toolbar_scroll           = true;
 		$helper->submit_action            = 'save' . $this->name;
 
-		die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
-
 		$helper->fields_value['smartpostperpage']        = Configuration::get( 'smartpostperpage' );
 		$helper->fields_value['smartdataformat']         = Configuration::get( 'smartdataformat' );
 		$helper->fields_value['smartacceptcomment']      = Configuration::get( 'smartacceptcomment' );
