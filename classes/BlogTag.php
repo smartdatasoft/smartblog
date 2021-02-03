@@ -66,11 +66,8 @@ class BlogTag extends ObjectModel {
 	public static function GetTagsMeta( $tag_key ) {
 		$meta = array();
 
-		$meta['title']       = $tag_key . ': ' . Configuration::get( 'smartblogmetatitle' );
-		$meta['description'] = Configuration::get( 'smartblogmetadescrip' );
-		$meta['keywords']    = Configuration::get( 'smartblogmetakeyword' );
+		$meta['title'] = $tag_key . ': ' . Configuration::get( 'smartblogmetatitle' );
 
 		return $meta;
 	}
-
 }

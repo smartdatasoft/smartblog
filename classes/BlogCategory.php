@@ -872,4 +872,12 @@ class BlogCategory extends ObjectModel {
 		}
 		return $meta;
 	}
+
+	public static function GetMetaForSearch() {
+		$meta = array();
+
+		$meta['title'] = 'Search :' . Configuration::get( 'smartblogmetatitle' );
+
+		return $meta;
+	}
 }

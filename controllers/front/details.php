@@ -202,15 +202,6 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 			);
 			$this->context->smarty->assign( 'HOOK_SMART_BLOG_POST_FOOTER', Hook::exec( 'displaySmartAfterPost' ) );
 		}
-
-		// echo '<pre>';
-		// print_r( $meta_description );
-		// echo '</pre>';
-		// die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
-
-		$this->context->smarty->assign( 'meta_title', isset( $meta_title ) ? $meta_title : '' );
-		$this->context->smarty->assign( 'meta_description', isset( $meta_description ) ? $meta_description : '' );
-		$this->context->smarty->assign( 'meta_keywords', isset( $meta_keyword ) ? $meta_keyword : '' );
 		$this->context->smarty->assign( SmartBlogPost::GetPostMetaByPost( $id_post ) );
 
 		$this->setTemplate( 'module:smartblog/views/templates/front/posts.tpl' );
