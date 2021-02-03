@@ -9,7 +9,7 @@ class SmartBlogCategories extends Module {
         public function __construct() {
         $this->name = 'smartblogcategories';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.1';
+        $this->version = '2.0.2';
         $this->bootstrap = true;
         $this->author = 'SmartDataSoft';
         $this->secure_key = Tools::encrypt($this->name);
@@ -33,7 +33,6 @@ class SmartBlogCategories extends Module {
                  || !Configuration::updateValue('SMART_BLOG_CATEGORIES_DHTML', 0)
                  || !Configuration::updateValue('SMART_BLOG_CATEGORIES_POST_COUNT', 1)
                  || !Configuration::updateValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', 0)
-                 || !Configuration::updateValue('SMART_BLOG_CATEGORIES_DROPDOWN', 'collapse')
                  || !Configuration::updateValue('sort_category_by', 'id_desc')
                  )
             return false;
@@ -45,7 +44,6 @@ class SmartBlogCategories extends Module {
             if (!parent::uninstall()  || 
                 !Configuration::deleteByName('SMART_BLOG_CATEGORIES_DHTML') || 
                 !Configuration::deleteByName('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY') || 
-                !Configuration::deleteByName('SMART_BLOG_CATEGORIES_DROPDOWN') || 
                 !Configuration::deleteByName('SMART_BLOG_CATEGORIES_POST_COUNT') || 
                 !Configuration::deleteByName('sort_category_by'))
                  return false;
@@ -72,8 +70,6 @@ class SmartBlogCategories extends Module {
                     $dhtml = Tools::getValue('SMART_BLOG_CATEGORIES_POST_COUNT');
                     Configuration::updateValue('SMART_BLOG_CATEGORIES_POST_COUNT', (int)$dhtml);
 
-                    Configuration::updateValue('SMART_BLOG_CATEGORIES_DROPDOWN', (int)Tools::getValue('SMART_BLOG_CATEGORIES_DROPDOWN'));
-
                     $html .= $this->displayConfirmation($this->l('Configuration updated'));
                     $this->_clearCache('smartblogcategories.tpl');
                     Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
@@ -94,25 +90,6 @@ class SmartBlogCategories extends Module {
                     'icon' => 'icon-cogs'
                 ),
                 'input' => array(
-                    array(
-                        'type' => 'switch',
-                        'label' => $this->l('Display as dropdown'),
-                        'name' => 'SMART_BLOG_CATEGORIES_DROPDOWN',
-                        'required' => false,
-                        'is_bool' => true,
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Enabled')
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('Disabled')
-                            )
-                        )
-                    ),
                     array(
                         'type' => 'switch',
                         'label' => $this->l('Show only assigned categories of post'),
@@ -251,8 +228,7 @@ class SmartBlogCategories extends Module {
             'SMART_BLOG_CATEGORIES_DHTML' => Tools::getValue('SMART_BLOG_CATEGORIES_DHTML', Configuration::get('SMART_BLOG_CATEGORIES_DHTML')),
             'SMART_BLOG_CATEGORIES_POST_COUNT' => Tools::getValue('SMART_BLOG_CATEGORIES_POST_COUNT', Configuration::get('SMART_BLOG_CATEGORIES_POST_COUNT')),
             'sort_category_by' => Tools::getValue('sort_category_by', Configuration::get('sort_category_by')),
-            'SMART_BLOG_ASSIGNED_CATEGORIES_ONLY' => Tools::getValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', Configuration::get('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY')),
-            'SMART_BLOG_CATEGORIES_DROPDOWN' => Tools::getValue('SMART_BLOG_CATEGORIES_DROPDOWN', Configuration::get('SMART_BLOG_CATEGORIES_DROPDOWN')),            
+            'SMART_BLOG_ASSIGNED_CATEGORIES_ONLY' => Tools::getValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', Configuration::get('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY')),         
 
         );
     }
@@ -266,8 +242,6 @@ class SmartBlogCategories extends Module {
     protected function _assignMedia()
     {
         $this->context->controller->addCss(($this->_path).'css/smartblogcategories.css');
-        // if(Configuration::get('SMART_BLOG_CATEGORIES_DROPDOWN'))
-        //     $this->context->controller->addCss(($this->_path).'css/smartblogcategories-dropdown.css');
     }
     public function hookLeftColumn($params){
    
@@ -300,7 +274,6 @@ class SmartBlogCategories extends Module {
                 $resultIds[$row['id_smart_blog_category']] = &$row;
             }
 
-            $root_id = (Configuration::get('smartblogrootcat') || Configuration::get('SMART_BLOG_CATEGORIES_DROPDOWN'))? 0 : 1;
             $blockCategTree = $this->getTree($resultParents, $resultIds, 10, 0);
 
             if(!Configuration::get('smartblogrootcat')){
@@ -316,15 +289,20 @@ class SmartBlogCategories extends Module {
             $isDhtml = Configuration::get('SMART_BLOG_CATEGORIES_DHTML');
             $this->smarty->assign('blockCategTree', $blockCategTree);
             $this->smarty->assign('isDhtml', $isDhtml);
-            $this->smarty->assign('isDropdown', Configuration::get('SMART_BLOG_CATEGORIES_DROPDOWN'));
             $this->smarty->assign('select', true);
 
-            if (file_exists(_PS_THEME_DIR_.'modules/smartblogcategories/new-smartblogcategories.tpl'))
-                $this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
-            else
-                $this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'smartblogcategories/category-tree-branch.tpl');
+           // if (file_exists(_PS_THEME_DIR_.'modules/smartblogcategories/smartblogcategories.tpl'))
+              //  $this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+           // else
+             //   $this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'smartblogcategories/new-smartblogcategories.tpl');
+            
+             return $this->display(__FILE__, 'views/templates/front/smartblogcategories.tpl',$this->getCacheId());
 
-        } return $this->display(__FILE__, 'new-smartblogcategories.tpl');
+            // return $this->display(__FILE__, 'smartblogcategories.tpl');
+             
+        }
+        
+        
     }
 
 
