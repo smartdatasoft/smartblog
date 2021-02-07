@@ -1,17 +1,9 @@
-.block-blog {
-    box-shadow: 2px 2px 8px 0 rgba(0,0,0,.2);
-    background: #fff;
-    padding: 1.563rem 1.25rem;
-    margin-bottom: 1.563rem;
-}
-.btn-blog-search{
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 53px;
-    overflow: hidden;
-    height: 45px;
-}
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* Fonts Family */
+/* font-family: 'Poppins', sans-serif; */
+
 #sdsblogCategory {
     margin-bottom: 0px;
     overflow: hidden;
@@ -635,7 +627,7 @@ fieldset.account_creation {
 .sdsblog-box-content{
     padding-top:10px;
 }
-.sdsbox-content ul {
+/* .sdsbox-content ul {
     list-style-type: none;
     margin-left: 5px;
     margin-bottom: 0px;
@@ -646,7 +638,7 @@ fieldset.account_creation {
 }
 .sdsbox-content ul li a{
     font-size: 12px;
-}
+} */
 .sdsbox-content .recentComments li {
     padding: 6px 0;
     border-bottom: 1px dotted #ccc;
@@ -675,7 +667,7 @@ fieldset.account_creation {
     height: 45px;
     margin: 0 5px 5px;
 }
-.sdsbox-content .recentArticles li {
+/* .sdsbox-content .recentArticles li {
     padding: 6px 0;
     border-bottom: 1px dotted #ccc !important;
     display: inline-block;
@@ -690,7 +682,7 @@ fieldset.account_creation {
     width: 65px;
     height: 45px;
     margin: 5px 5px;
-}
+} */
 .blogTags .sdsbox-content{
     margin-bottom: 10px;
 }
@@ -774,15 +766,6 @@ fieldset.account_creation {
 #sdssearch_block_top .btn.button-search:hover {
     color: #6f6f6f;
 }
-#sdssearch_block_top #search_query_top {
-    display: inline;
-    padding: 0 13px;
-    height: 45px;
-    line-height: 45px;
-    background: #fbfbfb;
-    margin-right: 1px;
-}
-
 .ac_results {
     background: white;
     border: 1px solid #d6d4d4;
@@ -844,3 +827,101 @@ form#searchbox .button.button-small i {
 }
 
 /* css added by sadikur */
+.block.smart-block {
+    background-color: #fff;
+    box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.1);
+    padding: 30px 25px;
+    margin-bottom: 1.563rem;
+}
+.smart-block .smart_blog_sidebar_title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+.smart-block .smart_blog_sidebar_title a{
+    color: #000000;
+}
+.smart-block .smart_blog_sidebar_title a:hover{
+    color: #2fb5d2;
+}
+#sdssearch_block_top .smart_blog_search_bar {
+    background-color: #F4F4F4;
+    border-color: transparent;
+    width: 100%;
+    height: 40px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: rgba(0, 0, 0, .5);
+    padding-right: 38px;
+}
+#sdssearch_block_top .smart_blog_search_bar::placeholder {
+  color: #B0B0B0;
+  opacity: 1;
+}
+#sdssearch_block_top .smart_blog_search_bar:-ms-input-placeholder {
+ color: #B0B0B0;
+}
+#sdssearch_block_top .smart_blog_search_bar::-ms-input-placeholder {
+ color: #B0B0B0;
+}
+#sdssearch_block_top .smart_blog_search_button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 53px;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+#sdssearch_block_top .smart_blog_search_button .search{
+    color:rgba(0, 0, 0, .3);
+    font-size: 26px;
+}
+.smart-blog-post-content ul.recentArticles li {
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px dashed #D6D6D6;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+.smart-blog-post-content ul.recentArticles li:last-child {
+    border-bottom: 1px dashed transparent;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+.smart-blog-post-content ul.recentArticles li .image{
+    width: 62px;
+    height: 58px;
+    overflow: hidden;
+    float: left;
+}
+.smart-blog-post-content ul.recentArticles li .image img{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+}
+.smart-blog-post-title-date {
+    padding-left: 10px;
+    overflow: hidden;
+}
+.smart-blog-post-title-date .title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16.5px;
+    color: #3F3F3F;
+}
+.smart-blog-post-title-date .info{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 10.5px;
+    color: #A7A7A7;
+    display: block;
+    padding-top: 6px;
+}
