@@ -728,8 +728,8 @@ class BlogCategory extends ObjectModel {
 
 	public static function getCatName( $id ) {
 		$id_lang = (int) Context::getContext()->language->id;
-		$sql     = 'SELECT pl.name FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl, ' . _DB_PREFIX_ . 'smart_blog_category p 
-                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
+		$sql     = 'SELECT pl.name FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl join ' . _DB_PREFIX_ . 'smart_blog_post_category as p3 on pl.id_smart_blog_category=p3.id_smart_blog_category  WHERE pl.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
+
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
 		}
@@ -738,8 +738,7 @@ class BlogCategory extends ObjectModel {
 
 	public static function getCatLinkRewrite( $id ) {
 		$id_lang = (int) Context::getContext()->language->id;
-		$sql     = 'SELECT pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl, ' . _DB_PREFIX_ . 'smart_blog_category p 
-                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
+		$sql     = 'SELECT pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl join ' . _DB_PREFIX_ . 'smart_blog_post_category as p3 on pl.id_smart_blog_category=p3.id_smart_blog_category  WHERE pl.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
 		}
