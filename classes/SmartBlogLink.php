@@ -164,9 +164,6 @@ class SmartBlogLink
 
         if (!is_object($blogpost)) {
             if ($alias !== null && !$dispatcher->hasKeyword('smartblog_post_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('smartblog_post_rule', $id_lang, 'meta_title', $id_shop)) {
-
-    
-
                 return $url.$dispatcher->createUrl('smartblog_post_rule', $id_lang, array('id_post' => (int)$blogpost,'slug'=>$alias), $this->allow, '', $id_shop);
             }
             $blogpost = new SmartBlogPost($blogpost, $id_lang);

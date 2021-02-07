@@ -26,32 +26,26 @@
 
 require_once dirname( __FILE__ ) . '/../../classes/controllers/FrontController.php';
 
-class smartblogCategoryModuleFrontController extends smartblogModuleFrontController {
-
+class smartblogListModuleFrontController extends ModuleFrontController {
 
 	public $ssl = false;
 	public $smartblogCategory;
 
 	public function init() {
-
 		parent::init();
 	}
-
 
 	public function canonicalRedirection( $canonicalURL = '' ) {
 		if ( Tools::getValue( 'live_edit' ) ) {
 			return;
 		}
-
 		$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
 		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
-
 		$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
 		if ( Validate::isLoadedObject( $this->smartblogCategory ) && ( $canonicalURL = $smartbloglink->getSmartBlogCategoryLink( $this->smartblogCategory, $this->smartblogCategory->link_rewrite ) ) ) {
 			parent::canonicalRedirection( $canonicalURL );
 		}
 	}
-
 
 	public function initContent() {
 
@@ -65,12 +59,9 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 		$SmartBlogPost    = new SmartBlogPost();
 		$BlogCategory     = new BlogCategory();
 		$BlogPostCategory = new BlogPostCategory();
-
 		$smartblogurlpattern = (int) Configuration::get( 'smartblogurlpattern' );
-
 		// now we will check whihc option we need to url rewrite
 		switch ( $smartblogurlpattern ) {
-
 			case 1:
 				$SmartBlog   = new smartblog();
 				$slug        = Tools::getValue( 'slug' );
@@ -79,24 +70,14 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 			case 2:
 				$SmartBlog   = new smartblog();
 				$id_category = Tools::getValue( 'id_category' );
-				// if($id_category==''){
-				// $id_category = $SmartBlog->categoryslug2id($slug);
-				// }
-
 				break;
-
 			default:
 				$id_category = Tools::getValue( 'id_category' );
-
 		}
-
-		// $categoryinfo = $BlogCategory->getNameCategory($id_category);
 		$posts_per_page = Configuration::get( 'smartpostperpage' );
 		$limit_start    = 0;
 		$limit          = $posts_per_page;
-
 		if ( ! $id_category ) {
-
 			$total = (int) $SmartBlogPost->getToltal( $this->context->language->id );
 		} else {
 			$total = (int) $SmartBlogPost->getToltalByCategory( $this->context->language->id, $id_category );
@@ -113,9 +94,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 			$meta_title       = Configuration::get( 'smartblogmetatitle' );
 			$meta_keyword     = Configuration::get( 'smartblogmetakeyword' );
 			$meta_description = Configuration::get( 'smartblogmetadescrip' );
-
 			$allNews = $SmartBlogPost->getAllPost( $this->context->language->id, $limit_start, $limit );
-
 		} else {
 			if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/category/' . $id_category . '.jpg' ) ) {
 				$cat_image = $id_category;
@@ -129,11 +108,9 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 			}
 			$categoryinfo   = $BlogCategory->getNameCategory( $id_category );
 			$title_category = $categoryinfo[0]['name'];
-
 			$meta_title       = $categoryinfo[0]['meta_title'];
 			$meta_keyword     = $categoryinfo[0]['meta_keyword'];
 			$meta_description = $categoryinfo[0]['meta_description'];
-
 			$category_status  = $categoryinfo[0]['active'];
 			$cat_link_rewrite = $categoryinfo[0]['link_rewrite'];
 			if ( $category_status == 1 ) {
@@ -144,12 +121,10 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 		}
 		$i  = 0;
 		$to = array();
-
 		if ( ! empty( $allNews ) ) {
 			foreach ( $allNews as $item ) {
 				$to[ $i ] = $blogcomment->getToltalComment( $item['id_post'] );
 				$i++;
-
 				if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $item['id_post'] . '.jpg' ) ) {
 					$item['post_img'] = $item['id_post'] . '.jpg';
 				} else {
@@ -167,10 +142,9 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 			}
 		}
 		$protocol_link        = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
-			$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
-
-			$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
-			$i             = 0;
+		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+		$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
+		$i             = 0;
 		if(!empty($allNews)){
 			if ( count( $allNews ) >= 1 ) {
 				if ( is_array( $allNews ) ) {
@@ -186,15 +160,10 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 				}
 			}
 		}
-		
 		$this->post_id = $id_category;
 		parent::initContent();
-
-		// $this->canonicalRedirection();
-
 		$this->context->smarty->assign(
 			array(
-
 				'smartbloglink'        => $smartbloglink,
 				'postcategory'         => $allNews,
 				'category_status'      => $category_status,
@@ -219,11 +188,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 				'totalpages'           => $totalpages,
 			)
 		);
-
-		// $this->context->smarty->assign(  );
 		$template_name = 'module:smartblog/views/templates/front/postcategory.tpl';
-
 		$this->setTemplate( $template_name );
 	}
-
 }
