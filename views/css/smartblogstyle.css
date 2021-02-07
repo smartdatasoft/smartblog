@@ -604,9 +604,6 @@ fieldset.account_creation {
     float: right;
     margin-top: 30px;
 }
-.paddleftreleted{
-    padding-left:34px;
-}
 .sdsbox-content .fullwidthreleted{
     width:100%;
 }
@@ -639,7 +636,7 @@ fieldset.account_creation {
 .sdsbox-content ul li a{
     font-size: 12px;
 } */
-.sdsbox-content .recentComments li {
+/* .sdsbox-content .recentComments li {
     padding: 6px 0;
     border-bottom: 1px dotted #ccc;
     display: inline-block;
@@ -657,31 +654,12 @@ fieldset.account_creation {
     border-bottom: 1px dotted #ccc !important;
     width: 100%;
 }
-.sdsbox-content .popularArticles li a{
-    font-size: 12px;
-}
 .sdsbox-content .popularArticles li .image{
     float: left;
     display: inline-flex;
     width: 65px;
     height: 45px;
     margin: 0 5px 5px;
-}
-/* .sdsbox-content .recentArticles li {
-    padding: 6px 0;
-    border-bottom: 1px dotted #ccc !important;
-    display: inline-block;
-    width: 100%;
-}
-.sdsbox-content .recentArticles li a{
-    font-size: 12px;
-}
-.sdsbox-content .recentArticles li .image{
-    float: left;
-    display: inline-flex;
-    width: 65px;
-    height: 45px;
-    margin: 5px 5px;
 } */
 .blogTags .sdsbox-content{
     margin-bottom: 10px;
@@ -882,25 +860,25 @@ form#searchbox .button.button-small i {
     color:rgba(0, 0, 0, .3);
     font-size: 26px;
 }
-.smart-blog-post-content ul.recentArticles li {
+.smart-blog-post-content ul li {
     width: 100%;
     overflow: hidden;
     border-bottom: 1px dashed #D6D6D6;
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
-.smart-blog-post-content ul.recentArticles li:last-child {
+.smart-blog-post-content ul li:last-child {
     border-bottom: 1px dashed transparent;
     padding-bottom: 0px;
     margin-bottom: 0px;
 }
-.smart-blog-post-content ul.recentArticles li .image{
+.smart-blog-post-content ul li .image{
     width: 62px;
     height: 58px;
     overflow: hidden;
     float: left;
 }
-.smart-blog-post-content ul.recentArticles li .image img{
+.smart-blog-post-content ul li .image img{
     max-width: 100%;
     width: 100%;
     height: 100%;
@@ -924,4 +902,19 @@ form#searchbox .button.button-small i {
     color: #A7A7A7;
     display: block;
     padding-top: 6px;
+}
+.smart-block .smart_blog_block_content a{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    background: #F6F6F6;
+    color: #565656;
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    padding: 5px 10px;
+}
+.smart-block .smart_blog_block_content a:hover{
+    color: #FFFFFF;
+    background: #3CB9D7;
 }
