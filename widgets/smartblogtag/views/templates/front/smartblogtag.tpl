@@ -6,7 +6,7 @@
             {assign var="options" value=null}
                 {$options.tag = $tag.name|urlencode}
                 {if $tag!=""}
-                    <a href="{smartblog::GetSmartBlogLink('smartblog_tag',$options)|escape:'html':'UTF-8'}">{$tag.name}</a>  
+                    <a href="{$smartbloglink->getSmartBlogTag($tag.slug)|escape:'htmlall':'UTF-8'}">{$tag.name}</a>  
                 {/if}
             {/foreach}
    </div>

@@ -47,6 +47,10 @@ class BlogTag extends ObjectModel {
 				'type'     => self::TYPE_STRING,
 				'validate' => 'isString',
 			),
+			'slug'    => array(
+				'type'     => self::TYPE_STRING,
+				'validate' => 'isString',
+			),
 		),
 	);
 
@@ -61,6 +65,27 @@ class BlogTag extends ObjectModel {
 			return false;
 		}
 		return $posts[0]['id_tag'];
+	}
+
+	public static function TagUrlBuild( $tag, $addnumber = null ) {
+		$slug    = str_replace(" ","-",$tag);
+		if($addnumber!=''){
+			$slug=$slug."-".$addnumber;
+		}
+		
+		
+		$sql = 'SELECT id_tag FROM ' . _DB_PREFIX_ . 'smart_blog_tag WHERE  slug="' . $slug . '"';
+		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
+			return $slug;
+		}
+		$lastchar    = substr($slug, -1);
+		$addnumber=1;
+		if(is_numeric($lastchar)){
+			$addnumber=$lastchar+1;
+		}
+
+		return self::TagUrlBuild($tag, $addnumber);
+		
 	}
 
 	public static function GetTagsMeta( $tag_key ) {
