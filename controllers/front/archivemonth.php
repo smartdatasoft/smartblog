@@ -26,8 +26,7 @@
 
 require_once dirname( __FILE__ ) . '/../../classes/controllers/FrontController.php';
 
-class smartblogarchiveModuleFrontController extends smartblogModuleFrontController {
-
+class smartblogarchivemonthModuleFrontController extends smartblogModuleFrontController {
 
 	public $ssl = false;
 
@@ -36,6 +35,7 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
 	}
 
 	public function initContent() {
+		
 		parent::initContent();
 		$blogcomment    = new Blogcomment();
 		$day            = Tools::getvalue( 'day' );
@@ -55,7 +55,6 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
 
 		$i  = 0;
 		$to = array();
-
 		if ( ! empty( $result ) ) {
 			foreach ( $result as $item ) {
 				$to[ $i ] = $blogcomment->getToltalComment( $item['id_post'] );
@@ -68,22 +67,18 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
 				} else {
 					$result[ $j ]['totalcomment'] = $item;
 				}
-
 				$j++;
 			}
 		}
 		$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
 		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
-
-			$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
-
+		$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
 		$month_name = '';
 		if ( $month ) {
 			$monthNum   = $month;
 			$dateObj    = DateTime::createFromFormat( '!m', $monthNum );
 			$month_name = $dateObj->format( 'F' );
 		}
-
 		$this->context->smarty->assign(
 			array(
 				'smartbloglink'        => $smartbloglink,
@@ -111,5 +106,4 @@ class smartblogarchiveModuleFrontController extends smartblogModuleFrontControll
 		$template_name = 'module:smartblog/views/templates/front/archivecategory.tpl';
 		$this->setTemplate( $template_name );
 	}
-
 }

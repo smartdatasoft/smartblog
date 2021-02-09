@@ -138,7 +138,7 @@ class SmartBlogPost extends ObjectModel {
 			'link_rewrite'      => array(
 				'type'     => self::TYPE_STRING,
 				'lang'     => true,
-				'validate' => 'isString',
+				'validate' => 'isLinkRewrite',
 				'required' => false,
 			),
 		),
@@ -673,8 +673,8 @@ class SmartBlogPost extends ObjectModel {
 			$result[ $i ]['meta_keyword']      = $post['meta_keyword'];
 			$result[ $i ]['id_category']       = $post['id_category'];
 			$result[ $i ]['link_rewrite']      = $post['link_rewrite'];
-			$result[ $i ]['cat_name']          = $BlogCategory->getCatName( $post['id_category'] );
-			$result[ $i ]['cat_link_rewrite']  = $BlogCategory->getCatLinkRewrite( $post['id_category'] );
+			//$result[ $i ]['cat_name']          = $BlogCategory->getCatName( $post['id_smart_blog_post'] );
+			$result[ $i ]['cat_link_rewrite']  = $BlogCategory->getCatLinkRewrite( $post['id_smart_blog_post'] );
 			$employee                          = new Employee( $post['id_author'] );
 
 			$result[ $i ]['lastname']  = $employee->lastname;
@@ -853,8 +853,8 @@ class SmartBlogPost extends ObjectModel {
 			$result[ $i ]['meta_keyword']      = $post['meta_keyword'];
 			$result[ $i ]['id_category']       = $post['id_category'];
 			$result[ $i ]['link_rewrite']      = $post['link_rewrite'];
-			$result[ $i ]['cat_name']          = $BlogCategory->getCatName( $post['id_category'] );
-			$result[ $i ]['cat_link_rewrite']  = $BlogCategory->getCatLinkRewrite( $post['id_category'] );
+			//$result[ $i ]['cat_name']          = $BlogCategory->getCatName(  $post['id_smart_blog_post'] );
+			$result[ $i ]['cat_link_rewrite']  = $BlogCategory->getCatLinkRewrite( $post['id_smart_blog_post'] );
 			$employee                          = new Employee( $post['id_author'] );
 
 			$result[ $i ]['lastname']  = $employee->lastname;
