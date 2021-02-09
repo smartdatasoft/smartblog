@@ -39,7 +39,10 @@
 				                  <i class="material-icons add">&#xE145;</i>
 				                  <i class="material-icons remove">&#xE15B;</i>
 				                </div>
+								
 			                {/if}
+
+							
 			            
 		                <div class="{if $isDhtml}collapse{/if}" id="exBlogCollapsingNavbar{$node.id}">
 		                  {blockCategTree nodes=$node.children depth=$depth+1}
@@ -67,8 +70,8 @@
 	  {/strip}
 	{/function}
 
-	<div class="block-categories hidden-sm-down">
-		<h4 class="text-uppercase h6 hidden-sm-down"><a href="{smartblog::GetSmartBlogLink('smartblog')}">{l s='Blog Category' mod='smartblogpopularposts'}</a></h4>
+	<div class="block-categories block smart-block hidden-sm-down">
+		<h4 class="smart_blog_sidebar_title hidden-sm-down"><a href="{smartblog::GetSmartBlogLink('smartblog')}">{l s='Blog Category' mod='smartblogpopularposts'}</a></h4>
 	  <ul class="category-top-menu">
 	    <li><a class="text-uppercase h6" href="{$blockCategTree.link nofilter}">{$blockCategTree.name}</a></li>
 	    <li>{blockCategTree nodes=$blockCategTree.children}</li>
