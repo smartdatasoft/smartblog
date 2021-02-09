@@ -55,36 +55,40 @@
 {block name='page_content'}
 		{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a><span class="navigation-pipe"></span>{$meta_title|escape:'htmlall':'UTF-8'}{/capture}
 		<div id="content" class="block">
-			<div itemtype="http://schema.org/BlogPosting" itemscope="" id="sdsblogArticle" class="blog-post">
-				<div class="title_block">{$meta_title|escape:'htmlall':'UTF-8'}</div>
-				<div class="sdsarticleHeader">
-					<span>
-						{if $smartshowauthor ==1} {l s='Posted by ' mod='smartblog'} &nbsp;<i class="icon icon-user"></i>
-						<span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>{/if}&nbsp;
-						<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|escape:'htmlall':'UTF-8'}</span>
-                   		<span itemprop="articleSection">
-                   			{$assocCats = BlogCategory::getPostCategoriesFull($post.id_post)}
-							{$catCounts = 0}
-							{if !empty($assocCats)}
-                        		&nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;
-                            	{foreach $assocCats as $catid=>$assoCat}
-	                                {if $catCounts > 0}, {/if}
-	                                {$catlink=[]}
-	                                {$catlink.id_category = $assoCat.id_category}
-	                                {$catlink.slug = $assoCat.link_rewrite}
-	                                <a href="{$smartbloglink->getSmartBlogCategoryLink($assoCat.id_category,$assoCat.link_rewrite)|escape:'htmlall':'UTF-8'}">
-	                                    {$assoCat.name|escape:'htmlall':'UTF-8'}
-	                                </a>
-	                                {$catCounts = $catCounts + 1}
-								{/foreach}
-							{/if}
+			<div itemtype="http://schema.org/BlogPosting" itemscope="" id="sdsblogArticle" class="blog-post smart-blog-single-post">
+				<div class="smart-blog-posts-header-area">
+					<div class="title_block smart-blog-single-post-title">{$meta_title|escape:'htmlall':'UTF-8'}</div>
+					<div class="sdsarticleHeader">
+						<span class="smart-blog-posts-info">
+							{if $smartshowauthor ==1} {l s='Posted by ' mod='smartblog'} &nbsp;<i class="icon icon-user"></i>
+							<span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>{/if}&nbsp;
+							<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|escape:'htmlall':'UTF-8'}</span>
+							<span itemprop="articleSection">
+								{$assocCats = BlogCategory::getPostCategoriesFull($post.id_post)}
+								{$catCounts = 0}
+								{if !empty($assocCats)}
+									&nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;
+									{foreach $assocCats as $catid=>$assoCat}
+										{if $catCounts > 0}, {/if}
+										{$catlink=[]}
+										{$catlink.id_category = $assoCat.id_category}
+										{$catlink.slug = $assoCat.link_rewrite}
+										<a href="{$smartbloglink->getSmartBlogCategoryLink($assoCat.id_category,$assoCat.link_rewrite)|escape:'htmlall':'UTF-8'}">
+											{$assoCat.name|escape:'htmlall':'UTF-8'}
+										</a>
+										{$catCounts = $catCounts + 1}
+									{/foreach}
+								{/if}
+							</span>
+							<span class="smart-blog-single-comments">
+							&nbsp;<i class="icon icon-comments"></i>&nbsp;
+							{l s=' Comments' mod='smartblog'}
+							<span class="comment-count-number">{if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}</span>
+							</span>
 						</span>
-                       &nbsp;<i class="icon icon-comments"></i>&nbsp;
-                       {if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}
-                       {l s=' Comments' mod='smartblog'}
-                   	</span>
-					<a title="" style="display:none" itemprop="url" href="#"></a>
-      			</div>
+						<a title="" style="display:none" itemprop="url" href="#"></a>
+					</div>
+				</div>	  
 				<div itemprop="articleBody">
 					<div class="articleContent">                    
 	                    {if isset($ispost) && !empty($ispost)}
@@ -98,7 +102,7 @@
 	                    {if isset($ispost) && !empty($ispost)}
 	                    	</a>
 	                    {/if}
-						<div class="sdsarticle-des" style="text-align: left;">
+						<div class="sdsarticle-des smart-blog-sing-blog-content" style="text-align: left;">
 	                    {$post.content nofilter}
 	                   	</div>
 	                   {$displayBackOfficeSmartBlog}
@@ -106,10 +110,10 @@
 	                   
 	            	<div class="sdsarticle-des"></div>
 	            	{if $tags != ''}
-		                <div class="sdstags-update">
-		                    <span class="tags"><b>{l s='Tags:' mod='smartblog'} </b> 
+		                <div class="sdstags-update smart-blog-post-tags">
+		                    <span class="tags"><span>{l s='Tags:' mod='smartblog'} </span> 
 		                        {foreach from=$tags item=tag}
-		                          <a title="tag" href="{$smartbloglink->getSmartBlogTag($tag.slug)|escape:'htmlall':'UTF-8'}">{$tag.name|escape:'htmlall':'UTF-8'}</a>
+		                          <a class="smart-blog-single-tag-item" title="tag" href="{$smartbloglink->getSmartBlogTag($tag.slug)|escape:'htmlall':'UTF-8'}">{$tag.name|escape:'htmlall':'UTF-8'}</a>
 		                        
 		                        {/foreach}
 		                    </span>
