@@ -1246,6 +1246,7 @@ class smartblog extends Module {
 
 			return $url . Tools::getvalue( 'smartmainblogurl' );
 		}
+
 		if ( $params != null ) {
 			return $url . $dispatcher->createUrl( $rewrite, $id_lang, $params, $force_routes );
 		} else {
