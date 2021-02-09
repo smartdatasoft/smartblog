@@ -460,14 +460,14 @@ class smartblog extends Module {
 			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
 		 endif;
 		 foreach ( $languages as $language ) {
-            if ( ! Db::getInstance()->Execute(
+			 if ( ! Db::getInstance()->Execute(
 				'
                        INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
                         VALUES(' . $i . ',' . (int) $language['id_lang'] . ', 
 							"' . htmlspecialchars( $title ) . '", 
 							"' . htmlspecialchars( $des ) . '","' . Tools::substr( $des, 0, 200 ) . '","' . htmlspecialchars( $des ) . '","' . $slug . '"
 						)'
-			 )
+            )
 			 ) {
 				 return false;
 			 }
@@ -647,6 +647,7 @@ class smartblog extends Module {
 		$this->autoregisterhook( 'moduleRoutes', 'smartblog' );
 		$this->autoregisterhook( 'vcBeforeInit', 'smartlegendaaddons' );
 		if ( Tools::isSubmit( 'savesmartblog' ) ) {
+
 			Configuration::updateValue( 'smartblogmetatitle', Tools::getvalue( 'smartblogmetatitle' ) );
 			Configuration::updateValue( 'smartenablecomment', Tools::getvalue( 'smartenablecomment' ) );
 			Configuration::updateValue( 'smartenableguestcomment', Tools::getvalue( 'smartenableguestcomment' ) );
@@ -1237,6 +1238,10 @@ class smartblog extends Module {
 		$dispatcher   = Dispatcher::getInstance();
 		$id_lang      = (int) Context::getContext()->language->id;
 		$force_routes = (bool) Configuration::get( 'PS_REWRITING_SETTINGS' );
+		if ( Tools::isSubmit( 'savesmartblog' ) ) {
+
+			return $url . Tools::getvalue( 'smartmainblogurl' );
+		}
 		if ( $params != null ) {
 			return $url . $dispatcher->createUrl( $rewrite, $id_lang, $params, $force_routes );
 		} else {
