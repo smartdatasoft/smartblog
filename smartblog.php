@@ -413,50 +413,50 @@ class smartblog extends Module
 				$title = 'From Now we are certified web agency';
 				$slug  = 'from-now-we-are-certified-web-agency';
 				$des   = 'Smartdatasoft is an offshore web development company located in Bangladesh. We are serving this sector since 2010. Our team is committed to develop high quality web based application and theme for our clients and also for the global marketplace. As your web development partner we will assist you in planning, development, implementation and upgrade! Why Smartdatasoft? Smartdatasoft released their first prestashop theme in November 2012. Till now we have 6+ prestashop theme which are getting sold on global renowned marketplace. Those themes are getting used in more than 400 customers eCommerce websites. Those themes are very user friendly and highly customize able from admin dashboard. For these reason these theme are very popular among the end users and developers';
-			elseif ($i == 2) :
-				$title = 'What is Bootstrap? – The History and the Hype';
-				$slug  = 'what-is-bootstrap';
-				$des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-			elseif ($i == 3) :
-				$title = 'Answers to your Questions about PrestaShop 1.6';
-				$slug  = 'question-about-prestashop';
-				$des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-			elseif ($i == 4) :
-				$title = 'Share the Love for PrestaShop 1.6';
-				$slug  = 'share-love-for-prestashop';
-				$des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-			elseif ($i == 5) :
-				$title = 'Christmas Sale is here 5';
-				$slug  = 'christmas-sale-is-here';
-				$des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-			elseif ($i == 6) :
-				$title = 'Christmas Sale is here 6';
-				$slug  = 'christmas-sale-is-here';
-				$des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-			elseif ($i == 7) :
-				$title = 'Christmas Sale is here 7';
-				$slug  = 'christmas-sale-is-here';
-				$des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-			endif;
-			foreach ($languages as $language) {
-				if (!Db::getInstance()->Execute(
-					'
-                       INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
+		 elseif ( $i == 2 ) :
+			 $title = 'What is Bootstrap? – The History and the Hype';
+			 $slug  = 'what-is-bootstrap';
+			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+		 elseif ( $i == 3 ) :
+			 $title = 'Answers to your Questions about PrestaShop 1.6';
+			 $slug  = 'question-about-prestashop';
+			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+		 elseif ( $i == 4 ) :
+			 $title = 'Share the Love for PrestaShop 1.6';
+			 $slug  = 'share-love-for-prestashop';
+			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+		 elseif ( $i == 5 ) :
+			 $title = 'Christmas Sale is here 5';
+			 $slug  = 'christmas-sale-is-here';
+			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+		 elseif ( $i == 6 ) :
+			 $title = 'Christmas Sale is here 6';
+			 $slug  = 'christmas-sale-is-here';
+			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+		 elseif ( $i == 7 ) :
+			 $title = 'Christmas Sale is here 7';
+			 $slug  = 'christmas-sale-is-here';
+			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+		 endif;
+		 foreach ( $languages as $language ) {
+			 if ( ! Db::getInstance()->Execute(
+				'INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
                         VALUES(' . $i . ',' . (int) $language['id_lang'] . ', 
 							"' . htmlspecialchars($title) . '", 
 							"' . htmlspecialchars($des) . '","' . Tools::substr($des, 0, 200) . '","' . htmlspecialchars($des) . '","' . $slug . '"
 						)'
-				)) {
-					return false;
-				}
-			}
+            )
+			 ) {
+				 return false;
+			 }
+		 }
+
 		}
 
 		for ($i = 1; $i <= 4; $i++) {
 			Db::getInstance()->Execute(
-				'
-                                                INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_shop`(`id_smart_blog_post`, `id_shop`) 
-                                                VALUES(' . $i . ',' . (int) $this->smart_shop_id . ')'
+				'INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_shop`(`id_smart_blog_post`, `id_shop`) 
+        VALUES(' . $i . ',' . (int) $this->smart_shop_id . ')'
 			);
 		}
 		for ($i = 1; $i <= 7; $i++) {
@@ -630,33 +630,35 @@ class smartblog extends Module
     </div>';
 
 		$html = '';
-		$this->autoregisterhook('moduleRoutes', 'smartblog');
-		$this->autoregisterhook('vcBeforeInit', 'smartlegendaaddons');
-		if (Tools::isSubmit('savesmartblog')) {
-			Configuration::updateValue('smartblogmetatitle', Tools::getvalue('smartblogmetatitle'));
-			Configuration::updateValue('smartenablecomment', Tools::getvalue('smartenablecomment'));
-			Configuration::updateValue('smartenableguestcomment', Tools::getvalue('smartenableguestcomment'));
-			Configuration::updateValue('smartblogmetakeyword', Tools::getvalue('smartblogmetakeyword'));
-			Configuration::updateValue('smartblogmetadescrip', Tools::getvalue('smartblogmetadescrip'));
-			Configuration::updateValue('smartpostperpage', Tools::getvalue('smartpostperpage'));
-			Configuration::updateValue('smartblogrootcat', Tools::getvalue('smartblogrootcat'));
-			Configuration::updateValue('smartblogurlpattern', Tools::getvalue('smartblogurlpattern'));
-			Configuration::updateValue('smartacceptcomment', Tools::getvalue('smartacceptcomment'));
-			Configuration::updateValue('smartcaptchaoption', Tools::getvalue('smartcaptchaoption'));
-			Configuration::updateValue('smartshowviewed', Tools::getvalue('smartshowviewed'));
-			Configuration::updateValue('smartdisablecatimg', Tools::getvalue('smartdisablecatimg'));
-			Configuration::updateValue('smartshowauthorstyle', Tools::getvalue('smartshowauthorstyle'));
-			Configuration::updateValue('smartshowauthor', Tools::getvalue('smartshowauthor'));
-			Configuration::updateValue('smartshowcolumn', Tools::getvalue('smartshowcolumn'));
-			Configuration::updateValue('smartmainblogurl', Tools::getvalue('smartmainblogurl'));
-			Configuration::updateValue('smartusehtml', Tools::getvalue('smartusehtml'));
-			Configuration::updateValue('smartshownoimg', Tools::getvalue('smartshownoimg'));
-			Configuration::updateValue('smartdataformat', Tools::getvalue('smartdataformat'));
-			Configuration::updateValue('smartcustomcss', Tools::getvalue('smartcustomcss'), true);
-			Configuration::updateValue('smartshowhomepost', Tools::getvalue('smartshowhomepost'));
 
-			$this->processImageUpload($_FILES);
-			$html   = $this->displayConfirmation($this->l('The settings have been updated successfully.'));
+		$this->autoregisterhook( 'moduleRoutes', 'smartblog' );
+		$this->autoregisterhook( 'vcBeforeInit', 'smartlegendaaddons' );
+		if ( Tools::isSubmit( 'savesmartblog' ) ) {
+
+			Configuration::updateValue( 'smartblogmetatitle', Tools::getvalue( 'smartblogmetatitle' ) );
+			Configuration::updateValue( 'smartenablecomment', Tools::getvalue( 'smartenablecomment' ) );
+			Configuration::updateValue( 'smartenableguestcomment', Tools::getvalue( 'smartenableguestcomment' ) );
+			Configuration::updateValue( 'smartblogmetakeyword', Tools::getvalue( 'smartblogmetakeyword' ) );
+			Configuration::updateValue( 'smartblogmetadescrip', Tools::getvalue( 'smartblogmetadescrip' ) );
+			Configuration::updateValue( 'smartpostperpage', Tools::getvalue( 'smartpostperpage' ) );
+			Configuration::updateValue( 'smartblogrootcat', Tools::getvalue( 'smartblogrootcat' ) );
+			Configuration::updateValue( 'smartblogurlpattern', Tools::getvalue( 'smartblogurlpattern' ) );
+			Configuration::updateValue( 'smartacceptcomment', Tools::getvalue( 'smartacceptcomment' ) );
+			Configuration::updateValue( 'smartcaptchaoption', Tools::getvalue( 'smartcaptchaoption' ) );
+			Configuration::updateValue( 'smartshowviewed', Tools::getvalue( 'smartshowviewed' ) );
+			Configuration::updateValue( 'smartdisablecatimg', Tools::getvalue( 'smartdisablecatimg' ) );
+			Configuration::updateValue( 'smartshowauthorstyle', Tools::getvalue( 'smartshowauthorstyle' ) );
+			Configuration::updateValue( 'smartshowauthor', Tools::getvalue( 'smartshowauthor' ) );
+			Configuration::updateValue( 'smartshowcolumn', Tools::getvalue( 'smartshowcolumn' ) );
+			Configuration::updateValue( 'smartmainblogurl', Tools::getvalue( 'smartmainblogurl' ) );
+			Configuration::updateValue( 'smartusehtml', Tools::getvalue( 'smartusehtml' ) );
+			Configuration::updateValue( 'smartshownoimg', Tools::getvalue( 'smartshownoimg' ) );
+			Configuration::updateValue( 'smartdataformat', Tools::getvalue( 'smartdataformat' ) );
+			Configuration::updateValue( 'smartcustomcss', Tools::getvalue( 'smartcustomcss' ), true );
+			Configuration::updateValue( 'smartshowhomepost', Tools::getvalue( 'smartshowhomepost' ) );
+
+			$this->processImageUpload( $_FILES );
+			$html   = $this->displayConfirmation( $this->l( 'The settings have been updated successfully.' ) );
 			$helper = $this->SettingForm();
 			$html  .= $feed_url_html;
 			$html  .= $helper->generateForm($this->fields_form);
@@ -1228,9 +1230,13 @@ class smartblog extends Module
 		$url          = self::GetSmartBlogUrl();
 		$dispatcher   = Dispatcher::getInstance();
 		$id_lang      = (int) Context::getContext()->language->id;
-		$force_routes = (bool) Configuration::get('PS_REWRITING_SETTINGS');
-		if ($params != null) {
-			return $url . $dispatcher->createUrl($rewrite, $id_lang, $params, $force_routes);
+
+		$force_routes = (bool) Configuration::get( 'PS_REWRITING_SETTINGS' );
+		if ( Tools::isSubmit( 'savesmartblog' ) ) {
+			return $url . Tools::getvalue( 'smartmainblogurl' );
+		}
+		if ( $params != null ) {
+			return $url . $dispatcher->createUrl( $rewrite, $id_lang, $params, $force_routes );
 		} else {
 			$params = array();
 			return $url . $dispatcher->createUrl($rewrite, $id_lang, $params, $force_routes);
