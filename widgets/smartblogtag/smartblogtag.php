@@ -91,8 +91,12 @@ class SmartBlogTag extends Module {
                           if(empty($tags)){
                               $tags = Db::getInstance()->ExecuteS($sqllangdefault);         
                           }
+                          $protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+                          $protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+                          $smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
                           $this->smarty->assign( array(
-                                        'tags' => $tags
+                                        'tags' => $tags,
+                                        'smartbloglink' => $smartbloglink
                               ));
                       }
                   return $this->display(__FILE__, 'views/templates/front/smartblogtag.tpl',$this->getCacheId());
