@@ -1,86 +1,93 @@
 <?php
 if (!defined('_PS_VERSION_'))
     exit;
- 
-require_once (_PS_MODULE_DIR_.'smartblog/classes/BlogCategory.php');
-require_once (_PS_MODULE_DIR_.'smartblog/smartblog.php');
-class SmartBlogCategories extends Module {
-    
-        public function __construct() {
+
+require_once(_PS_MODULE_DIR_ . 'smartblog/classes/BlogCategory.php');
+require_once(_PS_MODULE_DIR_ . 'smartblog/smartblog.php');
+class SmartBlogCategories extends Module
+{
+
+    public function __construct()
+    {
         $this->name = 'smartblogcategories';
         $this->tab = 'front_office_features';
         $this->version = '2.0.2';
         $this->bootstrap = true;
         $this->author = 'SmartDataSoft';
         $this->secure_key = Tools::encrypt($this->name);
-        
+
         parent::__construct();
-        
+
         $this->displayName = $this->l('Smart Blog Categories');
         $this->description = $this->l('The Most Powerfull Presta shop Blog  Module\'s tag - by smartdatasoft');
         $this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
-        }
-        public function install(){
-                $langs = Language::getLanguages();
-                $id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-                 if (!parent::install() || !$this->registerHook('leftColumn')  
-				 || !$this->registerHook('actionsbdeletecat') 
-				 || !$this->registerHook('actionsbnewcat') 
-				 || !$this->registerHook('actionsbupdatecat') 
-                 || !$this->registerHook('actionsbtogglecat') 
-				 || !$this->registerHook('displaySmartBlogLeft') 
-                 || ! $this->registerHook('displayHeader') 
-                 || !Configuration::updateValue('SMART_BLOG_CATEGORIES_DHTML', 0)
-                 || !Configuration::updateValue('SMART_BLOG_CATEGORIES_POST_COUNT', 1)
-                 || !Configuration::updateValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', 0)
-                 || !Configuration::updateValue('sort_category_by', 'id_desc')
-                 )
+    }
+    public function install()
+    {
+        $langs = Language::getLanguages();
+        $id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        if (
+            !parent::install() || !$this->registerHook('leftColumn')
+            || !$this->registerHook('actionsbdeletecat')
+            || !$this->registerHook('actionsbnewcat')
+            || !$this->registerHook('actionsbupdatecat')
+            || !$this->registerHook('actionsbtogglecat')
+            || !$this->registerHook('displaySmartBlogLeft')
+            || !$this->registerHook('displayHeader')
+            || !Configuration::updateValue('SMART_BLOG_CATEGORIES_DHTML', 0)
+            || !Configuration::updateValue('SMART_BLOG_CATEGORIES_POST_COUNT', 1)
+            || !Configuration::updateValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', 0)
+            || !Configuration::updateValue('sort_category_by', 'id_desc')
+        )
             return false;
-                 return true;
-            }
+        return true;
+    }
 
-        public function uninstall() {
-             $this->DeleteCache();
-            if (!parent::uninstall()  || 
-                !Configuration::deleteByName('SMART_BLOG_CATEGORIES_DHTML') || 
-                !Configuration::deleteByName('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY') || 
-                !Configuration::deleteByName('SMART_BLOG_CATEGORIES_POST_COUNT') || 
-                !Configuration::deleteByName('sort_category_by'))
-                 return false;
-            return true;
-                }
+    public function uninstall()
+    {
+        $this->DeleteCache();
+        if (
+            !parent::uninstall()  ||
+            !Configuration::deleteByName('SMART_BLOG_CATEGORIES_DHTML') ||
+            !Configuration::deleteByName('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY') ||
+            !Configuration::deleteByName('SMART_BLOG_CATEGORIES_POST_COUNT') ||
+            !Configuration::deleteByName('sort_category_by')
+        )
+            return false;
+        return true;
+    }
 
-            public function getContent(){
-                $html = '';
-                // If we try to update the settings
-                if (Tools::isSubmit('submitModule'))
-                {
-                    
-                    $smartblogrootcat = Tools::getValue('smartblogrootcat');
-                    Configuration::updateValue('smartblogrootcat', (int)$smartblogrootcat);
+    public function getContent()
+    {
+        $html = '';
+        // If we try to update the settings
+        if (Tools::isSubmit('submitModule')) {
 
-                    $sort_category_by = Tools::getValue('sort_category_by');
-                    Configuration::updateValue('sort_category_by', $sort_category_by);
+            $smartblogrootcat = Tools::getValue('smartblogrootcat');
+            Configuration::updateValue('smartblogrootcat', (int)$smartblogrootcat);
 
-                    $dhtml = Tools::getValue('SMART_BLOG_CATEGORIES_DHTML');
-                    Configuration::updateValue('SMART_BLOG_CATEGORIES_DHTML', (int)$dhtml);
+            $sort_category_by = Tools::getValue('sort_category_by');
+            Configuration::updateValue('sort_category_by', $sort_category_by);
 
-                    Configuration::updateValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', (int)Tools::getValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY'));
+            $dhtml = Tools::getValue('SMART_BLOG_CATEGORIES_DHTML');
+            Configuration::updateValue('SMART_BLOG_CATEGORIES_DHTML', (int)$dhtml);
 
-                    $dhtml = Tools::getValue('SMART_BLOG_CATEGORIES_POST_COUNT');
-                    Configuration::updateValue('SMART_BLOG_CATEGORIES_POST_COUNT', (int)$dhtml);
+            Configuration::updateValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', (int)Tools::getValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY'));
 
-                    $html .= $this->displayConfirmation($this->l('Configuration updated'));
-                    $this->_clearCache('smartblogcategories.tpl');
-                    Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
-                }
+            $dhtml = Tools::getValue('SMART_BLOG_CATEGORIES_POST_COUNT');
+            Configuration::updateValue('SMART_BLOG_CATEGORIES_POST_COUNT', (int)$dhtml);
 
-                $html .= $this->renderForm();
-     
-                return $html;
-            }
+            $html .= $this->displayConfirmation($this->l('Configuration updated'));
+            $this->_clearCache('smartblogcategories.tpl');
+            Tools::redirectAdmin('index.php?tab=AdminModules&configure=' . $this->name . '&token=' . Tools::getAdminTokenLite('AdminModules'));
+        }
 
-        
+        $html .= $this->renderForm();
+
+        return $html;
+    }
+
+
     public function renderForm()
     {
         $fields_form = array(
@@ -116,7 +123,7 @@ class SmartBlogCategories extends Module {
                         'desc' => 'Blog category list that is shown in the blog page sidebars',
                         'required' => false,
                         'options' => array(
-                            'query' => array( 
+                            'query' => array(
                                 array(
                                     'id_option' => 'name_ASC',
                                     'name' => 'Name ASC (A-Z)'
@@ -182,17 +189,17 @@ class SmartBlogCategories extends Module {
                         'name' => 'SMART_BLOG_CATEGORIES_DHTML',
                         'desc' => $this->l('Activate dynamic (animated) mode for category sublevels.'),
                         'values' => array(
-                                    array(
-                                        'id' => 'active_on',
-                                        'value' => 1,
-                                        'label' => $this->l('Enabled')
-                                    ),
-                                    array(
-                                        'id' => 'active_off',
-                                        'value' => 0,
-                                        'label' => $this->l('Disabled')
-                                    )
-                                ),
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled')
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled')
+                            )
+                        ),
                     ),
                 ),
                 'submit' => array(
@@ -211,7 +218,7 @@ class SmartBlogCategories extends Module {
 
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitModule';
-        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFieldsValues(),
@@ -221,30 +228,31 @@ class SmartBlogCategories extends Module {
 
         return $helper->generateForm(array($fields_form));
     }
-     public function getConfigFieldsValues()
+    public function getConfigFieldsValues()
     {
         return array(
             'smartblogrootcat' => Tools::getValue('smartblogrootcat', Configuration::get('smartblogrootcat')),
             'SMART_BLOG_CATEGORIES_DHTML' => Tools::getValue('SMART_BLOG_CATEGORIES_DHTML', Configuration::get('SMART_BLOG_CATEGORIES_DHTML')),
             'SMART_BLOG_CATEGORIES_POST_COUNT' => Tools::getValue('SMART_BLOG_CATEGORIES_POST_COUNT', Configuration::get('SMART_BLOG_CATEGORIES_POST_COUNT')),
             'sort_category_by' => Tools::getValue('sort_category_by', Configuration::get('sort_category_by')),
-            'SMART_BLOG_ASSIGNED_CATEGORIES_ONLY' => Tools::getValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', Configuration::get('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY')),         
+            'SMART_BLOG_ASSIGNED_CATEGORIES_ONLY' => Tools::getValue('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY', Configuration::get('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY')),
 
         );
     }
 
-     public function hookHeader()
+    public function hookHeader()
     {
-     
-            $this->_assignMedia();
+
+        $this->_assignMedia();
     }
 
     protected function _assignMedia()
     {
-        $this->context->controller->addCss(($this->_path).'css/smartblogcategories.css');
+        $this->context->controller->addCss(($this->_path) . 'css/smartblogcategories.css');
     }
-    public function hookLeftColumn($params){
-   
+    public function hookLeftColumn($params)
+    {
+
 
         if (!$this->isCached('smartblogcategories.tpl')) {
             $view_data = array();
@@ -255,28 +263,27 @@ class SmartBlogCategories extends Module {
             $maxdepth = 4;
             // Get all groups for this customer and concatenate them as a string: "1,2,3..."
             $groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
-      
+
             $active = 1;
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `'._DB_PREFIX_.'smart_blog_category` c
-            LEFT JOIN `'._DB_PREFIX_.'smart_blog_category_lang` cl ON c.`id_smart_blog_category` = cl.`id_smart_blog_category`
-            WHERE   `id_lang` = '.(int)$id_lang.'
-            '.($active ? 'AND `active` = 1' : '').'
+            FROM `' . _DB_PREFIX_ . 'smart_blog_category` c
+            LEFT JOIN `' . _DB_PREFIX_ . 'smart_blog_category_lang` cl ON c.`id_smart_blog_category` = cl.`id_smart_blog_category`
+            WHERE   `id_lang` = ' . (int)$id_lang . '
+            ' . ($active ? 'AND `active` = 1' : '') . '
             ORDER BY `meta_title` ASC');
 
             $resultParents = array();
             $resultIds = array();
 
-            foreach ($result as &$row)
-            {
+            foreach ($result as &$row) {
                 $resultParents[$row['id_parent']][] = &$row;
                 $resultIds[$row['id_smart_blog_category']] = &$row;
             }
 
             $blockCategTree = $this->getTree($resultParents, $resultIds, 10, 0);
 
-            if(!Configuration::get('smartblogrootcat')){
+            if (!Configuration::get('smartblogrootcat')) {
                 $blockCategTree = array(
                     'id' => 0,
                     'link' => '',
@@ -291,18 +298,17 @@ class SmartBlogCategories extends Module {
             $this->smarty->assign('isDhtml', $isDhtml);
             $this->smarty->assign('select', true);
 
-           // if (file_exists(_PS_THEME_DIR_.'modules/smartblogcategories/smartblogcategories.tpl'))
-              //  $this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
-           // else
-             //   $this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'smartblogcategories/new-smartblogcategories.tpl');
-            
-             return $this->display(__FILE__, 'views/templates/front/smartblogcategories.tpl',$this->getCacheId());
+            // if (file_exists(_PS_THEME_DIR_.'modules/smartblogcategories/smartblogcategories.tpl'))
+            //  $this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+            // else
+            //   $this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'smartblogcategories/new-smartblogcategories.tpl');
+
+
 
             // return $this->display(__FILE__, 'smartblogcategories.tpl');
-             
+
         }
-        
-        
+        return $this->display(__FILE__, 'views/templates/front/smartblogcategories.tpl', $this->getCacheId());
     }
 
 
@@ -322,16 +328,20 @@ class SmartBlogCategories extends Module {
 
         if (isset($resultIds[$id_smart_blog_category])) {
             $BlogCategory = new BlogCategory();
-            $tmp_all_child = $id_smart_blog_category.$BlogCategory->getAllChildCategory($id_smart_blog_category, '');
-            $tmp_all_child = array_values(array_unique(explode(",",$tmp_all_child)));
+            $tmp_all_child = $id_smart_blog_category . $BlogCategory->getAllChildCategory($id_smart_blog_category, '');
+            $tmp_all_child = array_values(array_unique(explode(",", $tmp_all_child)));
             $tmp_post_of_child = $BlogCategory->getTotalPostOfChildParent($tmp_all_child);
-            $total_post = (Configuration::get('SMART_BLOG_CATEGORIES_POST_COUNT'))? ' ('.$tmp_post_of_child.')' : '';
+            $total_post = (Configuration::get('SMART_BLOG_CATEGORIES_POST_COUNT')) ? ' (' . $tmp_post_of_child . ')' : '';
 
             $smartbloglink = new SmartBlogLink();
             $link = $smartbloglink->getSmartBlogCategoryLink($id_smart_blog_category, $resultIds[$id_smart_blog_category]['link_rewrite']);
             $name = $resultIds[$id_smart_blog_category]['name'];
             $desc = $resultIds[$id_smart_blog_category]['description'];
-            if($tmp_post_of_child == 0 && Configuration::get('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY')){ $name=''; $link=''; $total_post=''; }
+            if ($tmp_post_of_child == 0 && Configuration::get('SMART_BLOG_ASSIGNED_CATEGORIES_ONLY')) {
+                $name = '';
+                $link = '';
+                $total_post = '';
+            }
 
             $level_depth = str_repeat('&nbsp;', $resultIds[$id_smart_blog_category]['level_depth'] * 2);
         } else {
@@ -343,41 +353,40 @@ class SmartBlogCategories extends Module {
             'link' => $link,
             'name' => $name . $total_post,
             'level_depth' => $level_depth,
-            'desc'=> $desc,
+            'desc' => $desc,
             'children' => $children
         ];
-    }  
-         public function hookRightColumn($params)
-            {
-                 // return $this->hookLeftColumn($params);
-            }
-         public function hookdisplaySmartBlogLeft($params)
-            {
-                 return $this->hookLeftColumn($params);
-            }
-         public function hookdisplaySmartBlogRight($params)
-            {
-                 // return $this->hookLeftColumn($params);
-            } 
-		public function DeleteCache()
-            {
-				return $this->_clearCache('smartblogcategories.tpl', $this->getCacheId());
-			}
-		public function hookactionsbdeletecat($params)
-            {
-                 return $this->DeleteCache();
-            }
-		public function hookactionsbnewcat($params)
-            {
-                 return $this->DeleteCache();
-            }
-		public function hookactionsbupdatecat($params)
-            {
-                return $this->DeleteCache();
-            }
-		public function hookactionsbtogglecat($params)
-            {
-                return $this->DeleteCache();
-            }
-	
+    }
+    public function hookRightColumn($params)
+    {
+        // return $this->hookLeftColumn($params);
+    }
+    public function hookdisplaySmartBlogLeft($params)
+    {
+        return $this->hookLeftColumn($params);
+    }
+    public function hookdisplaySmartBlogRight($params)
+    {
+        // return $this->hookLeftColumn($params);
+    }
+    public function DeleteCache()
+    {
+        return $this->_clearCache('smartblogcategories.tpl', $this->getCacheId());
+    }
+    public function hookactionsbdeletecat($params)
+    {
+        return $this->DeleteCache();
+    }
+    public function hookactionsbnewcat($params)
+    {
+        return $this->DeleteCache();
+    }
+    public function hookactionsbupdatecat($params)
+    {
+        return $this->DeleteCache();
+    }
+    public function hookactionsbtogglecat($params)
+    {
+        return $this->DeleteCache();
+    }
 }
