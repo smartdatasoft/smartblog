@@ -171,7 +171,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 
 			$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
 			$i             = 0;
-		if(!empty($allNews)){
+		if ( ! empty( $allNews ) ) {
 			if ( count( $allNews ) >= 1 ) {
 				if ( is_array( $allNews ) ) {
 					foreach ( $allNews as $post ) {
@@ -186,7 +186,7 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 				}
 			}
 		}
-		
+
 		$this->post_id = $id_category;
 		parent::initContent();
 
@@ -220,10 +220,8 @@ class smartblogCategoryModuleFrontController extends smartblogModuleFrontControl
 			)
 		);
 
-		// $this->context->smarty->assign(  );
 		$template_name = 'module:smartblog/views/templates/front/postcategory.tpl';
 
 		$this->setTemplate( $template_name );
 	}
-
 }

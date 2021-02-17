@@ -27,8 +27,7 @@
 
 require_once dirname(__FILE__) . '/../../classes/controllers/FrontController.php';
 
-class smartblogListModuleFrontController extends ModuleFrontController
-{
+class smartblogListModuleFrontController extends smartblogModuleFrontController {
 
 	public $ssl = false;
 	public $smartblogCategory;
@@ -43,28 +42,28 @@ class smartblogListModuleFrontController extends ModuleFrontController
 		if (Tools::getValue('live_edit')) {
 			return;
 		}
-		$protocol_link    = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
-		if (Validate::isLoadedObject($this->smartblogCategory) && ($canonicalURL = $smartbloglink->getSmartBlogCategoryLink($this->smartblogCategory, $this->smartblogCategory->link_rewrite))) {
-			parent::canonicalRedirection($canonicalURL);
+		$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+		$smartbloglink    = new SmartBlogLink( $protocol_link, $protocol_content );
+		if ( Validate::isLoadedObject( $this->smartblogCategory ) && ( $canonicalURL = $smartbloglink->getSmartBlogCategoryLink( $this->smartblogCategory, $this->smartblogCategory->link_rewrite ) ) ) {
+			parent::canonicalRedirection( $canonicalURL );
 		}
 	}
 
 	public function initContent()
 	{
 
-		$category_status  = '';
-		$totalpages       = 0;
-		$cat_image        = 'no';
-		$categoryinfo     = '';
-		$title_category   = '';
-		$cat_link_rewrite = '';
-		$blogcomment      = new Blogcomment();
-		$SmartBlogPost    = new SmartBlogPost();
-		$BlogCategory     = new BlogCategory();
-		$BlogPostCategory = new BlogPostCategory();
-		$smartblogurlpattern = (int) Configuration::get('smartblogurlpattern');
+		$category_status     = '';
+		$totalpages          = 0;
+		$cat_image           = 'no';
+		$categoryinfo        = '';
+		$title_category      = '';
+		$cat_link_rewrite    = '';
+		$blogcomment         = new Blogcomment();
+		$SmartBlogPost       = new SmartBlogPost();
+		$BlogCategory        = new BlogCategory();
+		$BlogPostCategory    = new BlogPostCategory();
+		$smartblogurlpattern = (int) Configuration::get( 'smartblogurlpattern' );
 		// now we will check whihc option we need to url rewrite
 		switch ($smartblogurlpattern) {
 			case 1:
@@ -79,7 +78,8 @@ class smartblogListModuleFrontController extends ModuleFrontController
 			default:
 				$id_category = Tools::getValue('id_category');
 		}
-		$posts_per_page = Configuration::get('smartpostperpage');
+
+		$posts_per_page = Configuration::get( 'smartpostperpage' );
 		$limit_start    = 0;
 		$limit          = $posts_per_page;
 		if (!$id_category) {
@@ -95,11 +95,11 @@ class smartblogListModuleFrontController extends ModuleFrontController
 			$c           = (int) Tools::getValue('page');
 			$limit_start = $posts_per_page * ($c - 1);
 		}
-		if (!$id_category) {
-			$meta_title       = Configuration::get('smartblogmetatitle');
-			$meta_keyword     = Configuration::get('smartblogmetakeyword');
-			$meta_description = Configuration::get('smartblogmetadescrip');
-			$allNews = $SmartBlogPost->getAllPost($this->context->language->id, $limit_start, $limit);
+		if ( ! $id_category ) {
+			$meta_title       = Configuration::get( 'smartblogmetatitle' );
+			$meta_keyword     = Configuration::get( 'smartblogmetakeyword' );
+			$meta_description = Configuration::get( 'smartblogmetadescrip' );
+			$allNews          = $SmartBlogPost->getAllPost( $this->context->language->id, $limit_start, $limit );
 		} else {
 			if (file_exists(_PS_MODULE_DIR_ . 'smartblog/images/category/' . $id_category . '.jpg')) {
 				$cat_image = $id_category;
@@ -111,8 +111,8 @@ class smartblogListModuleFrontController extends ModuleFrontController
 			} else {
 				$cat_image = 'no';
 			}
-			$categoryinfo   = $BlogCategory->getNameCategory($id_category);
-			$title_category = $categoryinfo[0]['name'];
+			$categoryinfo     = $BlogCategory->getNameCategory( $id_category );
+			$title_category   = $categoryinfo[0]['name'];
 			$meta_title       = $categoryinfo[0]['meta_title'];
 			$meta_keyword     = $categoryinfo[0]['meta_keyword'];
 			$meta_description = $categoryinfo[0]['meta_description'];
@@ -146,17 +146,17 @@ class smartblogListModuleFrontController extends ModuleFrontController
 				$j++;
 			}
 		}
-		$protocol_link        = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
-		$i             = 0;
-		if (!empty($allNews)) {
-			if (count($allNews) >= 1) {
-				if (is_array($allNews)) {
-					foreach ($allNews as $post) {
-						$allNews[$i]['created'] = Smartblog::displayDate($post['created']);
-						if (new DateTime() >= new DateTime($post['created'])) {
-							$allNews[$i]['published'] = true;
+		$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+		$smartbloglink    = new SmartBlogLink( $protocol_link, $protocol_content );
+		$i                = 0;
+		if ( ! empty( $allNews ) ) {
+			if ( count( $allNews ) >= 1 ) {
+				if ( is_array( $allNews ) ) {
+					foreach ( $allNews as $post ) {
+						$allNews[ $i ]['created'] = Smartblog::displayDate( $post['created'] );
+						if ( new DateTime() >= new DateTime( $post['created'] ) ) {
+							$allNews[ $i ]['published'] = true;
 						} else {
 							$allNews[$i]['published'] = false;
 						}
@@ -165,8 +165,10 @@ class smartblogListModuleFrontController extends ModuleFrontController
 				}
 			}
 		}
+
 		$this->post_id = $id_category;
 		parent::initContent();
+
 		$this->context->smarty->assign(
 			array(
 				'smartbloglink'        => $smartbloglink,
