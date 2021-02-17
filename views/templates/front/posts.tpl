@@ -26,7 +26,7 @@
 
 {block name='breadcrumb'}
 	{if isset($breadcrumb)}
-		<nav class="breadcrumb">
+		<nav class="breadcrumb smart-blog-breadcrumb">
 		  <ol>
 		      <li>
 		        <a href="{$breadcrumb.links[0].url}">
@@ -55,36 +55,40 @@
 {block name='page_content'}
 		{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a><span class="navigation-pipe"></span>{$meta_title|escape:'htmlall':'UTF-8'}{/capture}
 		<div id="content" class="block">
-			<div itemtype="http://schema.org/BlogPosting" itemscope="" id="sdsblogArticle" class="blog-post">
-				<div class="title_block">{$meta_title|escape:'htmlall':'UTF-8'}</div>
-				<div class="sdsarticleHeader">
-					<span>
-						{if $smartshowauthor ==1} {l s='Posted by ' mod='smartblog'} &nbsp;<i class="icon icon-user"></i>
-						<span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>{/if}&nbsp;
-						<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|escape:'htmlall':'UTF-8'}</span>
-                   		<span itemprop="articleSection">
-                   			{$assocCats = BlogCategory::getPostCategoriesFull($post.id_post)}
-							{$catCounts = 0}
-							{if !empty($assocCats)}
-                        		&nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;
-                            	{foreach $assocCats as $catid=>$assoCat}
-	                                {if $catCounts > 0}, {/if}
-	                                {$catlink=[]}
-	                                {$catlink.id_category = $assoCat.id_category}
-	                                {$catlink.slug = $assoCat.link_rewrite}
-	                                <a href="{$smartbloglink->getSmartBlogCategoryLink($assoCat.id_category,$assoCat.link_rewrite)|escape:'htmlall':'UTF-8'}">
-	                                    {$assoCat.name|escape:'htmlall':'UTF-8'}
-	                                </a>
-	                                {$catCounts = $catCounts + 1}
-								{/foreach}
-							{/if}
+			<div itemtype="http://schema.org/BlogPosting" itemscope="" id="sdsblogArticle" class="blog-post smart-blog-single-post">
+				<div class="smart-blog-posts-header-area">
+					<div class="title_block smart-blog-single-post-title">{$meta_title|escape:'htmlall':'UTF-8'}</div>
+					<div class="sdsarticleHeader">
+						<span class="smart-blog-posts-info">
+							{if $smartshowauthor ==1} {l s='Posted by ' mod='smartblog'} &nbsp;<i class="icon icon-user"></i>
+							<span itemprop="author">{if $smartshowauthorstyle != 0}{$firstname} {$lastname}{else}{$lastname} {$firstname}{/if}</span>{/if}&nbsp;
+							<i class="icon icon-calendar"></i>&nbsp;<span itemprop="dateCreated">{$created|escape:'htmlall':'UTF-8'}</span>
+							<span itemprop="articleSection">
+								{$assocCats = BlogCategory::getPostCategoriesFull($post.id_post)}
+								{$catCounts = 0}
+								{if !empty($assocCats)}
+									&nbsp;&nbsp;<i class="icon icon-tags"></i>&nbsp;
+									{foreach $assocCats as $catid=>$assoCat}
+										{if $catCounts > 0}, {/if}
+										{$catlink=[]}
+										{$catlink.id_category = $assoCat.id_category}
+										{$catlink.slug = $assoCat.link_rewrite}
+										<a href="{$smartbloglink->getSmartBlogCategoryLink($assoCat.id_category,$assoCat.link_rewrite)|escape:'htmlall':'UTF-8'}">
+											{$assoCat.name|escape:'htmlall':'UTF-8'}
+										</a>
+										{$catCounts = $catCounts + 1}
+									{/foreach}
+								{/if}
+							</span>
+							<span class="smart-blog-single-comments">
+							&nbsp;<i class="icon icon-comments"></i>&nbsp;
+							{l s=' Comments' mod='smartblog'}
+							<span class="comment-count-number">{if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}</span>
+							</span>
 						</span>
-                       &nbsp;<i class="icon icon-comments"></i>&nbsp;
-                       {if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}
-                       {l s=' Comments' mod='smartblog'}
-                   	</span>
-					<a title="" style="display:none" itemprop="url" href="#"></a>
-      			</div>
+						<a title="" style="display:none" itemprop="url" href="#"></a>
+					</div>
+				</div>	  
 				<div itemprop="articleBody">
 					<div class="articleContent">                    
 	                    {if isset($ispost) && !empty($ispost)}
@@ -98,7 +102,7 @@
 	                    {if isset($ispost) && !empty($ispost)}
 	                    	</a>
 	                    {/if}
-						<div class="sdsarticle-des" style="text-align: left;">
+						<div class="sdsarticle-des smart-blog-sing-blog-content" style="text-align: left;">
 	                    {$post.content nofilter}
 	                   	</div>
 	                   {$displayBackOfficeSmartBlog}
@@ -106,10 +110,10 @@
 	                   
 	            	<div class="sdsarticle-des"></div>
 	            	{if $tags != ''}
-		                <div class="sdstags-update">
-		                    <span class="tags"><b>{l s='Tags:' mod='smartblog'} </b> 
+		                <div class="sdstags-update smart-blog-post-tags">
+		                    <span class="tags"><span>{l s='Tags:' mod='smartblog'} </span> 
 		                        {foreach from=$tags item=tag}
-		                          <a title="tag" href="{$smartbloglink->getSmartBlogTag($tag.slug)|escape:'htmlall':'UTF-8'}">{$tag.name|escape:'htmlall':'UTF-8'}</a>
+		                          <a class="smart-blog-single-tag-item" title="tag" href="{$smartbloglink->getSmartBlogTag($tag.slug)|escape:'htmlall':'UTF-8'}">{$tag.name|escape:'htmlall':'UTF-8'}</a>
 		                        
 		                        {/foreach}
 		                    </span>
@@ -123,11 +127,11 @@
 			</div>
 		</div>
 		<div id="product_comments_block_tab">
-			<ul class="footer_links clearfix">
+			<ul class="footer_links smart-blog-posts-navigation">
 				{foreach from=$posts_previous item="post"}
         			{if isset($post.id_smart_blog_post)}
 						<li>
-							<a title="{l s='Prevoius Post' mod='smartblog'}" href="{$smartbloglink->getSmartBlogPostLink($post.id_smart_blog_post,$post.link_rewrite)|escape:'htmlall':'UTF-8'}" class="btn btn-default button button-small"><span><i class="icon-chevron-left"></i> {l s='Prevoius Post' mod='smartblog'}</span></a>
+							<a title="{l s='Prevoius Post' mod='smartblog'}" href="{$smartbloglink->getSmartBlogPostLink($post.id_smart_blog_post,$post.link_rewrite)|escape:'htmlall':'UTF-8'}" class="btn btn-default button button-small"><span><i class="icon-chevron-left"></i> {l s='Prev Post' mod='smartblog'}</span></a>
 						</li>
 					{/if}
 				{/foreach}
@@ -142,10 +146,10 @@
 		</div>
 
 		{if $countcomment != ''}
-			<div id="articleComments">
-        		<h3>{if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}<span></span></h3>
+			<div id="articleComments" class="smart-blog-post-comments-view-area">
+        		<h3 class="smart-blog-comments-title">{if $countcomment != ''}{$countcomment|escape:'htmlall':'UTF-8'}{else}{l s='0' mod='smartblog'}{/if}{l s=' Comments' mod='smartblog'}<span></span></h3>
    				 <div id="comments">      
-        			<ul class="commentList">
+        			<ul class="commentList smart-blog-post-list">
               			{$i=1}
        					{foreach from=$comments item=comment}
                				{include file="module:smartblog/views/templates/front/comment_loop.tpl" childcommnets=$comment}
@@ -163,72 +167,64 @@
 		{else}
 			{if Configuration::get('smartenablecomment') == 1}
 				{if $comment_status == 1}
-					<div class="smartblogcomments" id="respond">
+					<div class="smartblogcomments smart-blog-commentform-area" id="respond">
 				    	<h4 class="comment-reply-title" id="reply-title">{l s='Leave a Reply'  mod='smartblog'}
 				    		<small style="float:right;">
 				        		<a style="display: none;" href="/wp/sellya/sellya/this-is-a-post-with-preview-image/#respond" id="cancel-comment-reply-link" rel="nofollow">{l s='Cancel Reply'  mod='smartblog'}</a>
 				            </small>
 				        </h4>
-						<div id="commentInput">
+						<div id="commentInput" class="smart-blog-commentform-input">
 							<form action="" method="post" id="commentform">
-								<table>
-									<tbody>
+
+									<div class="smart-blog-commentform-content">
 										{if ($enableguestcomment==0) && isset($is_looged) && $is_looged>0}
-											<tr>
-												<td>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm">
 													<input type="hidden" tabindex="1" class="inputName form-control grey" value="{$is_looged_fname|escape:'htmlall':'UTF-8'}" name="name" id="name">
-												</td>
-											</tr>
-											<tr>
-												<td>
+												</div>
+											</div>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm">
 													<input type="hidden" tabindex="2" class="inputMail form-control grey" value="{$is_looged_email|escape:'htmlall':'UTF-8'}" name="mail" id="mail">
-												</td>
-											</tr>
-											<tr>
-												<td><input type="hidden" tabindex="3" value="" name="website" class="form-control grey"></td>
-											</tr>
+												</div>
+											</div>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm">
+													<input type="hidden" tabindex="3" value="" name="website" class="form-control grey">
+												</div>
+											</div>
 										{else}
-											<tr>
-												<td>
-													<span class="required">*</span> <b>{l s='Name:'  mod='smartblog'} </b>
-												</td>
-												<td>
-													<input type="text" tabindex="1" class="inputName form-control grey" value="" name="name">
-												</td>
-											</tr>
-        									<tr>
-												<td>
-													<span class="required">*</span> <b>{l s='E-mail:' mod='smartblog'} </b><span class="note">{l s='(Not Published)'  mod='smartblog'}</span>
-												</td>
-												<td>
-													<input type="text" tabindex="2" class="inputMail form-control grey" value="" name="mail">
-												</td>
-											</tr>
-											<tr>
-												<td>&nbsp;&nbsp;&nbsp;<b>{l s='Website:'  mod='smartblog'} </b><span class="note"> {l s='(Site url with'  mod='smartblog'}http://)</span></td>
-												<td><input type="text" tabindex="3" value="" name="website" class="form-control grey"></td>
-											</tr>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm smart-blog-pr-10">
+													<input type="text" tabindex="1" class="inputName form-control" placeholder="{l s='Name*'  mod='smartblog'}" value="" name="name">
+												</div>
+												<div class="smart-blog-single-comm smart-blog-pl-10">
+													<input type="text" tabindex="2" class="inputMail form-control" value="" placeholder="{l s='Email*' mod='smartblog'}" name="mail">
+												</div>
+											</div>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm smart-blog-single-comm-full-width"><input type="text" tabindex="3" value="" name="website" placeholder="{l s='Website'  mod='smartblog'}" class="form-control"></div>
+											</div>
 										{/if}	
-										<tr>
-											<td><span class="required">*</span> <b> {l s='Comment:'  mod='smartblog'}</b></td>
-											<td><textarea tabindex="4" class="inputContent form-control grey" rows="8" cols="50" name="comment"></textarea></td>
-										</tr>
+										<div class="smart-blog-comm-row">
+											<div class="smart-blog-single-comm smart-blog-single-comm-full-width"><textarea tabindex="4" placeholder="{l s='Comment'  mod='smartblog'}" class="inputContent form-control" rows="8" cols="50" name="comment"></textarea></div>
+										</div>
 										{if Configuration::get('smartcaptchaoption') == '1'}
-											<tr>
-												<td></td><td><img src="{$modules_dir|escape:'htmlall':'UTF-8'}smartblog/classes/CaptchaSecurityImages.php?width=100&height=40&characters=5"></td>
-											</tr>
-											<tr>
-												<td><b>{l s='Type Code' mod='smartblog'}</b></td><td><input type="text" tabindex="" value="" name="smartblogcaptcha" class="smartblogcaptcha form-control grey"></td>
-											</tr>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm"><img src="{$modules_dir|escape:'htmlall':'UTF-8'}smartblog/classes/CaptchaSecurityImages.php?width=100&height=40&characters=5"></div>
+											</div>
+											<div class="smart-blog-comm-row">
+												<div class="smart-blog-single-comm"><input type="text" tabindex="" value="" placeholder="{l s='Type Code' mod='smartblog'}" name="smartblogcaptcha" class="smartblogcaptcha form-control"></div>
+											</div>
 										{/if}
-									</tbody>
-								</table>
+									</div>
+
              					<input type='hidden' name='comment_post_ID' value='1478' id='comment_post_ID' />
              					<input type='hidden' name='id_post' value='{$id_post|escape:'htmlall':'UTF-8'}' id='id_post' />
             					<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
-								<div class="right">
+								<div class="smart-blog-comm-button-area">
 							        <div class="submit">
-										<button type="submit" name="addComment" id="submitComment" class="bbutton btn btn-default button-medium" >{l s='Submit' mod='smartblog'}</button>
+										<button type="submit" name="addComment" id="submitComment" class="bbutton btn btn-default button-medium smart-blog-comment-btn" >{l s='Submit' mod='smartblog'}</button>
 									</div>
 								</div>
     						</form>

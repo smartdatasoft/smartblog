@@ -8,7 +8,7 @@ define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
 define('_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/');
 
-require_once __DIR__ . '/widgets/autoload.php';
+
 require_once dirname(__FILE__) . '/classes/smartpromotion.php';
 require_once dirname(__FILE__) . '/classes/BlogCategory.php';
 require_once dirname(__FILE__) . '/classes/BlogImageType.php';
@@ -1175,6 +1175,30 @@ class smartblog extends Module
 		$helper->show_toolbar             = true;
 		$helper->toolbar_scroll           = true;
 		$helper->submit_action            = 'save' . $this->name;
+<<<<<<< HEAD
+
+		$helper->fields_value['smartpostperpage']        = Configuration::get( 'smartpostperpage' );
+		$helper->fields_value['smartdataformat']         = Configuration::get( 'smartdataformat' );
+		$helper->fields_value['smartacceptcomment']      = Configuration::get( 'smartacceptcomment' );
+		$helper->fields_value['smartshowauthorstyle']    = Configuration::get( 'smartshowauthorstyle' );
+		$helper->fields_value['smartshowauthor']         = Configuration::get( 'smartshowauthor' );
+		$helper->fields_value['smartmainblogurl']        = Configuration::get( 'smartmainblogurl' );
+		$helper->fields_value['smartusehtml']            = Configuration::get( 'smartusehtml' );
+		$helper->fields_value['smartshowcolumn']         = Configuration::get( 'smartshowcolumn' );
+		$helper->fields_value['smartblogmetakeyword']    = Configuration::get( 'smartblogmetakeyword' );
+		$helper->fields_value['smartblogmetatitle']      = Configuration::get( 'smartblogmetatitle' );
+		$helper->fields_value['smartblogmetadescrip']    = Configuration::get( 'smartblogmetadescrip' );
+		$helper->fields_value['smartshowviewed']         = Configuration::get( 'smartshowviewed' );
+		$helper->fields_value['smartdisablecatimg']      = Configuration::get( 'smartdisablecatimg' );
+		$helper->fields_value['smartenablecomment']      = Configuration::get( 'smartenablecomment' );
+		$helper->fields_value['smartenableguestcomment'] = Configuration::get( 'smartenableguestcomment' );
+		$helper->fields_value['smartcustomcss']          = Configuration::get( 'smartcustomcss' );
+		$helper->fields_value['smartshownoimg']          = Configuration::get( 'smartshownoimg' );
+		$helper->fields_value['smartcaptchaoption']      = Configuration::get( 'smartcaptchaoption' );
+		$helper->fields_value['smartblogurlpattern']     = Configuration::get( 'smartblogurlpattern' );
+		$helper->fields_value['smartshowhomepost']       = Configuration::get( 'smartshowhomepost' );
+
+=======
 		$helper->fields_value['smartpostperpage']        = Configuration::get('smartpostperpage');
 		$helper->fields_value['smartdataformat']         = Configuration::get('smartdataformat');
 		$helper->fields_value['smartacceptcomment']      = Configuration::get('smartacceptcomment');
@@ -1195,6 +1219,7 @@ class smartblog extends Module
 		$helper->fields_value['smartcaptchaoption']      = Configuration::get('smartcaptchaoption');
 		$helper->fields_value['smartblogurlpattern']     = Configuration::get('smartblogurlpattern');
 		$helper->fields_value['smartshowhomepost']       = Configuration::get('smartshowhomepost');
+>>>>>>> e99e2be9e6b6e3048e5d39ba4493ca08569ecf16
 		return $helper;
 	}
 
@@ -1212,8 +1237,14 @@ class smartblog extends Module
 			}
 			$ssl = $force_ssl;
 		}
+<<<<<<< HEAD
+
+		if ( Configuration::get( 'PS_MULTISHOP_FEATURE_ACTIVE' ) && $id_shop !== null ) {
+			$shop = new Shop( $id_shop );
+=======
 		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null) {
 			$shop = new Shop($id_shop);
+>>>>>>> e99e2be9e6b6e3048e5d39ba4493ca08569ecf16
 		} else {
 			$shop = Context::getContext()->shop;
 		}
@@ -1222,6 +1253,7 @@ class smartblog extends Module
 		if ((!$rewrite_set && in_array($id_shop, array((int) Context::getContext()->shop->id, null))) || !Language::isMultiLanguageActivated($id_shop) || !(int) Configuration::get('PS_REWRITING_SETTINGS', null, null, $id_shop)) {
 			$langUrl = '';
 		}
+
 		return $base . $shop->getBaseURI() . $langUrl;
 	}
 
@@ -1235,6 +1267,7 @@ class smartblog extends Module
 		if ( Tools::isSubmit( 'savesmartblog' ) ) {
 			return $url . Tools::getvalue( 'smartmainblogurl' );
 		}
+
 		if ( $params != null ) {
 			return $url . $dispatcher->createUrl( $rewrite, $id_lang, $params, $force_routes );
 		} else {
@@ -1252,9 +1285,19 @@ class smartblog extends Module
 		} else {
 			$html = '';
 		}
+<<<<<<< HEAD
+
+		$smartblogurlpattern = (int) Configuration::get( 'smartblogurlpattern' );
+
+		$my_link = array();
+
+		switch ( $smartblogurlpattern ) {
+
+=======
 		$smartblogurlpattern = (int) Configuration::get('smartblogurlpattern');
 		$my_link = array();
 		switch ($smartblogurlpattern) {
+>>>>>>> e99e2be9e6b6e3048e5d39ba4493ca08569ecf16
 			case 1:
 				$my_link = $this->urlPatterWithoutId($alias, $html);
 				break;
@@ -1265,6 +1308,7 @@ class smartblog extends Module
 			default:
 				$my_link = $this->urlPatterWithIdOne($alias, $html);
 		}
+
 		return $my_link;
 	}
 
@@ -1272,7 +1316,7 @@ class smartblog extends Module
 	{
 		$my_link = array(
 			'smartblog'                     => array(
-				'controller' => 'list',
+				'controller' => 'category',
 				'rule'       => $alias . $html,
 				'keywords'   => array(),
 				'params'     => array(
@@ -1346,7 +1390,7 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-category'            => array(
+			'smartblog_category'            => array(
 				'controller' => 'category',
 				'rule'       => $alias . '/category/{slug}' . $html,
 				'keywords'   => array(
@@ -1425,20 +1469,6 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-tagpost'                 => array(
-				'controller' => 'tagpost',
-				'rule'       => $alias . '/tag/{tag}' . $html,
-				'keywords'   => array(
-					'tag' => array(
-						'regexp' => '[_a-zA-Z0-9-\pL\+]*',
-						'param'  => 'tag',
-					),
-				),
-				'params'     => array(
-					'fc'     => 'module',
-					'module' => 'smartblog',
-				),
-			),
 			'smartblog_tag'                 => array(
 				'controller' => 'tagpost',
 				'rule'       => $alias . '/tag/{tag}' . $html,
@@ -1467,7 +1497,10 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
+<<<<<<< HEAD
+=======
 
+>>>>>>> e99e2be9e6b6e3048e5d39ba4493ca08569ecf16
 			'smartblog_post_rule'           => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{slug}' . $html,
@@ -1488,8 +1521,7 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
-
-			'module-smartblog-details'                => array(
+			'smartblog_post'                => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{slug}' . $html,
 				'keywords'   => array(
@@ -1509,36 +1541,10 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
-
-
-			'module-smartblog-archivemonth'             => array(
-				'controller' => 'archivemonth',
-				'rule'       => $alias . '/archive/{year}/{month}' . $html,
-				'keywords'   => array(
-					'year' => array(
-						'regexp' => '',
-						'param'  => 'year',
-					),
-					'month' => array(
-						'regexp' => '',
-						'param'  => 'month',
-					),
-				),
-				'params'     => array(
-					'fc'     => 'module',
-					'module' => 'smartblog',
-				),
-			),
-
-			'module-smartblog-archive'             => array(
+			'smartblog_archive'             => array(
 				'controller' => 'archive',
-				'rule'       => $alias . '/archive/{year}' . $html,
-				'keywords'   => array(
-					'year' => array(
-						'regexp' => '',
-						'param'  => 'year',
-					),
-				),
+				'rule'       => $alias . '/archive' . $html,
+				'keywords'   => array(),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
@@ -1559,7 +1565,7 @@ class smartblog extends Module
 				),
 			),
 			'smartblog_month'               => array(
-				'controller' => 'archivemonth',
+				'controller' => 'archive',
 				'rule'       => $alias . '/archive/{year}/{month}' . $html,
 				'keywords'   => array(
 					'year'  => array(
@@ -1646,7 +1652,10 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
+<<<<<<< HEAD
+=======
 
+>>>>>>> e99e2be9e6b6e3048e5d39ba4493ca08569ecf16
 			'smartblog_year'                => array(
 				'controller' => 'archive',
 				'rule'       => $alias . '/archive/{year}' . $html,
@@ -1861,8 +1870,11 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> e99e2be9e6b6e3048e5d39ba4493ca08569ecf16
 			'smartblog_post_rule'           => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{id_post}_{slug}' . $html,
@@ -1873,6 +1885,15 @@ class smartblog extends Module
 					),
 					'slug'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				),
+				'params'     => array(
+					'fc'     => 'module',
+					'module' => 'smartblog',
+				),
+			),
+			'smartblog_archive'             => array(
+				'controller' => 'archive',
+				'rule'       => $alias . '/archive' . $html,
+				'keywords'   => array(),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',

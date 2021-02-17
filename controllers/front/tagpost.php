@@ -77,12 +77,14 @@ class smartblogtagpostModuleFrontController extends smartblogModuleFrontControll
 		$id_lang = (int) $this->context->language->id;
 
 		$result     = SmartBlogPost::tagsPost( $keyword, $id_lang );
-		$total      = count( $result );
-		$totalpages = ceil( $total / $posts_per_page );
-		$i          = 0;
-		$to         = array();
-
+		$total      = 0;
+		$totalpages = 0;
+		
 		if ( ! empty( $result ) ) {
+			$total      = count( $result );
+			$totalpages = ceil( $total / $posts_per_page );
+			$i          = 0;
+			$to         = array();
 			foreach ( $result as $item ) {
 				$to[ $i ] = $blogcomment->getToltalComment( $item['id_post'] );
 				$i++;

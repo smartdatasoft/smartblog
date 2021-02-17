@@ -116,14 +116,14 @@ class smartblogModuleFrontController extends ModuleFrontController {
 		} elseif ( $controller_name == 'search' ) {
 			$metas                 = BlogCategory::GetMetaForSearch();
 			$page['meta']['title'] = $metas['title'];
+		} else {
+			$page['meta']['title']       = Configuration::get( 'smartblogmetatitle' );
+			$page['meta']['description'] = Configuration::get( 'smartblogmetadescrip' );
+			$page['meta']['keywords']    = Configuration::get( 'smartblogmetakeyword' );
 		}
 
 		$page['meta']['robots'] = 'noindex';
 
 		return $page;
 	}
-
-
-
-
 }
