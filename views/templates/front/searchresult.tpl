@@ -25,7 +25,7 @@
 {extends file='page.tpl'}
 {block name='breadcrumb'}
   {if isset($breadcrumb)}
-    <nav class="breadcrumb">
+    <nav class="breadcrumb smart-blog-breadcrumb">
       <ol>
           <li>
             <a href="{$breadcrumb.links[0].url}">

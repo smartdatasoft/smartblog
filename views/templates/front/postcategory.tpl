@@ -25,7 +25,7 @@
 {extends file='page.tpl'}
 {block name='breadcrumb'}
   {if isset($breadcrumb)}
-    <nav class="breadcrumb">
+    <nav class="breadcrumb smart-blog-breadcrumb">
       <ol>
           <li>
             <a href="{$breadcrumb.links[0].url}">
@@ -87,7 +87,7 @@
             {/foreach}
         </div>
         {if !empty($pagenums)}
-          <div class="row bottom-pagination-content">
+          <div class="row bottom-pagination-content smart-blog-bottom-pagination">
             <div class="post-page col-md-12">
               <div id="pagination_bottom" class="col-md-6">
                 <ul class="pagination">
