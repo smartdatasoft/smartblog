@@ -566,30 +566,51 @@
 									<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
 										<i class="icon-remove text-danger"></i>
 									</button>
-									{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)}&nbsp;{l s='(ref: %s)' sprintf=$accessory.reference}{/if}
+									{$accessory.name|escape:'html':'UTF-8'}
 								</div>
 								{/foreach}
 								</div>
 							</div>
 								
 <script type="text/javascript">
-$(document).ready(function(){  
+$(document).ready(function(){ 
 
-	var id_product = $('input[name=id_product]').first().val();
 
-	$('#product_autocomplete_input')
-			.autocomplete('ajax_products_list.php', {
+
+
+
+	
+	 
+
+	var token_product = $('#admin_info').data('token_product'); 
+	 var id_product = $('input[name=id_product]').first().val();
+     $('#product_autocomplete_input').autocomplete('ajax_products_list.php?token='+token_product+'&excludeIds=', {
+		
+				
 				minChars: 1,
-				autoFill: true,
+				autoFill: false,
 				max:20,
 				matchContains: true,
 				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
-					return item[1]+' - '+item[0];
-				}
-			}).result( addAccessory);
+					if (item.length == 2) {
+						return item[1]+' - '+item[0].replace(/\(.*\)/g,'');  
+					} else {
+						return '--';
+					}
+					
+				},
+				/*parse: function(data) {
+					var obj = JSON.parse(data); 
+					var mytab = new Array();
+					for (var i = 0; i < obj.length; i++)
+						mytab[i] = { data: obj[i], value: (obj[i].id + ' - ' + obj[i].name).trim() };
+					return mytab;
+				},*/
+				
+			}).result(addAccessory)
 			$('#product_autocomplete_input').setOptions({
 			extraParams: {
 				excludeIds : getAccessoriesIds()
@@ -604,7 +625,6 @@ $(document).ready(function(){
 		// Cut hidden fields in array
 		var inputCut = input.value.split('-');
 		var nameCut = name.value.split('¤');
-
 		if (inputCut.length != nameCut.length)
 			return jAlert('Bad size');
 
@@ -612,6 +632,7 @@ $(document).ready(function(){
 		input.value = '';
 		name.value = '';
 		div.innerHTML = '';
+	
 		for (i in inputCut)
 		{
 			// If empty, error, next
@@ -636,27 +657,26 @@ $(document).ready(function(){
 		});
 	};
 	
-		$('#divAccessories').delegate('.delAccessory', 'click', function(){
+		
+		$(document).on('click','.delAccessory',  function(){
+		
 			delAccessory($(this).attr('name'));
 		});
 		
-	/*function addAccessory()	
-	{
-		console.log("i am fire addAccessory");
 
-	}*/
-function getAccessoriesIds()	{
-	
-		if ($('#inputAccessories').val() === undefined)
-			return id_product;
-		return id_product + ',' + $('#inputAccessories').val().replace(/\-/g,',');
+	function getAccessoriesIds()	{
+		if (!$('#inputAccessories').val()){
+			return -1;
+		}
+		return  $('#inputAccessories').val().replace(/\-/g,',');
 	}
 	function addAccessory(event, data, formatted)
 	{
-		if (data == null)
+		if (data == null  || data.length != 2)
 			return false;
+			
 		var productId = data[1];
-		var productName = data[0];
+		var productName = data[0].replace(/\(.*\)/g,'');
 
 		var $divAccessories = $('#divAccessories');
 		var $inputAccessories = $('#inputAccessories');
@@ -664,6 +684,7 @@ function getAccessoriesIds()	{
 
 		/* delete product from select + add product line to the div, input_name, input_ids elements */
 		$divAccessories.html($divAccessories.html() + '<div class="form-control-static"><button type="button" class="delAccessory btn btn-default" name="' + productId + '"><i class="icon-remove text-danger"></i></button>&nbsp;'+ productName +'</div>');
+		console.log(89)
 		$nameAccessories.val($nameAccessories.val() + productName + '¤');
 		$inputAccessories.val($inputAccessories.val() + productId + '-');
 		$('#product_autocomplete_input').val('');
