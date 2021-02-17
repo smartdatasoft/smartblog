@@ -8,7 +8,7 @@ define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
 define('_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/');
 
-require_once __DIR__ . '/widgets/autoload.php';
+
 require_once dirname(__FILE__) . '/classes/smartpromotion.php';
 require_once dirname(__FILE__) . '/classes/BlogCategory.php';
 require_once dirname(__FILE__) . '/classes/BlogImageType.php';
