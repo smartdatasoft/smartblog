@@ -8,7 +8,7 @@ define( '_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/module
 define( '_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/' );
 define( '_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/' );
 
-require_once __DIR__ . '/widgets/autoload.php';
+// require_once __DIR__ . '/widgets/autoload.php';
 
 require_once dirname( __FILE__ ) . '/classes/smartpromotion.php';
 require_once dirname( __FILE__ ) . '/classes/BlogCategory.php';
@@ -460,14 +460,14 @@ class smartblog extends Module {
 			 $des   = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
 		 endif;
 		 foreach ( $languages as $language ) {
-            if ( ! Db::getInstance()->Execute(
+			 if ( ! Db::getInstance()->Execute(
 				'
                        INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_lang`(`id_smart_blog_post`,`id_lang`,`meta_title`,`meta_description`,`short_description`,`content`,`link_rewrite`)
                         VALUES(' . $i . ',' . (int) $language['id_lang'] . ', 
 							"' . htmlspecialchars( $title ) . '", 
 							"' . htmlspecialchars( $des ) . '","' . Tools::substr( $des, 0, 200 ) . '","' . htmlspecialchars( $des ) . '","' . $slug . '"
 						)'
-			 )
+            )
 			 ) {
 				 return false;
 			 }
