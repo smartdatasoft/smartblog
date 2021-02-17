@@ -1528,8 +1528,13 @@ class smartblog extends Module
 			),
 			'module-smartblog-archive'             => array(
 				'controller' => 'archive',
-				'rule'       => $alias . '/archive' . $html,
-				'keywords'   => array(),
+				'rule'       => $alias . '/archive/{year}' . $html,
+				'keywords'   => array(
+					'year' => array(
+						'regexp' => '',
+						'param'  => 'year',
+					),
+				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
