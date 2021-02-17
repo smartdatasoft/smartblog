@@ -1,6 +1,6 @@
 {if $archive_type==1}
-  <div class="block-categories hidden-sm-down">
-    <h4 class="text-uppercase h6 hidden-sm-down">{l s='Blog Archive' mod='smartblogarchive'}</h4>
+  <div class="block-categories block smart-block smart-blog-archive hidden-sm-down">
+    <h4 class="smart_blog_sidebar_title smart-title-shape hidden-sm-down">{l s='Blog Archive' mod='smartblogarchive'}</h4>
     <h4 class="text-uppercase h6 hidden-sm-down"></h4>
     <ul class="category-sub-menu">
       {foreach from=$archives item="archive"}
@@ -31,7 +31,7 @@
               {if $node.name != ''}
                 <li data-depth="{$depth}">
                   {if $depth===0}
-                    <a href="{$node.link}">{$node.name}</a>
+                    <a href="{$node.link}">Posted in {$node.name}</a>
                     {if $node.children}
                       
                         {if $isDhtml}
@@ -67,8 +67,8 @@
       {/strip}
     {/function}
 
-    <div class="block-categories hidden-sm-down">
-      <h4 class="text-uppercase h6 hidden-sm-down">{l s='Blog Archive' mod='smartblogarchive'}</h4>
+    <div class="block-categories block smart-block smart-blog-archive hidden-sm-down">
+      <h4 class="smart_blog_sidebar_title smart-title-shape hidden-sm-down">{l s='Blog Archive' mod='smartblogarchive'}</h4>
       <ul class="category-top-menu">
         <li><a class="text-uppercase h6" href="{$archives.link nofilter}">{$archives.name}</a></li>
         <li>{archives nodes=$archives.children}</li>

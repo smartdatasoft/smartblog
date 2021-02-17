@@ -39,22 +39,25 @@
 				                  <i class="material-icons add">&#xE145;</i>
 				                  <i class="material-icons remove">&#xE15B;</i>
 				                </div>
+								
 			                {/if}
+
+							
 			            
 		                <div class="{if $isDhtml}collapse{/if}" id="exBlogCollapsingNavbar{$node.id}">
 		                  {blockCategTree nodes=$node.children depth=$depth+1}
 		                </div>
 		              {/if}
 		            {else}
-		              <a class="category-sub-link" href="{$node.link}">{$node.name}</a>
+		              <a class="category-sub-link category-sub-second-list" href="{$node.link}">{$node.name}</a>
 		              {if $node.children}
 		              	{if $isDhtml}
-			                <span class="arrows" data-toggle="collapse" data-target="#exBlogCollapsingNavbar{$node.id}">
-			                  <i class="material-icons arrow-right">&#xE315;</i>
-			                  <i class="material-icons arrow-down">&#xE313;</i>
+			                <span class="arrows smart-blog-secound-layer-toggler" data-toggle="collapse" data-target="#exBlogCollapsingNavbar{$node.id}">
+							  <i class="material-icons arrow-right">&#xE145;</i>
+							  <i class="material-icons arrow-down">&#xE15B;</i>
 			                </span>
 			            {/if}
-		                <div class="{if $isDhtml}collapse{/if}" id="exBlogCollapsingNavbar{$node.id}">
+		                <div class="{if $isDhtml}collapse{/if} smart-blog-sec-laye-icon" id="exBlogCollapsingNavbar{$node.id}">
 		                  {blockCategTree nodes=$node.children depth=$depth+1}
 		                </div>
 		              {/if}
@@ -67,8 +70,8 @@
 	  {/strip}
 	{/function}
 
-	<div class="block-categories hidden-sm-down">
-		<h4 class="text-uppercase h6 hidden-sm-down"><a href="{smartblog::GetSmartBlogLink('smartblog')}">{l s='Blog Category' mod='smartblogpopularposts'}</a></h4>
+	<div class="block-categories block smart-block hidden-sm-down">
+		<h4 class="smart_blog_sidebar_title hidden-sm-down"><a href="{smartblog::GetSmartBlogLink('smartblog')}">{l s='Blog Category' mod='smartblogpopularposts'}</a></h4>
 	  <ul class="category-top-menu">
 	    <li><a class="text-uppercase h6" href="{$blockCategTree.link nofilter}">{$blockCategTree.name}</a></li>
 	    <li>{blockCategTree nodes=$blockCategTree.children}</li>

@@ -396,6 +396,8 @@ class SmartBlogPost extends ObjectModel {
 	}
 
 	public static function addTags( $id_lang = null, $id_post, $tag_list, $separator = ',' ) {
+
+		
 		if ( $id_lang == null ) {
 			$id_lang = (int) Context::getContext()->language->id;
 		}
@@ -412,10 +414,11 @@ class SmartBlogPost extends ObjectModel {
 			foreach ( $tag_list as $tag ) {
 				$id_tag = BlogTag::TagExists( $tag, (int) $id_lang );
 				if ( ! $id_tag ) {
+					$slug = BlogTag::TagUrlBuild( $tag );
 					$tag_obj = new BlogTag( null, $tag, (int) $id_lang );
 					if ( ! Validate::isLoadedObject( $tag_obj ) ) {
 						$tag_obj->name    = $tag;
-						$tag_obj->slug    = str_replace(" ","-",$tag);
+						$tag_obj->slug    = $slug;
 						$tag_obj->id_lang = (int) $id_lang;
 						$tag_obj->add();
 					}
@@ -434,6 +437,7 @@ class SmartBlogPost extends ObjectModel {
 			$data .= '(' . (int) $tag . ',' . (int) $id_post . '),';
 		}
 		$data = rtrim( $data, ',' );
+		
 
 		return Db::getInstance()->execute(
 			'
