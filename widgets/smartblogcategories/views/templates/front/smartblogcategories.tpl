@@ -49,15 +49,15 @@
 		                </div>
 		              {/if}
 		            {else}
-		              <a class="category-sub-link" href="{$node.link}">{$node.name}</a>
+		              <a class="category-sub-link category-sub-second-list" href="{$node.link}">{$node.name}</a>
 		              {if $node.children}
 		              	{if $isDhtml}
-			                <span class="arrows" data-toggle="collapse" data-target="#exBlogCollapsingNavbar{$node.id}">
-			                  <i class="material-icons arrow-right">&#xE315;</i>
-			                  <i class="material-icons arrow-down">&#xE313;</i>
+			                <span class="arrows smart-blog-secound-layer-toggler" data-toggle="collapse" data-target="#exBlogCollapsingNavbar{$node.id}">
+							  <i class="material-icons arrow-right">&#xE145;</i>
+							  <i class="material-icons arrow-down">&#xE15B;</i>
 			                </span>
 			            {/if}
-		                <div class="{if $isDhtml}collapse{/if}" id="exBlogCollapsingNavbar{$node.id}">
+		                <div class="{if $isDhtml}collapse{/if} smart-blog-sec-laye-icon" id="exBlogCollapsingNavbar{$node.id}">
 		                  {blockCategTree nodes=$node.children depth=$depth+1}
 		                </div>
 		              {/if}

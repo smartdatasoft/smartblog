@@ -87,7 +87,7 @@
             {/foreach}
         </div>
         {if !empty($pagenums)}
-          <div class="row bottom-pagination-content">
+          <div class="row bottom-pagination-content smart-blog-bottom-pagination">
             <div class="post-page col-md-12">
               <div id="pagination_bottom" class="col-md-6">
                 <ul class="pagination">

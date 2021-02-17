@@ -494,9 +494,7 @@ fieldset.account_creation {
 }
 
 .news_module_image_holder img{
-    padding: 5px;
-    max-width: 95%;
-    max-height: 220px;
+    max-height: 230px;
 }
 .news_home_image_holder img{
     width: 100%;
@@ -556,39 +554,6 @@ fieldset.account_creation {
     float: left;
     margin: 5px;
     width: 46%;
-}
-#sds_blog_post .sds_post_title{
-    background:none;
-    border:none;
-    font-size:14px;
-    padding:0px;
-    content:none !important;
-}
-
-.sds_post_title_home a{
-    font-family: Montserrat,sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    text-align: left;
-    color: #251b5b;
-    outline: 0;
-    text-decoration: none;
-    margin: 18px auto;
-    display: block;
-    min-height: 40px;
-}
-.sds_post_date{
-    padding: 0;
-    margin: 0;
-    font-family: Montserrat,sans-serif;
-    font-size: 16px;
-    font-weight: 300;
-    text-align: left;
-    color: #251b5b;
-}
-
-#sdssearch_block_top {
-    padding-top: 0px;
 }
 #sdssearch_block_top #searchbox {
     float: left;
@@ -1302,4 +1267,124 @@ span.smart-blog-reply-icon {
     font-size: 16px;
     line-height: 24px;
     color: #1C3557;
+}
+.smart-blog-bottom-pagination .pagination li .page-link{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    color: #1C3557;
+    border-radius: 3px;
+    padding: 6px 12px;
+    margin: 0px 2px;
+}
+.smart-blog-bottom-pagination .pagination li .page-link.page-active{
+    background: #3CB9D7;
+    color: #fff;
+}
+.smart-blog-bottom-pagination #pagination_bottom{
+    padding: 0;
+}
+.smart-blog-bottom-pagination .results{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #3F3F3F;
+}
+#module-smartblog-archive .breadcrumb.smart-blog-breadcrumb{
+    margin-right: 0px;
+    margin-left: 0px;
+}
+/* Smart Blog Home Latest News */
+.smart-blog-home-latest-news {
+    overflow: hidden;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.smart-blog-home-latest-news .title_block {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1C3557;
+    margin-bottom: 20px;
+}
+.smart-title-shape-full-width {
+    position: relative;
+    margin-bottom: 35px !important;
+}
+.smart-title-shape-full-width:before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 1px;
+    left: 0px;
+    bottom: -12px;
+    background: #E0E0E0;
+}
+.smart-title-shape-full-width:after{
+    position: absolute;
+    content: '';
+    width: 60px;
+    height: 1px;
+    left: 0px;
+    bottom: -12px;
+    background: #3CB9D7;
+}
+.smart-blog-home-news-date{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #82868C;
+    padding-top: 15px;
+}
+.smart-blog-home-news-date .sds_post_date{
+    margin-left: 5px;
+}
+.smart-blog-home-latest-news .sds_post_title.sds_post_title_home{
+    padding-top: 15px;
+}
+.smart-blog-home-latest-news .sds_post_title.sds_post_title_home a{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1C3557;
+    line-height: 22px;
+}
+.smart-blog-news-box-content .news_module_image_holder.news_home_image_holder{
+    display: block;
+}
+.smart-blog-home-news-box {
+    background-color:#fff;
+    box-shadow: 4px 1px 12px rgba(101, 102, 102, .2);
+    padding: 15px 15px;
+    margin-bottom: 20px;
+}
+.sdsblog-box-content.row.smart-blog-news-box-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Smart Blog Not Home Related Post */
+.smart-blog-home-latest-news.smart-blog-not-home-related-post {
+    padding-top: 20px;
+}
+.smart-blog-not-home-related-post .smart-blog-home-news-box {
+    padding: 0;
+    box-shadow: none;
+}
+.smart-blog-not-home-related-post .smart-blog-home-news-date {
+    font-size: 12px;
+    padding-top: 13px;
+}
+.smart-blog-not-home-related-post .sds_post_title.sds_post_title_home a {
+    font-size: 14px;
+}
+.smart-blog-home-latest-news.smart-blog-not-home-related-post .sds_post_title.sds_post_title_home {
+    padding-top: 10px;
+}
+
+#module-smartblog-details .articleContent img{
+    width: 100%;
+    height: 100%;
+    max-height: 400px;
 }
