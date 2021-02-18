@@ -76,7 +76,8 @@
                     <img alt="{$category.meta_title|escape:'htmlall':'UTF-8'}" src="{$cat_image}" class="imageFeatured">
                   {/if}
                 {/if}
-                {$category.description}
+                {$category.meta_title|nl2br nofilter}
+                {$category.description|nl2br nofilter}
               </div>
             {/foreach}  
           {/if}
