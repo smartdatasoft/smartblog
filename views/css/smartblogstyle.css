@@ -451,14 +451,6 @@ div.relProduct .price-new {
 .blogCol4 .comment, .blogCol4 .comment a {
     display: none;
 }
-#sdsblogCategory .imageFeatured {
-    background: none repeat scroll 0 0 #F4F4F4;
-    border: 1px solid #E4E4E4;
-    float: left;
-    margin: 0 10px 10px 0;
-    max-width: 98.5%;
-    padding: 4px;
-}
 .sdsarticle-des{
     margin: 10px 0px;
 }
@@ -1244,7 +1236,6 @@ span.smart-blog-reply-icon {
     line-height:22px;
     color:#3CB9D7;
 }
-.smart-blog-page-not-found .smart-go-back-home a span{}
 .smart-blog-page-not-found .smart-go-back-home a span i {
     margin-right: 5px;
     font-size: 14px;
@@ -1387,3 +1378,61 @@ span.smart-blog-reply-icon {
     max-height: 400px;
 }
 /* Category Breadcrumbs */
+.smartg-blog-category-banner-area {
+    display: block;
+    padding-bottom: 30px;
+    border-bottom: 1px solid#D2CECE;
+    margin-bottom: 30px !important;
+}
+.smartg-blog-category-banner-images-and-content .imageFeatured {
+    width: 100%;
+    max-width: 100%;
+    max-height: 400px;
+    min-height: 165px;
+}
+.smartg-blog-category-banner-images-and-content {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    max-height: 400px;
+    min-height: 165px;
+    background: #3CB9D7;
+}
+.smartg-blog-category-banner-images-and-content:before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(245, 253, 255, 0.86);
+}
+.smartg-blog-category-banner-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+.smart-blog-category-banner-content-title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+    color: #1C3557;
+    padding-bottom: 8px;
+    text-transform: capitalize;
+}
+.smart-blog-cat-description{
+    font-family: 'PT Serif', serif !important;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #264061;
+    width: 85%;
+}
