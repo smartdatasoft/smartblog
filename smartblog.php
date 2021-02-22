@@ -7,6 +7,7 @@ define('_MODULE_SMARTBLOG_DIR_', _PS_MODULE_DIR_ . 'smartblog/images/');
 define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules/' . 'smartblog/');
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
 define('_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/');
+define('_MODULE_SMARTBLOG_JS_DIR_', _PS_MODULE_DIR_ . 'smartblog/views/js/');
 
 
 require_once dirname(__FILE__) . '/classes/smartpromotion.php';
@@ -1269,11 +1270,10 @@ class smartblog extends Module
 		return $my_link;
 	}
 
-	public function urlPatterWithoutId($alias, $html)
-	{
+	public function urlPatterWithoutId( $alias, $html ) {
 		$my_link = array(
 			'smartblog'                     => array(
-				'controller' => 'list',
+				'controller' => 'category',
 				'rule'       => $alias . $html,
 				'keywords'   => array(),
 				'params'     => array(
@@ -1339,15 +1339,15 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-category'            => array(
+			'smartblog_category'            => array(
 				'controller' => 'category',
 				'rule'       => $alias . '/category/{slug}' . $html,
 				'keywords'   => array(
@@ -1359,8 +1359,8 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
@@ -1426,20 +1426,6 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-tagpost'                 => array(
-				'controller' => 'tagpost',
-				'rule'       => $alias . '/tag/{tag}' . $html,
-				'keywords'   => array(
-					'tag' => array(
-						'regexp' => '[_a-zA-Z0-9-\pL\+]*',
-						'param'  => 'tag',
-					),
-				),
-				'params'     => array(
-					'fc'     => 'module',
-					'module' => 'smartblog',
-				),
-			),
 			'smartblog_tag'                 => array(
 				'controller' => 'tagpost',
 				'rule'       => $alias . '/tag/{tag}' . $html,
@@ -1480,15 +1466,15 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-details'                => array(
+			'smartblog_post'                => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{slug}' . $html,
 				'keywords'   => array(
@@ -1500,41 +1486,18 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-archivemonth'             => array(
-				'controller' => 'archivemonth',
-				'rule'       => $alias . '/archive/{year}/{month}' . $html,
-				'keywords'   => array(
-					'year' => array(
-						'regexp' => '',
-						'param'  => 'year',
-					),
-					'month' => array(
-						'regexp' => '',
-						'param'  => 'month',
-					),
-				),
-				'params'     => array(
-					'fc'     => 'module',
-					'module' => 'smartblog',
-				),
-			),
-			'module-smartblog-archive'             => array(
+			'smartblog_archive'             => array(
 				'controller' => 'archive',
-				'rule'       => $alias . '/archive/{year}' . $html,
-				'keywords'   => array(
-					'year' => array(
-						'regexp' => '',
-						'param'  => 'year',
-					),
-				),
+				'rule'       => $alias . '/archive' . $html,
+				'keywords'   => array(),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
@@ -1555,7 +1518,7 @@ class smartblog extends Module
 				),
 			),
 			'smartblog_month'               => array(
-				'controller' => 'archivemonth',
+				'controller' => 'archive',
 				'rule'       => $alias . '/archive/{year}/{month}' . $html,
 				'keywords'   => array(
 					'year'  => array(

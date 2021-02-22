@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file='page.tpl'}
-
 {block name='breadcrumb'}
 	{if isset($breadcrumb)}
 		<nav class="breadcrumb smart-blog-breadcrumb">
@@ -52,6 +51,8 @@
 		</nav>
 	{/if}
 {/block}
+
+
 {block name='page_content'}
 		{capture name=path}<a href="{smartblog::GetSmartBlogLink('smartblog')|escape:'htmlall':'UTF-8'}">{l s='All Blog News' mod='smartblog'}</a><span class="navigation-pipe"></span>{$meta_title|escape:'htmlall':'UTF-8'}{/capture}
 		<div id="content" class="block">
@@ -96,6 +97,7 @@
 	                    {/if}
 
 	                    {if $smartbloglink->getImageLink($post.link_rewrite, $post.id_post, 'single-default') != 'false'}
+						
 	                        <img itemprop="image" alt="{$post.meta_title|escape:'htmlall':'UTF-8'}" src="{$smartbloglink->getImageLink($post.link_rewrite, $post.id_post, 'single-default')}" class="imageFeatured">                   
 	                    {/if}
 	                           
