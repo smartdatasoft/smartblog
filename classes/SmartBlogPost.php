@@ -164,10 +164,13 @@ class SmartBlogPost extends ObjectModel {
 			$id_post = 1;
 		}
 
-		$sql             = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post WHERE id_smart_blog_post = ' . $id_post;
+		$sql             = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_related WHERE id_smart_blog_post = ' . $id_post;
 		$postDetails     = Db::getInstance()->executeS( $sql );
+		if(empty($postDetails)){
+			return array();
+		}
 		$currentPost     = $postDetails[0];
-		$product_ids     = explode( '-', $currentPost['associations'] );
+		$product_ids     = explode( '-', $currentPost['related_poroduct_id'] );
 		$productIdString = '';
 		$limitcount      = 0;
 		foreach ( $product_ids as $product_id ) {
@@ -509,11 +512,10 @@ class SmartBlogPost extends ObjectModel {
 		}
 		$tags = '';
 		if ( ! $tmp = Db::getInstance( _PS_USE_SQL_SLAVE_ )->executeS(
-			'
-                    SELECT  t.`name`
-                    FROM ' . _DB_PREFIX_ . 'smart_blog_tag t
-                    LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . $id_lang . ')
-                    WHERE pt.`id_post`=' . (int) $id_post
+			'SELECT  t.`name`
+            FROM ' . _DB_PREFIX_ . 'smart_blog_tag t
+            LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . $id_lang . ')
+            WHERE pt.`id_post`=' . (int) $id_post
 		) ) {
 			return false;
 		}
@@ -1052,7 +1054,7 @@ class SmartBlogPost extends ObjectModel {
 		if ( empty( $id_smart_blog_post ) ) {
 			return array();
 		}
-		$associates = Db::getInstance()->getValue( 'SELECT `associations` FROM `' . _DB_PREFIX_ . "smart_blog_post` WHERE `id_smart_blog_post`={$id_smart_blog_post}" );
+		$associates = Db::getInstance()->getValue( 'SELECT `related_poroduct_id` FROM `' . _DB_PREFIX_ . "smart_blog_post_related` WHERE `id_smart_blog_post`={$id_smart_blog_post}" );
 
 		if ( empty( $associates ) ) {
 			return array();
@@ -1192,14 +1194,17 @@ class SmartBlogPost extends ObjectModel {
 			$id_product = 1;
 		}
 
-		$sql      = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post';
+		$sql      = 'SELECT * FROM `' . _DB_PREFIX_ . "smart_blog_post_related`" ;
 		$allPosts = Db::getInstance()->executeS( $sql );
+		if ( empty( $allPosts ) ) {
+			return array();
+		}
 
 		$relatedPosts = array();
 		$post_ids     = array();
 		$j            = 0;
 		foreach ( $allPosts as $post ) {
-			$associations = $post['associations'];
+			$associations = $post['related_poroduct_id'];
 			$associations = explode( '-', $associations );
 			foreach ( $associations as $productId ) {
 				if ( $productId == $id_product ) {
