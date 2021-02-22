@@ -516,8 +516,16 @@ class AdminBlogPostController extends ModuleAdminController
 		if (Tools::isSubmit('submitAddsmart_blog_post')) {
 			if (Tools::getValue('id_smart_blog_post')) {
 				$this->processUpdate();
+				$id_post = Tools::getValue('id_smart_blog_post');
+				if (Tools::getValue('associations')) {
+					Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'smart_blog_post_related` SET `related_poroduct_id` = "' . Tools::getValue('associations') . '" WHERE `id_smart_blog_post` = ' . pSQL($id_post));
+				}
 			} else {
-				$this->processAdd();
+				$add = $this->processAdd();
+				$id_post = $add->id;
+				if (Tools::getValue('associations')) {
+					Db::getInstance()->execute(' INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_related` (`id_smart_blog_post`, `related_poroduct_id`)VALUES("' . pSQL($id_post) . '","' . Tools::getValue('associations') . '" )');
+				}
 			}
 		} else {
 			$admin_url =   $this->context->link->getAdminLink('AdminProducts', true);
@@ -671,5 +679,18 @@ class AdminBlogPostController extends ModuleAdminController
 			$this->errors[] = Tools::displayError('An error occurred while adding tags.');
 		}
 		return $tag_success;
+	}
+
+	public function processDelete()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject())) {
+			parent::processDelete();
+			Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'smart_blog_post_category` WHERE `id_smart_blog_post` = ' . $object->id);
+			Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'smart_blog_post_related` WHERE `id_smart_blog_post` = ' . $object->id);
+		} else {
+			$this->errors[] = $this->trans('An error occurred while deleting the object.', [], 'Admin.Notifications.Error') .
+				' <b>' . $this->table . '</b> ' .
+				$this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
+		}
 	}
 }

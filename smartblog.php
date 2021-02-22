@@ -31,9 +31,10 @@ class smartblog extends Module
 
 	public function __construct()
 	{
+
 		$this->name          = 'smartblog';
 		$this->tab           = 'front_office_features';
-		$this->version       = '3.0.2';
+		$this->version       = '3.0.3';
 		$this->author        = 'SmartDataSoft';
 		$this->need_upgrade  = true;
 		$this->controllers   = array('category', 'details', 'search', 'tagpost', "archivemonth");
@@ -1314,7 +1315,7 @@ class smartblog extends Module
 				),
 			),
 			'smartblog_pagination'          => array(
-				'controller' => 'category',
+				'controller' => 'categorypage',
 				'rule'       => $alias . '/page/{page}' . $html,
 				'keywords'   => array(
 					'page' => array(
@@ -1367,8 +1368,22 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
+			'module-smartblog-categorypage'            => array(
+				'controller' => 'categorypage',
+				'rule'       => $alias . '/page/{page}' . $html,
+				'keywords'   => array(
+					'page' => array(
+						'regexp' => '',
+						'param'  => 'page',
+					),
+				),
+				'params'     => array(
+					'fc'     => 'module',
+					'module' => 'smartblog',
+				),
+			),
 			'smartblog_category_pagination' => array(
-				'controller' => 'category',
+				'controller' => 'categorypage',
 				'rule'       => $alias . '/category/{slug}/page/{page}' . $html,
 				'keywords'   => array(
 					'id_category' => array(
