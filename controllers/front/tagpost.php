@@ -103,6 +103,7 @@ class smartblogtagpostModuleFrontController extends smartblogModuleFrontControll
 		$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
 		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
 
+
 		$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
 		$this->context->smarty->assign(
 			array(
