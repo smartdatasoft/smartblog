@@ -69,16 +69,27 @@
           {$activeimgincat = $smartshownoimg} 
           {if $title_category != ''}        
             {foreach from=$categoryinfo item=category}
-              <div id="sdsblogCategory">  
-                {if $cat_image == "no" } 
-                {else} 
-                  {if ($cat_image != "no" && $activeimgincat == 0) || $activeimgincat == 1}
-                    <img alt="{$category.meta_title|escape:'htmlall':'UTF-8'}" src="{$cat_image}" class="imageFeatured">
-                  {/if}
-                {/if}
-                {$category.description}
+              <div id="sdsblogCategory" class="smartg-blog-category-banner-area"> 
+                  <div class="smartg-blog-category-banner-images-and-content"> 
+                    {if $cat_image == "no" } 
+                    {else} 
+                      {if ($cat_image != "no" && $activeimgincat == 0) || $activeimgincat == 1}
+                        <img alt="{$category.meta_title|escape:'htmlall':'UTF-8'}" src="{$cat_image}" class="imageFeatured">
+                      {/if}
+                    {/if}
+                    <div class="smartg-blog-category-banner-content">
+                      <div class="smart-blog-category-banner-content-title">
+                        <span class="smart_blog-cat-text">Category:</span>
+                        {* {$category.meta_title|nl2br nofilter} *}
+                        <span class="smart_blog-cat-text">{$category.name|nl2br nofilter}</span>
+                      </div>
+                      <div class="smart-blog-cat-description">
+                        {$category.description|nl2br nofilter}
+                      </div>
+                    </div>
+                  </div>  
               </div>
-            {/foreach}  
+            {/foreach} 
           {/if}
         {/if}
         <div id="smartblogcat" class="block">

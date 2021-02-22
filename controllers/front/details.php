@@ -178,8 +178,6 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 					'is_looged_email'            => $this->context->customer->email,
 					'is_looged_fname'            => $this->context->customer->firstname,
 					'tags'                       => $tags,
-					// 'live_configurator_token' => $this->getLiveConfiguratorToken(),
-					// 'title_category' => $title_category[0][0]['meta_title'],
 					'title_category'             => ( isset( $title_category[0][0]['name'] ) ) ? $title_category[0][0]['name'] : '',
 					'cat_link_rewrite'           => ( isset( $title_category[0][0]['link_rewrite'] ) ) ? $title_category[0][0]['link_rewrite'] : '',
 					'meta_title'                 => $post['meta_title'],
@@ -322,6 +320,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 	public function getCover() {
 
 		if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $this->post->id . '.jpg' ) ) {
+			
 			$post_img = $this->post->id . '.jpg';
 		} else {
 			$post_img = 'no';
