@@ -1174,6 +1174,8 @@ span.smart-blog-reply-icon {
     padding: 20px 30px !important;
     margin-bottom: 1.563rem;
     border: none;
+}
+.smartblog-sidebars .breadcrumb.smart-blog-breadcrumb{
     margin-right: 15px;
     margin-left: 15px;
 }
