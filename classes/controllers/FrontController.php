@@ -45,7 +45,6 @@ class smartblogModuleFrontController extends ModuleFrontController {
 				$hide_column_right = isset( $colums['right_column'] ) && ! empty( $colums['right_column'] ) ? 0 : 1;
 			}
 		}
-
 		$this->context->smarty->assign( $meta );
 		if ( Configuration::get( 'smartshowcolumn' ) == 0 ) {
 			$this->context->smarty->assign(
@@ -66,7 +65,6 @@ class smartblogModuleFrontController extends ModuleFrontController {
 				)
 			);
 		} elseif ( Configuration::get( 'smartshowcolumn' ) == 2 ) {
-
 			$this->context->smarty->assign(
 				array(
 					'HOOK_LEFT_COLUMN'  => '',
@@ -76,7 +74,6 @@ class smartblogModuleFrontController extends ModuleFrontController {
 				)
 			);
 		} elseif ( Configuration::get( 'smartshowcolumn' ) == 3 ) {
-
 			$this->context->smarty->assign(
 				array(
 					'hide_right_column' => $hide_column_right,
@@ -93,12 +90,13 @@ class smartblogModuleFrontController extends ModuleFrontController {
 				)
 			);
 		}
-
 	}
 
 	public function getTemplateVarPage() {
 		$page            = parent::getTemplateVarPage();
 		$controller_name = Tools::getValue( 'controller' );
+
+		
 
 		if ( $controller_name == 'category' ) {
 			$metas                       = BlogCategory::GetMetaByCategory( $this->post_id );
@@ -121,8 +119,15 @@ class smartblogModuleFrontController extends ModuleFrontController {
 			$page['meta']['description'] = Configuration::get( 'smartblogmetadescrip' );
 			$page['meta']['keywords']    = Configuration::get( 'smartblogmetakeyword' );
 		}
-
 		$page['meta']['robots'] = 'noindex';
+
+		$layout = $this->getLayout();
+
+		if($layout == 'layouts/layout-full-width.tpl'){
+			$page['body_classes']['smartblog-full-width'] = 1;
+		}else{
+			$page['body_classes']['smartblog-sidebars'] = 1;
+		}
 
 		return $page;
 	}
