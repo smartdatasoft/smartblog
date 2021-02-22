@@ -361,14 +361,14 @@ class BlogCategory extends ObjectModel {
 		$total_post = 0;
 		if ( is_array( $all_child ) ) {
 			foreach ( $all_child as $key => $child_id ) {
-				$total_post += self::getPostByCategory( $child_id );
+				$total_post = (int) self::getPostByCategory( $child_id );
 			}
 		}
 		return $total_post;
 	}
 
 	public static function getAllChildCategory( $id_smart_blog_category, $current ) {
-		$sql = 'select id_smart_blog_category from `' . _DB_PREFIX_ . 'smart_blog_category` where id_parent = ' . $id_smart_blog_category;
+		$sql = 'select id_smart_blog_category from `' . _DB_PREFIX_ . 'smart_blog_category` where id_smart_blog_category = ' . $id_smart_blog_category;
 
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
