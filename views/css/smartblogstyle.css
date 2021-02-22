@@ -986,6 +986,10 @@ form#searchbox .button.button-small i {
     display: inline-block;
     padding: 8px;
     border-radius: 5px;
+    transition: .1s;
+}
+.smart-blog-article-share-social-single:hover {
+    opacity: .6;
 }
 .smart-blog-article-share-social-single svg{
     color: #fff;
@@ -1011,6 +1015,9 @@ form#searchbox .button.button-small i {
 }
 .smart-blog-linkedin-in{
     background: #2867B2;
+}
+.smart-blog-reddit{
+    background: #FF4500;
 }
 .smart-blog-commentform-area {
     margin-top: 40px;
@@ -1167,10 +1174,8 @@ span.smart-blog-reply-icon {
     padding: 20px 30px !important;
     margin-bottom: 1.563rem;
     border: none;
-    margin-right: 15px;
-    margin-left: 15px;
 }
-#module-smartblog-details .breadcrumb.smart-blog-breadcrumb{
+.smartblog-sidebars .breadcrumb.smart-blog-breadcrumb{
     margin-right: 15px;
     margin-left: 15px;
 }
@@ -1280,10 +1285,6 @@ span.smart-blog-reply-icon {
     font-weight: 500;
     font-size: 14px;
     color: #3F3F3F;
-}
-#module-smartblog-archive .breadcrumb.smart-blog-breadcrumb{
-    margin-right: 0px;
-    margin-left: 0px;
 }
 /* Smart Blog Home Latest News */
 .smart-blog-home-latest-news {
