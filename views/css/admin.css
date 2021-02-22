@@ -201,3 +201,8 @@
                     font-style: italic;
                     padding: 5px 1px;
                     font-weight: 600;
+                }
+
+                .smartblog-addons-name{
+                    margin: unset !important;
+                }
