@@ -145,8 +145,11 @@ class AdminSmartblogAddonsController extends ModuleAdminController
 
         $template_file = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/form.tpl';
 
+        $validity = Configuration::get( 'SMARTBLOG_LICENSE_VALIDITY' );
+
         $this->context->smarty->assign(array(
             'addons' =>  $addons_arr,
+            'smartblog_validity' =>  $validity,
             'image_url' => _MODULE_SMARTBLOG_IMAGE_URL_
         ));
 
@@ -174,7 +177,6 @@ class AdminSmartblogAddonsController extends ModuleAdminController
                 echo '1';
             }
         }
-       
         die();
     }
     

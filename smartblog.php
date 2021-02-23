@@ -8,6 +8,7 @@ define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
 define('_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/');
 define('_MODULE_SMARTBLOG_JS_DIR_', _PS_MODULE_DIR_ . 'smartblog/views/js/');
+define('_MODULE_SMARTBLOG_CLASS_DIR_', _PS_MODULE_DIR_ . 'smartblog/classes/');
 
 
 require_once dirname(__FILE__) . '/classes/smartpromotion.php';
@@ -659,6 +660,7 @@ class smartblog extends Module
 
 			$this->processImageUpload($_FILES);
 			$html   = $this->displayConfirmation($this->l('The settings have been updated successfully.'));
+
 			$helper = $this->SettingForm();
 			$html  .= $feed_url_html;
 			$html  .= $helper->generateForm($this->fields_form);
@@ -690,7 +692,56 @@ class smartblog extends Module
 
 				return $html;
 			}
-		} else {
+		} elseif (Tools::isSubmit('activatesmartblog')) {
+			$purchase_code = strval( Tools::getValue( 'smartblogpurchasecode' ) );
+			$action = Tools::getValue( 'licenseaction' );
+
+			if ( ! $purchase_code || empty( $purchase_code ) ) {
+				$html .= $this->displayError( $this->l( 'Please Enter a Purchase Code' ) );
+			} else {
+
+				include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+
+				$license = new SmartBlogLicense();
+				if($action){
+					$status = $license->smartblog_activate_license( $purchase_code );
+					if ( $status ) {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', $purchase_code );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'valid' );
+						$today = date( 'Y-m-d' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', $today );
+						$html .= $this->displayConfirmation( $this->l( 'Purchase Code Activated' ) );
+					} else {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
+						$html .= $this->displayError( $this->l( 'Invalid Purchase Code. Please try again!!!' ) );
+					}
+				}else{
+					$status = $license->smartblog_deactivate_license( $purchase_code );
+					if ( $status ) {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', '' );
+						$html .= $this->displayConfirmation( $this->l( 'Purchase Code Dectivated' ) );
+					} else {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
+						$html .= $this->displayError( $this->l( 'Invalid Purchase Code. Please try again!!!' ) );
+					}
+				}
+			}
+			$helper = $this->activationForm();
+			$html  .= $helper->generateForm($this->fields_form);
+			$helper = $this->SettingForm();
+			$html  .= $helper->generateForm($this->fields_form);
+			$helper = $this->regenerateform();
+			$html  .= $helper->generateForm($this->fields_form);
+			$auc    = new AdminAboutUsController();
+			return $html;
+		}else {
+
+			$helper = $this->activationForm();
+			$html  .= $helper->generateForm($this->fields_form);
 			$helper = $this->SettingForm();
 			$html  .= $helper->generateForm($this->fields_form);
 			$helper = $this->regenerateform();
@@ -861,11 +912,69 @@ class smartblog extends Module
 		}
 	}
 
+	protected function activationForm()
+	{
+		$default_lang                 = (int) Configuration::get('PS_LANG_DEFAULT');
+		$desc = '<a href="#">Click here</a> to get the Purchase Code For FREE!!!';
+		$actiontext = 'Activate';
+		$validity = Configuration::get( 'SMARTBLOG_LICENSE_VALIDITY' );
+		$action = 1;
+		if($validity=='valid'){
+			$action = 0;
+			$desc = "Your License Key Is Activated.";
+			$actiontext = 'Deactivate';
+		}
+		$this->fields_form[0]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Module Activation'),
+			),
+			'input'  => array(
+				array(
+					'type'     => 'text',
+					'label'    => $this->l('Purchase Code'),
+					'name'     => 'smartblogpurchasecode',
+					'desc'     => $desc,
+					'size'     => 70,
+					'required' => false,
+				),
+				array(
+					'type'     => 'hidden',
+					'name'     => 'licenseaction',
+				),
+			),
+			'submit' => array(
+				'title' => $actiontext,
+			),
+		);
+
+		$helper                  = new HelperForm();
+		$helper->module          = $this;
+		$helper->name_controller = $this->name;
+		$helper->token           = Tools::getAdminTokenLite('AdminModules');
+		foreach (Language::getLanguages(false) as $lang) {
+			$helper->languages[] = array(
+				'id_lang'    => $lang['id_lang'],
+				'iso_code'   => $lang['iso_code'],
+				'name'       => $lang['name'],
+				'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0),
+			);
+		}
+		$helper->currentIndex                       = AdminController::$currentIndex . '&configure=' . $this->name;
+		$helper->default_form_language              = $default_lang;
+		$helper->allow_employee_form_lang           = $default_lang;
+		$helper->toolbar_scroll                     = true;
+		$helper->show_toolbar                       = false;
+		$helper->submit_action                      = 'activatesmartblog';
+		$helper->fields_value['smartblogpurchasecode'] = Configuration::get('SMARTBLOG_LICENSE');
+		$helper->fields_value['licenseaction'] = $action;
+		return $helper;
+	}
+
 	public function SettingForm()
 	{
 		$blog_url                     = self::GetSmartBlogLink('smartblog');
 		$img_desc                     = '';
-		$img_desc                    .= '' . $this->l('Upload a Avatar from your computer. N.B : Only jpg image is allowed');
+		$img_desc                    .= '' . $this->l('Upload an Avatar from your computer. N.B : Only jpg image is allowed');
 		$img_desc                    .= '<br/><img style="clear:both;border:1px solid black;" alt="" src="' . __PS_BASE_URI__ . 'modules/smartblog/images/avatar/avatar.jpg" height="100" width="100"/><br />';
 		$default_lang                 = (int) Configuration::get('PS_LANG_DEFAULT');
 		$this->fields_form[0]['form'] = array(

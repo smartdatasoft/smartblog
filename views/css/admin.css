@@ -259,9 +259,31 @@
                 }
 
                 .pro-class{
-                    background: #e75d85;
+                    background: #25b9d7;
                 }
 
                 .free-class{
                     background: #b269b1;
+                }
+                .smartblog-activation-sec{
+                    text-align: center;
+                    width: 100%;
+                }
+                .addons-controller-promotion {
+                    border: 3px solid;
+                    padding: 10px;
+                    font-size: 20px;
+                    color: #c31d1d;
+                    border-radius: 4px;
+                    margin-bottom: 12px;
+                    display: table;
+                    width: 100%;
+                }
+                .addons-controller-promotion p{
+                    width: 50%;
+                    float: left;
+                }
+                .smartblog-promo-text{
+                    text-align: right;
+                    font-size: 12px;
                 }

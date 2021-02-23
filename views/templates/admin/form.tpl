@@ -1,5 +1,11 @@
 <div class="row justify-content-center">
     <div class="col-lg-10 module-catalog-page">
+    {if $smartblog_validity == "invalid"}
+    <div class="addons-controller-promotion">
+      <p>You need to <a href="{$link->getAdminLink('AdminModules')}&configure=smartblog">activate license</a> to use these addons.</p>
+      <p class="smartblog-promo-text">Don't have a purchase code??? <a href="#">GET ONE FOR FREE!!!</a></p>
+    </div>
+    {/if}
     <div class="ajax-loader-wrapper"><div class="ajax-loader"><img src="{$image_url}loader.gif"></div></div>
        <div id="modules-list-container-all" class="row modules-list" style="display: flex;" data-name="all">
          {foreach from=$addons key=k item=value}
@@ -37,19 +43,25 @@
                         <span class="pt-2">Price: ${$value.price}</span>
                      {/if}
                    </div>
-                   <div class="btn-group module-actions smartblog-addon-action">
-                     {if $value.installed == '-1'}
-                        <a>Download Now</a>
-                     {else}
-                        {assign var="text" value="Install"}
-                        {if $value.installed == '1'}
-                           {assign "text" value="Uninstall"}
+                   {if $smartblog_validity == "invalid"}
+                        <div class="btn-group module-actions">
+                           <a href="{$link->getAdminLink('AdminModules')}&configure=smartblog" class="smartblog-activation-sec">Activate SmartBlog to Get The Add-on</a> 
+                        </div>
+                   {else}
+                     <div class="btn-group module-actions smartblog-addon-action">
+                        {if $value.installed == '-1'}
+                           <a href="#" class="smartblog-activation-sec">Get Now</a>
+                        {else}
+                           {assign var="text" value="Install"}
+                           {if $value.installed == '1'}
+                              {assign "text" value="Uninstall"}
+                           {/if}
+                           <button class="btn btn-primary-reverse btn-outline-primary smartblog_addons_install" data-addon_name="{$k}" data-installed="{$value.installed}">
+                           {$text}
+                           </button>
                         {/if}
-                        <button class="btn btn-primary-reverse btn-outline-primary smartblog_addons_install" data-addon_name="{$k}" data-installed="{$value.installed}">
-                        {$text}
-                        </button>
-                     {/if}
-                   </div>
+                     </div>
+                   {/if}
                 </div>
              </div>
           </div>
