@@ -30,8 +30,15 @@ class AdminSmartblogAddonsController extends ModuleAdminController
         parent::initContent();
 
         $addons_arr = array(
-            'smartblogaddthisbutton' => array(
-                'title' => "Smart Blog Moduel Add This Button",
+            'smartblogsearch' => array(
+                'title' => "Smart Blog Search",
+                'version' => '1.0.0',
+                'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
+                'price' => 0,
+                'd_link' => '',
+            ),
+            'smartblogtag' => array(
+                'title' => "Smart Blog Tag",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
                 'price' => 0,
@@ -51,32 +58,39 @@ class AdminSmartblogAddonsController extends ModuleAdminController
                 'price' => 0,
                 'd_link' => '',
             ),
+            'smartblogaddthisbutton' => array(
+                'title' => "Smart Blog Moduel Add This Button",
+                'version' => '1.0.0',
+                'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
+                'price' => 2,
+                'd_link' => '',
+            ),
             'smartblogdisqus' => array(
                 'title' => "Smart Blog Discuss Comments",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
+                'price' => 3,
                 'd_link' => '',
             ),
             'smartblogfbcoments' => array(
                 'title' => "Smart Blog Facebook Comments",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
+                'price' => 3,
                 'd_link' => '',
             ),
             'smartblogfeed' => array(
                 'title' => "RSS SmartBlog Feed",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
+                'price' => 2,
                 'd_link' => '',
             ),
             'smartbloghomelatestnews' => array(
                 'title' => "SmartBlog Home Latest News",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
+                'price' => 5,
                 'd_link' => '',
             ),
             'smartbloglatestcomments' => array(
@@ -90,7 +104,7 @@ class AdminSmartblogAddonsController extends ModuleAdminController
                 'title' => "Smart Blog Popular Posts",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
+                'price' => 3,
                 'd_link' => '',
             ),
             'smartblogrecentposts' => array(
@@ -111,21 +125,7 @@ class AdminSmartblogAddonsController extends ModuleAdminController
                 'title' => "Smart Blog Related Product",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
-                'd_link' => '',
-            ),
-            'smartblogsearch' => array(
-                'title' => "Smart Blog Search",
-                'version' => '1.0.0',
-                'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
-                'd_link' => '',
-            ),
-            'smartblogtag' => array(
-                'title' => "Smart Blog Tag",
-                'version' => '1.0.0',
-                'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
-                'price' => 0,
+                'price' => 6,
                 'd_link' => '',
             ),
         );
@@ -145,9 +145,12 @@ class AdminSmartblogAddonsController extends ModuleAdminController
 
         $template_file = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/form.tpl';
 
+        $validity = Configuration::get( 'SMARTBLOG_LICENSE_VALIDITY' );
+
         $this->context->smarty->assign(array(
             'addons' =>  $addons_arr,
-            'image_url' => _MODULE_SMARTBLOG_IMAGE_URL_ . 'addons/'
+            'smartblog_validity' =>  $validity,
+            'image_url' => _MODULE_SMARTBLOG_IMAGE_URL_
         ));
 
         $content = $this->context->smarty->fetch($template_file);
@@ -165,14 +168,15 @@ class AdminSmartblogAddonsController extends ModuleAdminController
             if ( Module::isInstalled( $module ) && Module::isEnabled( $module ) ) {
                 $mod_ins = Module::getInstanceByName( trim($module) );
                 $mod_ins->uninstall();
+                echo '0';
             }
         }else{
-            if ( Module::isInstalled( $module ) && Module::isEnabled( $module ) ) {
+            if ( !Module::isInstalled( $module ) ) {
                 $mod_ins = Module::getInstanceByName( trim($module) );
                 $mod_ins->install();
+                echo '1';
             }
         }
-       
         die();
     }
     
