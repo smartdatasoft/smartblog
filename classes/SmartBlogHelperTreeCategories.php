@@ -1,28 +1,29 @@
 <?php
+
 /**
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2015 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2015 PrestaShop SA
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class SmartBlogHelperTreeCategories extends TreeCore
 {
@@ -44,11 +45,15 @@ class SmartBlogHelperTreeCategories extends TreeCore
     private $_module_template_dir;
     private $_no_js;
 
-    public function __construct($id, $title = null, $root_category = null,
-        $lang = null, $use_shop_restriction = true)
-    {
+    public function __construct(
+        $id,
+        $title = null,
+        $root_category = null,
+        $lang = null,
+        $use_shop_restriction = true
+    ) {
         parent::__construct($id);
-        
+
         if (isset($title)) {
             $this->setTitle($title);
         }
@@ -59,7 +64,7 @@ class SmartBlogHelperTreeCategories extends TreeCore
 
         $this->setLang($lang);
         $this->setUseShopRestriction($use_shop_restriction);
-        $this->_module_template_dir = dirname(__FILE__).'/../views/templates/admin/';
+        $this->_module_template_dir = dirname(__FILE__) . '/../views/templates/admin/';
     }
     public function setNoJS($value)
     {
@@ -69,16 +74,15 @@ class SmartBlogHelperTreeCategories extends TreeCore
     }
     private function fillTree(&$categories, $id_category)
     {
-        $tree = array();        
+        $tree = array();
         foreach ($categories[$id_category] as $category) {
             $tree[$category['id_category']] = $category;
             if (!empty($categories[$category['id_category']])) {
                 $tree[$category['id_category']]['children'] = $this->fillTree($categories, $category['id_category']);
-            } 
-            elseif ($result = BlogCategory::hasChildren($category['id_category'], $this->getLang(), false, $this->getShop()->id)) {
-                $tree[$category['id_category']]['children'] = array($result[0]['id_category'] => $result[0]);                
+            } elseif ($result = BlogCategory::hasChildren($category['id_category'], $this->getLang(), false, $this->getShop()->id)) {
+                $tree[$category['id_category']]['children'] = array($result[0]['id_category'] => $result[0]);
             }
-        }        
+        }
         return $tree;
     }
 
@@ -151,10 +155,10 @@ class SmartBlogHelperTreeCategories extends TreeCore
     }
 
     public function getNodeItemTemplate()
-    {        
+    {
         if (!isset($this->_node_item_template)) {
             $this->setNodeItemTemplate(self::DEFAULT_NODE_ITEM_TEMPLATE);
-        }        
+        }
         return $this->_node_item_template;
     }
 
@@ -214,7 +218,7 @@ class SmartBlogHelperTreeCategories extends TreeCore
 
         return $this->_shop;
     }
-    
+
     public function getTemplate()
     {
         if (!isset($this->_template)) {
@@ -261,29 +265,32 @@ class SmartBlogHelperTreeCategories extends TreeCore
         if (!isset($this->_data)) {
             $shop = $this->getShop();
             $lang = $this->getLang();
-            $root_category = (int)$this->getRootCategory();            
-            if ($this->_full_tree) {                
+            $root_category = (int)$this->getRootCategory();
+            if ($this->_full_tree) {
                 $this->setData(BlogCategory::getNestedCategories(
-                    $root_category, $lang, false, null, $this->useShopRestriction()));
+                    $root_category,
+                    $lang,
+                    false,
+                    null,
+                    $this->useShopRestriction()
+                ));
                 $this->setDataSearch(BlogCategory::getAllCategoriesName($root_category, $lang, false, null, $this->useShopRestriction()));
             } elseif ($this->_children_only) {
                 if (empty($root_category)) {
                     $root_category = BlogCategory::getRootCategory();
                     $root_category = $root_category['id_smart_blog_category'];
                 }
-                                
                 $categories = array();
-                         
                 $categories[$root_category] = BlogCategory::getChildren($root_category, $lang, false, $shop->id);
                 $children = $this->fillTree($categories, $root_category);
                 $this->setData($children);
             } else {
                 if (empty($root_category)) {
-                    $root_category = BlogCategory::getRootCategory();                    
-                    $root_category = $root_category['id_smart_blog_category'];                    
-                }                
+                    $root_category = BlogCategory::getRootCategory();
+                    $root_category = $root_category['id_smart_blog_category'];
+                }
                 $new_selected_categories = array();
-                $selected_categories = $this->getSelectedCategories();                
+                $selected_categories = $this->getSelectedCategories();
                 $categories[$root_category] = BlogCategory::getChildren($root_category, $lang, false);
                 foreach ($selected_categories as $selected_category) {
                     $category = new BlogCategory($selected_category, $lang, $shop->id);
@@ -293,48 +300,53 @@ class SmartBlogHelperTreeCategories extends TreeCore
                         $new_selected_categories[] = $value['id_category'];
                     }
                 }
-                $new_selected_categories = array_unique($new_selected_categories);                
+                $new_selected_categories = array_unique($new_selected_categories);
                 foreach ($new_selected_categories as $selected_category) {
                     $current_category = BlogCategory::getChildren($selected_category, $lang, false, $shop->id);
                     if (!empty($current_category)) {
                         $categories[$selected_category] = $current_category;
                     }
                 }
-
                 $tree = BlogCategory::getCategoryInformations(array($root_category), $lang);
-                
-                $children = $this->fillTree($categories, $root_category);                
+                $children = $this->fillTree($categories, $root_category);
                 if (!empty($children)) {
                     $tree[$root_category]['children'] = $children;
-                }                
+                }
                 $this->setData($tree);
                 $this->setDataSearch(BlogCategory::getAllCategoriesName($root_category, $lang, false, null, $this->useShopRestriction()));
             }
         }
-
         return $this->_data;
     }
+
     public function render($data = null)
     {
+
         if (!isset($data)) {
             $data = $this->getData();
         }
 
-        if (isset($this->_disabled_categories)
-            && !empty($this->_disabled_categories)) {
+        if (
+            isset($this->_disabled_categories)
+            && !empty($this->_disabled_categories)
+        ) {
             $this->_disableCategories($data, $this->getDisabledCategories());
         }
 
-        if (isset($this->_selected_categories)
-            && !empty($this->_selected_categories)) {
+        if (
+            isset($this->_selected_categories)
+            && !empty($this->_selected_categories)
+        ) {
             $this->_getSelectedChildNumbers($data, $this->getSelectedCategories());
         }
 
         //Default bootstrap style of search is push-right, so we add this button first
         if ($this->useSearch()) {
-            $this->addAction(new TreeToolbarSearchCategories(
-                'Find a category:',
-                $this->getId().'-categories-search')
+            $this->addAction(
+                new TreeToolbarSearchCategories(
+                    'Find a category:',
+                    $this->getId() . '-categories-search'
+                )
             );
             $this->setAttribute('use_search', $this->useSearch());
         }
@@ -342,15 +354,17 @@ class SmartBlogHelperTreeCategories extends TreeCore
         $collapse_all = new TreeToolbarLink(
             'Collapse All',
             '#',
-            '$(\'#'.$this->getId().'\').tree(\'collapseAll\');$(\'#collapse-all-'.$this->getId().'\').hide();$(\'#expand-all-'.$this->getId().'\').show(); return false;',
-            'icon-collapse-alt');
-        $collapse_all->setAttribute('id', 'collapse-all-'.$this->getId());
+            '$(\'#' . $this->getId() . '\').tree(\'collapseAll\');$(\'#collapse-all-' . $this->getId() . '\').hide();$(\'#expand-all-' . $this->getId() . '\').show(); return false;',
+            'icon-collapse-alt'
+        );
+        $collapse_all->setAttribute('id', 'collapse-all-' . $this->getId());
         $expand_all = new TreeToolbarLink(
             'Expand All',
             '#',
-            '$(\'#'.$this->getId().'\').tree(\'expandAll\');$(\'#collapse-all-'.$this->getId().'\').show();$(\'#expand-all-'.$this->getId().'\').hide(); return false;',
-            'icon-expand-alt');
-        $expand_all->setAttribute('id', 'expand-all-'.$this->getId());
+            '$(\'#' . $this->getId() . '\').tree(\'expandAll\');$(\'#collapse-all-' . $this->getId() . '\').show();$(\'#expand-all-' . $this->getId() . '\').hide(); return false;',
+            'icon-expand-alt'
+        );
+        $expand_all->setAttribute('id', 'expand-all-' . $this->getId());
         $this->addAction($collapse_all);
         $this->addAction($expand_all);
 
@@ -358,15 +372,17 @@ class SmartBlogHelperTreeCategories extends TreeCore
             $check_all = new TreeToolbarLink(
                 'Check All',
                 '#',
-                'checkAllAssociatedCategories($(\'#'.$this->getId().'\')); return false;',
-                'icon-check-sign');
-            $check_all->setAttribute('id', 'check-all-'.$this->getId());
+                'checkAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
+                'icon-check-sign'
+            );
+            $check_all->setAttribute('id', 'check-all-' . $this->getId());
             $uncheck_all = new TreeToolbarLink(
                 'Uncheck All',
                 '#',
-                'uncheckAllAssociatedCategories($(\'#'.$this->getId().'\')); return false;',
-                'icon-check-empty');
-            $uncheck_all->setAttribute('id', 'uncheck-all-'.$this->getId());
+                'uncheckAllAssociatedCategories($(\'#' . $this->getId() . '\')); return false;',
+                'icon-check-empty'
+            );
+            $uncheck_all->setAttribute('id', 'uncheck-all-' . $this->getId());
             $this->addAction($check_all);
             $this->addAction($uncheck_all);
             $this->setNodeFolderTemplate('tree_node_folder_checkbox.tpl');
@@ -378,34 +394,34 @@ class SmartBlogHelperTreeCategories extends TreeCore
         $this->getContext()->smarty->assign('root_category', Configuration::get('PS_ROOT_CATEGORY'));
         $this->getContext()->smarty->assign('token', Tools::getAdminTokenLite('AdminBlogPost'));
         $return = parent::render($data);
-        
-        
-//        $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-//        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
-//        $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
-//            && $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
-//
-//        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template')) {
-//            $bo_theme = 'default';
-//        }
-//        $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
-//        
-//        $foundIndex = array_search($js_path, Context::getContext()->controller->js_files);
-//        if(!empty($foundIndex))
-//            Context::getContext()->controller->removeJS($js_path);
-//            unset(Context::getContext()->controller->js_files[$foundIndex]);
-        
-        $js_path = _MODULE_DIR_.'smartblog/views/js/tree.js';
-        
+
+
+        //        $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
+        //        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+        //        $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
+        //            && $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
+        //
+        //        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template')) {
+        //            $bo_theme = 'default';
+        //        }
+        //        $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
+        //        
+        //        $foundIndex = array_search($js_path, Context::getContext()->controller->js_files);
+        //        if(!empty($foundIndex))
+        //            Context::getContext()->controller->removeJS($js_path);
+        //            unset(Context::getContext()->controller->js_files[$foundIndex]);
+
+        $js_path = _MODULE_DIR_ . 'smartblog/views/js/tree.js';
+
         if (Context::getContext()->controller->ajax) {
             if (!$this->_no_js) {
-                $html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+                $html = '<script type="text/javascript" src="' . $js_path . '"></script>';
             }
         } else {
-            Context::getContext()->controller->addJS($js_path);            
+            Context::getContext()->controller->addJS($js_path);
         }
-        
-        return (isset($html)?$html:'').$return;
+
+        return (isset($html) ? $html : '') . $return;
     }
 
     /* Override */
@@ -421,11 +437,15 @@ class SmartBlogHelperTreeCategories extends TreeCore
 
         $html = '';
         foreach ($data as $item) {
-            if (array_key_exists('children', $item)
-                && !empty($item['children'])) {
+            if (
+                array_key_exists('children', $item)
+                && !empty($item['children'])
+            ) {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile(
-                            'helpers/tree/'.$this->getNodeFolderTemplate(),true),
+                        'helpers/tree/' . $this->getNodeFolderTemplate(),
+                        true
+                    ),
                     $this->getContext()->smarty
                 )->assign(array(
                     'input_name' => $this->getInputName(),
@@ -434,7 +454,7 @@ class SmartBlogHelperTreeCategories extends TreeCore
                 ))->fetch();
             } else {
                 $html .= $this->getContext()->smarty->createTemplate(
-                    $this->getTemplateFile('helpers/tree/'.$this->getNodeItemTemplate(),true),
+                    $this->getTemplateFile('helpers/tree/' . $this->getNodeItemTemplate(), true),
                     $this->getContext()->smarty
                 )->assign(array(
                     'input_name' => $this->getInputName(),
@@ -483,11 +503,11 @@ class SmartBlogHelperTreeCategories extends TreeCore
     }
     public function getTemplateFile($template, $loadLocal = false)
     {
-        if(!$loadLocal)
+        if (!$loadLocal)
             return parent::getTemplateFile($template);
-        
+
         $template = "{$this->_module_template_dir}{$template}";
-        if(file_exists($template))
+        if (file_exists($template))
             return $template;
     }
 }
