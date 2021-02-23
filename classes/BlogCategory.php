@@ -672,7 +672,7 @@ class BlogCategory extends ObjectModel {
 
 		$cache_id = 'BlogCategory::hasChildren_' . (int) $id_parent . '-' . (int) $id_lang . '-' . (bool) $active . '-' . (int) $id_shop;
 		if ( ! Cache::isStored( $cache_id ) ) {
-			$query  = 'SELECT c.`id_smart_blog_category` AS id_category, "" as name
+			$query  = 'SELECT c.`id_smart_blog_category` AS id_category, cl.`name` as name
             FROM `' . _DB_PREFIX_ . 'smart_blog_category` c
             LEFT JOIN `' . _DB_PREFIX_ . 'smart_blog_category_lang` cl ON (c.`id_smart_blog_category` = cl.`id_smart_blog_category`)
             ' . Shop::addSqlAssociation( 'smart_blog_category', 'c' ) . '
