@@ -6,6 +6,7 @@ if (!defined('_PS_VERSION_')) {
 function upgrade_module_3_0_3($object)
 {
 
+	$object->registerhook('displayDashboardTop');
 	$sql = 'ALTER TABLE ' . _DB_PREFIX_ . 'smart_blog_post_related  CHANGE related_post_id related_poroduct_id varchar(100)';
 	Db::getInstance()->execute($sql);
 

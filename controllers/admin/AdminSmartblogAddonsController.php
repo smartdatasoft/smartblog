@@ -66,7 +66,7 @@ class AdminSmartblogAddonsController extends ModuleAdminController
                 'd_link' => '',
             ),
             'smartblogdisqus' => array(
-                'title' => "Smart Blog Discuss Comments",
+                'title' => "Smart Blog Disqus Comments",
                 'version' => '1.0.0',
                 'description' => "The Most Powerfull Presta shop Blog  Module's Add This Button - by smartdatasoft",
                 'price' => 3,

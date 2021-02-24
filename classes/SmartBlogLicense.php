@@ -17,58 +17,63 @@ class SmartBlogLicense {
 	 */
 	public function __construct() {
 
-		// $purchase_code = Configuration::get( 'CLASSYPETAB_LICENSE' );
-		// $todate        = Configuration::get( 'CLASSYPETAB_DATE' );
+		$purchase_code = Configuration::get( 'SMARTBLOG_LICENSE' );
+		$todate        = Configuration::get( 'SMARTBLOG_LICENSE_DATE' );
 
-		// if ( $purchase_code && $todate ) {
+		if ( $purchase_code && $todate ) {
 
-		// 	$stable = Configuration::get( 'CLASSYPETAB_STABLE' );
-		// 	$d_link = Configuration::get( 'CLASSYPETAB_DLINK' );
+			$stable = Configuration::get( 'SMARTBLOG_STABLE' );
+			$d_link = Configuration::get( 'SMARTBLOG_DLINK' );
 
-		// 	if ( isset( $stable ) && isset( $d_link ) ) {
-		// 		if ( $stable == '' && $d_link == '' ) {
-		// 			$today = date( 'Y-m-d' );
-		// 			if ( $today > $todate ) {
-		// 				Configuration::updateValue( 'CLASSYPETAB_DATE', $today );
-		// 				$this->classypetab_get_update( $purchase_code );
-		// 			}
-		// 		} else {
-		// 			$this->show_notification( $stable, $d_link );
-		// 		}
-		// 	}
-		// }
+			if ( isset( $stable ) && isset( $d_link ) ) {
+				
+				if ( $stable == '' && $d_link == '' ) {
+					$today = date( 'Y-m-d' );
+					if ( $today > $todate ) {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', $today );
+						$this->smartblog_get_update( $purchase_code );
+					}
+				} else {
+					
+					$this->show_notification( $stable, $d_link );
+				}
+			}
+		}
 	}
 
 	
-	// public function classypetab_get_update( $key ) {
-	// 	$api_params = array(
-	// 		'edd_action' => 'get_version',
-	// 		'item_id'    => $this->product_id,
-	// 		'license'    => $key,
-	// 		'version'    => CLASSSY_PEXTRATAB_VERSION,
-	// 		'url'        => _PS_BASE_URL_SSL_,
-	// 	);
-	// 	$url        = $this->store_url . '?' . http_build_query( $api_params );
+	public function smartblog_get_update( $key ) {
+		$api_params = array(
+			'edd_action' => 'get_version',
+			'item_id'    => $this->product_id,
+			'license'    => $key,
+			'version'    => _MODULE_SMARTBLOG_VERSION_,
+			'url'        => _PS_BASE_URL_SSL_,
+		);
+		$url        = $this->store_url . '?' . http_build_query( $api_params );
 
-	// 	$response = $this->wp_remote_get(
-	// 		$url,
-	// 		array(
-	// 			'timeout' => 20,
-	// 			'headers' => '',
-	// 			'header'  => false,
-	// 			'json'    => true,
-	// 		)
-	// 	);
+		$response = $this->wp_remote_get(
+			$url,
+			array(
+				'timeout' => 20,
+				'headers' => '',
+				'header'  => false,
+				'json'    => true,
+			)
+		);
 
-	// 	$responsearray = Tools::jsonDecode( $response, true );
-
-	// 	if ( version_compare( $responsearray['stable_version'], CLASSSY_PEXTRATAB_VERSION, '>' ) ) {
-	// 		$d_link = $responsearray['download_link'];
-	// 		Configuration::updateValue( 'CLASSYPETAB_STABLE', $responsearray['stable_version'] );
-	// 		Configuration::updateValue( 'CLASSYPETAB_DLINK', $d_link );
-	// 		$this->show_notification( $responsearray['stable_version'], $d_link );
-	// 	}
-	// }
+		$responsearray = Tools::jsonDecode( $response, true );
+		echo '<pre>';
+		print_r('hello');
+		echo '</pre>';
+		echo __FILE__ . ' : ' . __LINE__;
+		if ( version_compare( $responsearray['stable_version'], _MODULE_SMARTBLOG_VERSION_, '>' ) ) {
+			$d_link = $responsearray['download_link'];
+			Configuration::updateValue( 'SMARTBLOG_STABLE', $responsearray['stable_version'] );
+			Configuration::updateValue( 'SMARTBLOG_DLINK', $d_link );
+			$this->show_notification( $responsearray['stable_version'], $d_link );
+		}
+	}
 
 	public function smartblog_activate_license( $key ) {
 		$api_params = array(
@@ -215,7 +220,7 @@ class SmartBlogLicense {
 	}
 
 	private function show_notification( $v, $d ) {
-		$msg = 'There is a new version of Classy Product Extra Tab is available.';
+		$msg = 'There is a new version of SmartBlog is available.';
 		?>
 		<div class="row">
 			<div class="col-lg-12">
@@ -224,7 +229,7 @@ class SmartBlogLicense {
 						<div class="lds-dual-ring"></div>
 					</div>
 					<div class="update-logo-and-text">
-						<img src="<?php echo CLASSSY_PEXTRATAB_IMAGES_URL . 'module_logo.png'; ?>" width="90" height="90">
+						<img src="<?php echo _MODULE_SMARTBLOG_IMAGE_URL_ . 'module_logo.png'; ?>" width="90" height="90">
 						<div class="update-header-text-and-version">
 							<h4 class="update_msg"><?php echo $msg; ?></h4>
 							<h6 class="update_vsn"><?php echo 'Version: ' . $v; ?></h6>

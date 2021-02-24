@@ -3,6 +3,7 @@ if (!defined('_PS_VERSION_')) {
 	exit;
 }
 
+define('_MODULE_SMARTBLOG_VERSION_', '3.0.3');
 define('_MODULE_SMARTBLOG_DIR_', _PS_MODULE_DIR_ . 'smartblog/images/');
 define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules/' . 'smartblog/');
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
@@ -246,6 +247,9 @@ class smartblog extends Module
 
 	public function hookDisplayDashboardTop()
 	{
+
+		include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+		SmartBlogLicense::init();
 
 		$controller_name = Tools::getValue('controller');
 		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs') { ?>
