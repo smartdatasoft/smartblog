@@ -53,8 +53,6 @@ class smartblog extends Module
 		$this->description      = $this->l('The Most Powerfull Prestashop Blog  Module - by smartdatasoft');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 		$this->module_key       = '5679adf718951d4bc63422b616a9d75d';
-
-		$this->installDummyData();
 	}
 
 	public function install()
@@ -111,6 +109,7 @@ class smartblog extends Module
 		$ret &= $this->CreateSmartBlogTabs();
 		$ret &= $this->requiredDataInstall();
 		$ret &= $this->sampleDataInstall();
+		$ret &= $this->installDummyData();
 
 		// Later Will Be Fine Tuned
 		// *************************************
