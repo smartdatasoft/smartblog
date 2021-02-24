@@ -522,10 +522,13 @@ class AdminBlogPostController extends ModuleAdminController
 				}
 			} else {
 				$add = $this->processAdd();
-				$id_post = $add->id;
-				if (Tools::getValue('associations')) {
-					Db::getInstance()->execute(' INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_related` (`id_smart_blog_post`, `related_poroduct_id`)VALUES("' . pSQL($id_post) . '","' . Tools::getValue('associations') . '" )');
+				if(isset($add->id)){
+					$id_post = $add->id;
+					if (Tools::getValue('associations')) {
+						Db::getInstance()->execute(' INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_related` (`id_smart_blog_post`, `related_poroduct_id`)VALUES("' . pSQL($id_post) . '","' . Tools::getValue('associations') . '" )');
+					}
 				}
+				
 			}
 		} else {
 			$admin_url =   $this->context->link->getAdminLink('AdminProducts', true);
