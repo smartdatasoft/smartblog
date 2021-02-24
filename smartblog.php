@@ -53,6 +53,8 @@ class smartblog extends Module
 		$this->description      = $this->l('The Most Powerfull Prestashop Blog  Module - by smartdatasoft');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 		$this->module_key       = '5679adf718951d4bc63422b616a9d75d';
+
+		$this->installDummyData();
 	}
 
 	public function install()
@@ -134,6 +136,7 @@ class smartblog extends Module
 	{
 		$image_types         = BlogImageType::GetImageAllType('post');
 		$id_smart_blog_posts = $this->getAllPost();
+
 		$tmp_name            = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 		$langs               = Language::getLanguages();
 		$arrayImg = array();
@@ -143,28 +146,39 @@ class smartblog extends Module
 			}
 			$arrayImg[] = $images;
 		}
+
 		$img_count = 0;
+		$dummy_post_ids = array();
 		foreach ($id_smart_blog_posts as $id_smart_blog_post) {
+			$dummy_post_ids[] = $id_smart_blog_post['id_smart_blog_post'];
+		}
+
+		
+		$dummy_post_ids = array_unique($dummy_post_ids);
+
+		foreach ($dummy_post_ids as $id_smart_blog_post) {
 			$files_to_delete = array();
-			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg';
-			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg';
+			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post . '.jpg';
+			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post . '.jpg';
 			foreach ($langs as $l) {
-				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post['id_smart_blog_post'] . '_' . $l['id_lang'] . '.jpg';
-				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post['id_smart_blog_post'] . '_' . $l['id_lang'] . '.jpg';
+				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post . '_' . $l['id_lang'] . '.jpg';
+				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post . '_' . $l['id_lang'] . '.jpg';
 			}
 			foreach ($files_to_delete as $file) {
 				if (file_exists($file)) {
 					@unlink($file);
 				}
 			}
-			Tools::Copy(__DIR__ . '/dummy_data/' . $arrayImg[$img_count], _PS_MODULE_DIR_ . '/smartblog/images/' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg');
-			foreach ($image_types as $image_type) {
-				ImageManager::resize(
-					__DIR__ . '/dummy_data/' . $arrayImg[$img_count],
-					_PS_MODULE_DIR_ . 'smartblog/images/' . $id_smart_blog_post['id_smart_blog_post'] . '-' . stripslashes($image_type['type_name']) . '.jpg',
-					(int) $image_type['width'],
-					(int) $image_type['height']
-				);
+			if(isset($arrayImg[$img_count])){
+				Tools::Copy(__DIR__ . '/dummy_data/' . $arrayImg[$img_count], _PS_MODULE_DIR_ . '/smartblog/images/' . $id_smart_blog_post . '.jpg');
+				foreach ($image_types as $image_type) {
+					ImageManager::resize(
+						__DIR__ . '/dummy_data/' . $arrayImg[$img_count],
+						_PS_MODULE_DIR_ . 'smartblog/images/' . $id_smart_blog_post . '-' . stripslashes($image_type['type_name']) . '.jpg',
+						(int) $image_type['width'],
+						(int) $image_type['height']
+					);
+				}
 			}
 			$img_count = (count($arrayImg) > $img_count) ? $img_count + 1 : 0;
 		}
