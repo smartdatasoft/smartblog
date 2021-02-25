@@ -205,6 +205,8 @@ class smartblog extends Module
 	public function hookdisplayBackOfficeHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path . 'views/css/admin.css');
+		$this->context->controller->addJs( $this->_path . 'views/js/update.js' );
+		Media::addJsDef( array( 'sblogaddons_ajaxurl' => $this->context->link->getAdminLink( 'AdminSmartblogAddons' )));
 		$this->smarty->assign(
 			array(
 				'smartmodules_dir' => __PS_BASE_URI__,
@@ -247,12 +249,11 @@ class smartblog extends Module
 
 	public function hookDisplayDashboardTop()
 	{
-
-		include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
-		SmartBlogLicense::init();
-
 		$controller_name = Tools::getValue('controller');
-		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs') { ?>
+		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs' || $controller_name == 'AdminSmartblogAddons') { 
+			include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+			SmartBlogLicense::init();
+			?>
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel dashboard-presents-product-area">
@@ -283,7 +284,10 @@ class smartblog extends Module
 					</div>
 				</div>
 			</div>
-<?php
+	<?php
+		}elseif($controller_name == 'AdminDashboard'){
+			include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+			SmartBlogLicense::init();
 		}
 	}
 

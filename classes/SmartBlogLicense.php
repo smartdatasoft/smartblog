@@ -19,20 +19,19 @@ class SmartBlogLicense {
 
 		$purchase_code = Configuration::get( 'SMARTBLOG_LICENSE' );
 		$todate        = Configuration::get( 'SMARTBLOG_LICENSE_DATE' );
-
 		if ( $purchase_code && $todate ) {
 
 			$stable = Configuration::get( 'SMARTBLOG_STABLE' );
 			$d_link = Configuration::get( 'SMARTBLOG_DLINK' );
-
+			
 			if ( isset( $stable ) && isset( $d_link ) ) {
 				
 				if ( $stable == '' && $d_link == '' ) {
 					$today = date( 'Y-m-d' );
-					if ( $today > $todate ) {
+					// if ( $today > $todate ) {
 						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', $today );
 						$this->smartblog_get_update( $purchase_code );
-					}
+					// }
 				} else {
 					
 					$this->show_notification( $stable, $d_link );
@@ -63,10 +62,6 @@ class SmartBlogLicense {
 		);
 
 		$responsearray = Tools::jsonDecode( $response, true );
-		echo '<pre>';
-		print_r('hello');
-		echo '</pre>';
-		echo __FILE__ . ' : ' . __LINE__;
 		if ( version_compare( $responsearray['stable_version'], _MODULE_SMARTBLOG_VERSION_, '>' ) ) {
 			$d_link = $responsearray['download_link'];
 			Configuration::updateValue( 'SMARTBLOG_STABLE', $responsearray['stable_version'] );
@@ -235,7 +230,7 @@ class SmartBlogLicense {
 							<h6 class="update_vsn"><?php echo 'Version: ' . $v; ?></h6>
 						</div>
 					</div>
-					<a  href="javascript:void(0)" id="classype_update_bt" data-down_vs="<?php echo $v; ?>" data-down_url="<?php echo $d; ?>" class="btn btn-primary classy-update-bt"><?php echo 'Update To <strong>Version ' . $v . '</strong>'; ?></a>
+					<a  href="javascript:void(0)" id="classy_update_bt" data-down_vs="<?php echo $v; ?>" data-down_url="<?php echo $d; ?>" class="btn btn-primary classy-update-bt"><?php echo 'Update To <strong>Version ' . $v . '</strong>'; ?></a>
 				</div>					
 			</div>
 		</div>

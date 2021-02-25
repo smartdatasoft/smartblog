@@ -179,5 +179,44 @@ class AdminSmartblogAddonsController extends ModuleAdminController
         }
         die();
     }
+
+    /**
+	 * AjaxProcessDownNow processes downloading the update.
+	 *
+	 * @return void
+	 */
+	public function ajaxProcessDownNow() {
+		$down_url = Tools::getValue( 'down_url' );
+
+		$down_path = _PS_MODULE_DIR_;
+		$newfile   = $down_path . '/classy_productextratab.zip';
+
+		$ua = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13';
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $down_url );
+		curl_setopt( $ch, CURLOPT_HEADER, false );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_USERAGENT, $ua );
+		curl_setopt( $ch, CURLOPT_AUTOREFERER, true );
+		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+		curl_setopt( $ch, CURLOPT_MAXREDIRS, 20 );
+		$result = curl_exec( $ch );
+		file_put_contents( $newfile, $result );
+		$last = curl_getinfo( $ch, CURLINFO_EFFECTIVE_URL );
+		if ( curl_errno( $ch ) ) {
+			echo 'Could not update the module. Please try again.';
+		} else {
+			$zip = new \ZipArchive();
+			if ( $zip->open( $newfile ) === true ) {
+				$zip->extractTo( _PS_MODULE_DIR_ );
+				$zip->close();
+			}
+			Configuration::updateValue( 'SMARTBLOG_STABLE', '' );
+			Configuration::updateValue( 'SMARTBLOG_DLINK', '' );
+			echo 'Updated';
+		}
+		curl_close( $ch );
+		die();
+	}
     
 }
