@@ -34,6 +34,13 @@ class smartblog extends Module
 	public function __construct()
 	{
 
+
+
+		// echo _PS_THEME_DIR_." _PS_THEME_URI_<br>";
+		// echo _PS_PARENT_THEME_DIR_." _PS_PARENT_THEME_URI_<br>";
+		// echo __PS_BASE_URI__." __PS_BASE_URI__<br>";
+		// exit();
+
 		$this->name          = 'smartblog';
 		$this->tab           = 'front_office_features';
 		$this->version       = '3.0.3';
