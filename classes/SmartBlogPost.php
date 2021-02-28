@@ -1051,6 +1051,10 @@ class SmartBlogPost extends ObjectModel {
 	*/
 	public static function getAccessoriesLight( $id_lang, $id_smart_blog_post ) {
 
+		if(!Module::isInstalled( 'smartblogrelatedproducts' )){
+			return array();
+		}
+
 		if ( empty( $id_smart_blog_post ) ) {
 			return array();
 		}
@@ -1064,13 +1068,13 @@ class SmartBlogPost extends ObjectModel {
 
 		return Db::getInstance()->executeS(
 			'
-      SELECT p.`id_product`, p.`reference`, pl.`name`
-      FROM `' . _DB_PREFIX_ . 'product` p      
-      LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-        p.`id_product` = pl.`id_product`
-        AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang( 'pl' ) . '
-      )
-      WHERE p.id_product IN(' . $associates . ')'
+	      SELECT p.`id_product`, p.`reference`, pl.`name`
+	      FROM `' . _DB_PREFIX_ . 'product` p      
+	      LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
+	        p.`id_product` = pl.`id_product`
+	        AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang( 'pl' ) . '
+	      )
+	      WHERE p.id_product IN(' . $associates . ')'
 		);
 		// return Db::getInstance()->executeS('
 		// SELECT p.`id_product`, p.`reference`, pl.`name`
