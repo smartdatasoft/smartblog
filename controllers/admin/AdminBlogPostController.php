@@ -517,16 +517,20 @@ class AdminBlogPostController extends ModuleAdminController
 			if (Tools::getValue('id_smart_blog_post')) {
 				$this->processUpdate();
 				$id_post = Tools::getValue('id_smart_blog_post');
-				if (Tools::getValue('associations')) {
+
+				if (Tools::getValue('associations') && Module::isInstalled( 'smartblogrelatedproducts' )) {
 					Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'smart_blog_post_related` SET `related_poroduct_id` = "' . Tools::getValue('associations') . '" WHERE `id_smart_blog_post` = ' . pSQL($id_post));
 				}
+
 			} else {
 				$add = $this->processAdd();
 				if(isset($add->id)){
 					$id_post = $add->id;
-					if (Tools::getValue('associations')) {
+
+					if (Tools::getValue('associations') && Module::isInstalled( 'smartblogrelatedproducts' )) {
 						Db::getInstance()->execute(' INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_related` (`id_smart_blog_post`, `related_poroduct_id`)VALUES("' . pSQL($id_post) . '","' . Tools::getValue('associations') . '" )');
 					}
+
 				}
 				
 			}
