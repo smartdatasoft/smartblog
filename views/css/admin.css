@@ -201,3 +201,89 @@
                     font-style: italic;
                     padding: 5px 1px;
                     font-weight: 600;
+                }
+
+                .smartblog-addons-name{
+                    margin: unset !important;
+                }
+
+                .ajax-loader-wrapper{
+                    display: none;
+                }
+
+                .ajax-loader {
+                    background: #a8a8a8;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 1; 
+                    opacity: 0.6;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+
+                  .ajax-loader img{
+                    width: 100px;
+                    z-index: 999;
+                  }
+
+                  .smartblog-addons-author img{
+                    width: 110px;
+                  }
+
+                  .smartblog-addons-author{
+                    font-style: italic;
+                  }
+
+                .smartblog_addons_install {
+                    border: 2px solid #25b9d7 !important;
+                    border-radius: 3px;
+                }
+
+                .smartblog_addons_install:hover{
+                    color: #fff  !important;
+                }
+
+                .smartblog-addon-action{
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+
+                .addons-price{
+                    color: #fff;
+                    padding: 8px;
+                    border-radius: 4px;
+                }
+
+                .pro-class{
+                    background: #25b9d7;
+                }
+
+                .free-class{
+                    background: #b269b1;
+                }
+                .smartblog-activation-sec{
+                    text-align: center;
+                    width: 100%;
+                }
+                .addons-controller-promotion {
+                    border: 3px solid;
+                    padding: 10px;
+                    font-size: 20px;
+                    color: #c31d1d;
+                    border-radius: 4px;
+                    margin-bottom: 12px;
+                    display: table;
+                    width: 100%;
+                }
+                .addons-controller-promotion p{
+                    width: 50%;
+                    float: left;
+                }
+                .smartblog-promo-text{
+                    text-align: right;
+                    font-size: 12px;
+                }

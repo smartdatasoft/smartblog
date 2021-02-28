@@ -50,6 +50,12 @@ $tabvalue = array(
 		'name'       => 'Image Type',
 	),
 	array(
+		'class_name' => 'AdminSmartblogAddons',
+		'id_parent'  => 15,
+		'module'     => 'smartblog',
+		'name'       => 'Add-ons',
+	),
+	array(
 		'class_name' => 'AdminAboutUs',
 		'id_parent'  => 15,
 		'module'     => 'smartblog',

@@ -3,10 +3,13 @@ if (!defined('_PS_VERSION_')) {
 	exit;
 }
 
+define('_MODULE_SMARTBLOG_VERSION_', '3.0.3');
 define('_MODULE_SMARTBLOG_DIR_', _PS_MODULE_DIR_ . 'smartblog/images/');
 define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules/' . 'smartblog/');
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
 define('_MODULE_SMARTBLOG_GALLARY_DIR_', _PS_MODULE_DIR_ . 'smartblog/gallary/');
+define('_MODULE_SMARTBLOG_JS_DIR_', _PS_MODULE_DIR_ . 'smartblog/views/js/');
+define('_MODULE_SMARTBLOG_CLASS_DIR_', _PS_MODULE_DIR_ . 'smartblog/classes/');
 
 
 require_once dirname(__FILE__) . '/classes/smartpromotion.php';
@@ -107,6 +110,7 @@ class smartblog extends Module
 		$ret &= $this->CreateSmartBlogTabs();
 		$ret &= $this->requiredDataInstall();
 		$ret &= $this->sampleDataInstall();
+		$ret &= $this->installDummyData();
 
 		// Later Will Be Fine Tuned
 		// *************************************
@@ -132,6 +136,7 @@ class smartblog extends Module
 	{
 		$image_types         = BlogImageType::GetImageAllType('post');
 		$id_smart_blog_posts = $this->getAllPost();
+
 		$tmp_name            = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 		$langs               = Language::getLanguages();
 		$arrayImg = array();
@@ -141,28 +146,39 @@ class smartblog extends Module
 			}
 			$arrayImg[] = $images;
 		}
+
 		$img_count = 0;
+		$dummy_post_ids = array();
 		foreach ($id_smart_blog_posts as $id_smart_blog_post) {
+			$dummy_post_ids[] = $id_smart_blog_post['id_smart_blog_post'];
+		}
+
+		
+		$dummy_post_ids = array_unique($dummy_post_ids);
+
+		foreach ($dummy_post_ids as $id_smart_blog_post) {
 			$files_to_delete = array();
-			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg';
-			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg';
+			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post . '.jpg';
+			$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post . '.jpg';
 			foreach ($langs as $l) {
-				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post['id_smart_blog_post'] . '_' . $l['id_lang'] . '.jpg';
-				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post['id_smart_blog_post'] . '_' . $l['id_lang'] . '.jpg';
+				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_' . $id_smart_blog_post . '_' . $l['id_lang'] . '.jpg';
+				$files_to_delete[] = _PS_TMP_IMG_DIR_ . 'smart_blog_post_mini_' . $id_smart_blog_post . '_' . $l['id_lang'] . '.jpg';
 			}
 			foreach ($files_to_delete as $file) {
 				if (file_exists($file)) {
 					@unlink($file);
 				}
 			}
-			Tools::Copy(__DIR__ . '/dummy_data/' . $arrayImg[$img_count], _PS_MODULE_DIR_ . '/smartblog/images/' . $id_smart_blog_post['id_smart_blog_post'] . '.jpg');
-			foreach ($image_types as $image_type) {
-				ImageManager::resize(
-					__DIR__ . '/dummy_data/' . $arrayImg[$img_count],
-					_PS_MODULE_DIR_ . 'smartblog/images/' . $id_smart_blog_post['id_smart_blog_post'] . '-' . stripslashes($image_type['type_name']) . '.jpg',
-					(int) $image_type['width'],
-					(int) $image_type['height']
-				);
+			if(isset($arrayImg[$img_count])){
+				Tools::Copy(__DIR__ . '/dummy_data/' . $arrayImg[$img_count], _PS_MODULE_DIR_ . '/smartblog/images/' . $id_smart_blog_post . '.jpg');
+				foreach ($image_types as $image_type) {
+					ImageManager::resize(
+						__DIR__ . '/dummy_data/' . $arrayImg[$img_count],
+						_PS_MODULE_DIR_ . 'smartblog/images/' . $id_smart_blog_post . '-' . stripslashes($image_type['type_name']) . '.jpg',
+						(int) $image_type['width'],
+						(int) $image_type['height']
+					);
+				}
 			}
 			$img_count = (count($arrayImg) > $img_count) ? $img_count + 1 : 0;
 		}
@@ -189,6 +205,8 @@ class smartblog extends Module
 	public function hookdisplayBackOfficeHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path . 'views/css/admin.css');
+		$this->context->controller->addJs( $this->_path . 'views/js/update.js' );
+		Media::addJsDef( array( 'sblogaddons_ajaxurl' => $this->context->link->getAdminLink( 'AdminSmartblogAddons' )));
 		$this->smarty->assign(
 			array(
 				'smartmodules_dir' => __PS_BASE_URI__,
@@ -231,9 +249,11 @@ class smartblog extends Module
 
 	public function hookDisplayDashboardTop()
 	{
-
 		$controller_name = Tools::getValue('controller');
-		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs') { ?>
+		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs' || $controller_name == 'AdminSmartblogAddons') { 
+			include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+			SmartBlogLicense::init();
+			?>
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel dashboard-presents-product-area">
@@ -264,7 +284,10 @@ class smartblog extends Module
 					</div>
 				</div>
 			</div>
-<?php
+	<?php
+		}elseif($controller_name == 'AdminDashboard'){
+			include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+			SmartBlogLicense::init();
 		}
 	}
 
@@ -658,6 +681,7 @@ class smartblog extends Module
 
 			$this->processImageUpload($_FILES);
 			$html   = $this->displayConfirmation($this->l('The settings have been updated successfully.'));
+
 			$helper = $this->SettingForm();
 			$html  .= $feed_url_html;
 			$html  .= $helper->generateForm($this->fields_form);
@@ -689,7 +713,56 @@ class smartblog extends Module
 
 				return $html;
 			}
-		} else {
+		} elseif (Tools::isSubmit('activatesmartblog')) {
+			$purchase_code = strval( Tools::getValue( 'smartblogpurchasecode' ) );
+			$action = Tools::getValue( 'licenseaction' );
+
+			if ( ! $purchase_code || empty( $purchase_code ) ) {
+				$html .= $this->displayError( $this->l( 'Please Enter a Purchase Code' ) );
+			} else {
+
+				include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
+
+				$license = new SmartBlogLicense();
+				if($action){
+					$status = $license->smartblog_activate_license( $purchase_code );
+					if ( $status ) {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', $purchase_code );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'valid' );
+						$today = date( 'Y-m-d' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', $today );
+						$html .= $this->displayConfirmation( $this->l( 'Purchase Code Activated' ) );
+					} else {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
+						$html .= $this->displayError( $this->l( 'Invalid Purchase Code. Please try again!!!' ) );
+					}
+				}else{
+					$status = $license->smartblog_deactivate_license( $purchase_code );
+					if ( $status ) {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', '' );
+						$html .= $this->displayConfirmation( $this->l( 'Purchase Code Dectivated' ) );
+					} else {
+						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
+						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
+						$html .= $this->displayError( $this->l( 'Invalid Purchase Code. Please try again!!!' ) );
+					}
+				}
+			}
+			$helper = $this->activationForm();
+			$html  .= $helper->generateForm($this->fields_form);
+			$helper = $this->SettingForm();
+			$html  .= $helper->generateForm($this->fields_form);
+			$helper = $this->regenerateform();
+			$html  .= $helper->generateForm($this->fields_form);
+			$auc    = new AdminAboutUsController();
+			return $html;
+		}else {
+
+			$helper = $this->activationForm();
+			$html  .= $helper->generateForm($this->fields_form);
 			$helper = $this->SettingForm();
 			$html  .= $helper->generateForm($this->fields_form);
 			$helper = $this->regenerateform();
@@ -860,11 +933,69 @@ class smartblog extends Module
 		}
 	}
 
+	protected function activationForm()
+	{
+		$default_lang                 = (int) Configuration::get('PS_LANG_DEFAULT');
+		$desc = '<a href="#">Click here</a> to get the Purchase Code For FREE!!!';
+		$actiontext = 'Activate';
+		$validity = Configuration::get( 'SMARTBLOG_LICENSE_VALIDITY' );
+		$action = 1;
+		if($validity=='valid'){
+			$action = 0;
+			$desc = "Your License Key Is Activated.";
+			$actiontext = 'Deactivate';
+		}
+		$this->fields_form[0]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Module Activation'),
+			),
+			'input'  => array(
+				array(
+					'type'     => 'text',
+					'label'    => $this->l('Purchase Code'),
+					'name'     => 'smartblogpurchasecode',
+					'desc'     => $desc,
+					'size'     => 70,
+					'required' => false,
+				),
+				array(
+					'type'     => 'hidden',
+					'name'     => 'licenseaction',
+				),
+			),
+			'submit' => array(
+				'title' => $actiontext,
+			),
+		);
+
+		$helper                  = new HelperForm();
+		$helper->module          = $this;
+		$helper->name_controller = $this->name;
+		$helper->token           = Tools::getAdminTokenLite('AdminModules');
+		foreach (Language::getLanguages(false) as $lang) {
+			$helper->languages[] = array(
+				'id_lang'    => $lang['id_lang'],
+				'iso_code'   => $lang['iso_code'],
+				'name'       => $lang['name'],
+				'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0),
+			);
+		}
+		$helper->currentIndex                       = AdminController::$currentIndex . '&configure=' . $this->name;
+		$helper->default_form_language              = $default_lang;
+		$helper->allow_employee_form_lang           = $default_lang;
+		$helper->toolbar_scroll                     = true;
+		$helper->show_toolbar                       = false;
+		$helper->submit_action                      = 'activatesmartblog';
+		$helper->fields_value['smartblogpurchasecode'] = Configuration::get('SMARTBLOG_LICENSE');
+		$helper->fields_value['licenseaction'] = $action;
+		return $helper;
+	}
+
 	public function SettingForm()
 	{
 		$blog_url                     = self::GetSmartBlogLink('smartblog');
 		$img_desc                     = '';
-		$img_desc                    .= '' . $this->l('Upload a Avatar from your computer. N.B : Only jpg image is allowed');
+		$img_desc                    .= '' . $this->l('Upload an Avatar from your computer. N.B : Only jpg image is allowed');
 		$img_desc                    .= '<br/><img style="clear:both;border:1px solid black;" alt="" src="' . __PS_BASE_URI__ . 'modules/smartblog/images/avatar/avatar.jpg" height="100" width="100"/><br />';
 		$default_lang                 = (int) Configuration::get('PS_LANG_DEFAULT');
 		$this->fields_form[0]['form'] = array(
@@ -1270,11 +1401,10 @@ class smartblog extends Module
 		return $my_link;
 	}
 
-	public function urlPatterWithoutId($alias, $html)
-	{
+	public function urlPatterWithoutId( $alias, $html ) {
 		$my_link = array(
 			'smartblog'                     => array(
-				'controller' => 'list',
+				'controller' => 'category',
 				'rule'       => $alias . $html,
 				'keywords'   => array(),
 				'params'     => array(
@@ -1340,15 +1470,15 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-category'            => array(
+			'smartblog_category'            => array(
 				'controller' => 'category',
 				'rule'       => $alias . '/category/{slug}' . $html,
 				'keywords'   => array(
@@ -1360,8 +1490,8 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
@@ -1441,20 +1571,6 @@ class smartblog extends Module
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-tagpost'                 => array(
-				'controller' => 'tagpost',
-				'rule'       => $alias . '/tag/{tag}' . $html,
-				'keywords'   => array(
-					'tag' => array(
-						'regexp' => '[_a-zA-Z0-9-\pL\+]*',
-						'param'  => 'tag',
-					),
-				),
-				'params'     => array(
-					'fc'     => 'module',
-					'module' => 'smartblog',
-				),
-			),
 			'smartblog_tag'                 => array(
 				'controller' => 'tagpost',
 				'rule'       => $alias . '/tag/{tag}' . $html,
@@ -1495,15 +1611,15 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-details'                => array(
+			'smartblog_post'                => array(
 				'controller' => 'details',
 				'rule'       => $alias . '/{slug}' . $html,
 				'keywords'   => array(
@@ -1515,41 +1631,18 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
 				),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
 				),
 			),
-			'module-smartblog-archivemonth'             => array(
-				'controller' => 'archivemonth',
-				'rule'       => $alias . '/archive/{year}/{month}' . $html,
-				'keywords'   => array(
-					'year' => array(
-						'regexp' => '',
-						'param'  => 'year',
-					),
-					'month' => array(
-						'regexp' => '',
-						'param'  => 'month',
-					),
-				),
-				'params'     => array(
-					'fc'     => 'module',
-					'module' => 'smartblog',
-				),
-			),
-			'module-smartblog-archive'             => array(
+			'smartblog_archive'             => array(
 				'controller' => 'archive',
-				'rule'       => $alias . '/archive/{year}' . $html,
-				'keywords'   => array(
-					'year' => array(
-						'regexp' => '',
-						'param'  => 'year',
-					),
-				),
+				'rule'       => $alias . '/archive' . $html,
+				'keywords'   => array(),
 				'params'     => array(
 					'fc'     => 'module',
 					'module' => 'smartblog',
@@ -1570,7 +1663,7 @@ class smartblog extends Module
 				),
 			),
 			'smartblog_month'               => array(
-				'controller' => 'archivemonth',
+				'controller' => 'archive',
 				'rule'       => $alias . '/archive/{year}/{month}' . $html,
 				'keywords'   => array(
 					'year'  => array(
