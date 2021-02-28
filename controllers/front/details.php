@@ -202,9 +202,11 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 		}
 		$this->context->smarty->assign(SmartBlogPost::GetPostMetaByPost($id_post));
 		$templatepath = $this->get_template_path("posts.tpl","loveus");
-		
-
-		$this->setTemplate("module:smartblog/views/templates/front/themes/".$templatepath."/posts.tpl");
+		if("outside"==$templatepath){
+			$this->setTemplate("module:smartblog/views/templates/front/themes/".$templatepath."/posts.tpl");
+		}else{
+			$this->setTemplate("module:smartblog/views/templates/front/posts.tpl");
+		}
 	}
 
 	public function get_template_path($tplName, $themeName )
@@ -246,7 +248,15 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 				}
 			}
 		}
-		return $themeName;
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/views/templates/front/themes/'$themeName."/" .$tplName )) {
+			return $themeName;
+		}
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/views/templates/front/themes/default/' .$tplName )) {
+			return "default";
+		}
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/views/templates/front/' .$tplName )) {
+			return "outside";
+		}
 	}
 
 	/**
