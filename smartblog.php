@@ -3,7 +3,7 @@ if (!defined('_PS_VERSION_')) {
 	exit;
 }
 
-define('_MODULE_SMARTBLOG_VERSION_', '4.0.0');
+define('_MODULE_SMARTBLOG_VERSION_', '3.0.5');
 define('_MODULE_SMARTBLOG_DIR_', _PS_MODULE_DIR_ . 'smartblog/images/');
 define('_MODULE_SMARTBLOG_URL_', _PS_BASE_URL_SSL_ . __PS_BASE_URI__ . '/modules/' . 'smartblog/');
 define('_MODULE_SMARTBLOG_IMAGE_URL_', _MODULE_SMARTBLOG_URL_ . 'images/');
@@ -36,7 +36,7 @@ class smartblog extends Module
 
 		$this->name          = 'smartblog';
 		$this->tab           = 'front_office_features';
-		$this->version       = '4.0.0';
+		$this->version       = '3.0.5';
 		$this->author        = 'SmartDataSoft';
 		$this->need_upgrade  = true;
 		$this->controllers   = array('category', 'details', 'search', 'tagpost', "archivemonth");
