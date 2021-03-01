@@ -1374,9 +1374,8 @@ span.smart-blog-reply-icon {
     padding-top: 10px;
 }
 #module-smartblog-details .articleContent img{
-    width: 100%;
-    height: 100%;
-    max-height: 400px;
+    max-width: 100%;
+    height: auto;
 }
 /* Category Breadcrumbs */
 .smartg-blog-category-banner-area {
