@@ -974,6 +974,10 @@ class SmartBlogPost extends ObjectModel {
 
 	public static function getAccessoriesLight( $id_lang, $id_smart_blog_post ) {
 
+		if(!Module::isInstalled( 'smartblogrelatedproducts' )){
+			return array();
+		}
+
 		if ( empty( $id_smart_blog_post ) ) {
 			return array();
 		}
