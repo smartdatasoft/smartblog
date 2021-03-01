@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
     <div class="col-lg-10 module-catalog-page">
-    {if $smartblog_validity == "invalid"}
+    {if $smartblog_validity == "invalid" || $smartblog_validity == ""}
     <div class="addons-controller-promotion">
       <p>You need to <a href="{$link->getAdminLink('AdminModules')}&configure=smartblog">activate license</a> to use these addons.</p>
       <p class="smartblog-promo-text">Don't have a purchase code??? <a href="#">GET ONE FOR FREE!!!</a></p>
@@ -43,7 +43,7 @@
                         <span class="pt-2">Price: ${$value.price}</span>
                      {/if}
                    </div>
-                   {if $smartblog_validity == "invalid"}
+                   {if $smartblog_validity == "invalid" || $smartblog_validity == ""}
                         <div class="btn-group module-actions">
                            <a href="{$link->getAdminLink('AdminModules')}&configure=smartblog" class="smartblog-activation-sec">Activate SmartBlog to Get The Add-on</a> 
                         </div>

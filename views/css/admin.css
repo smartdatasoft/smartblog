@@ -118,14 +118,14 @@
                 }
                 
                 .classy-update-bt {
-                    background-color: #2664d2 !important;
-                    border-color: #2664d2 !important;
+                    background-color: #009ee1 !important;
+                    border-color: #009ee1 !important;
                 }
                 
                 .classy-update-bt:hover {
                     background-color: #fff !important;
-                    border-color: #2664d2 !important;
-                    color: #2664d2 !important;
+                    border-color: #009ee1 !important;
+                    color: #009ee1 !important;
                 }
                 
                 .update-header-text-and-version h4 {
@@ -139,7 +139,7 @@
                     line-height: 6px;
                     font-size: 12px;
                     font-weight: 600;
-                    background: #0f2585;
+                    background: #009ee1;
                     display: table;
                     padding: 8px;
                     color: white;
