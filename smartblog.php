@@ -153,7 +153,7 @@ class smartblog extends Module
 			$dummy_post_ids[] = $id_smart_blog_post['id_smart_blog_post'];
 		}
 
-		
+
 		$dummy_post_ids = array_unique($dummy_post_ids);
 
 		foreach ($dummy_post_ids as $id_smart_blog_post) {
@@ -169,7 +169,7 @@ class smartblog extends Module
 					@unlink($file);
 				}
 			}
-			if(isset($arrayImg[$img_count])){
+			if (isset($arrayImg[$img_count])) {
 				Tools::Copy(__DIR__ . '/dummy_data/' . $arrayImg[$img_count], _PS_MODULE_DIR_ . '/smartblog/images/' . $id_smart_blog_post . '.jpg');
 				foreach ($image_types as $image_type) {
 					ImageManager::resize(
@@ -205,8 +205,8 @@ class smartblog extends Module
 	public function hookdisplayBackOfficeHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path . 'views/css/admin.css');
-		$this->context->controller->addJs( $this->_path . 'views/js/update.js' );
-		Media::addJsDef( array( 'sblogaddons_ajaxurl' => $this->context->link->getAdminLink( 'AdminSmartblogAddons' )));
+		$this->context->controller->addJs($this->_path . 'views/js/update.js');
+		Media::addJsDef(array('sblogdown_ajaxurl' => $this->context->link->getAdminLink('AdminSmartblogAddons')));
 		$this->smarty->assign(
 			array(
 				'smartmodules_dir' => __PS_BASE_URI__,
@@ -250,10 +250,10 @@ class smartblog extends Module
 	public function hookDisplayDashboardTop()
 	{
 		$controller_name = Tools::getValue('controller');
-		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs' || $controller_name == 'AdminSmartblogAddons') { 
+		if ($controller_name == 'AdminBlogCategory' || $controller_name == 'AdminBlogPost' || $controller_name == 'AdminAboutUs' || $controller_name == 'AdminSmartblogAddons') {
 			include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
 			SmartBlogLicense::init();
-			?>
+?>
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="panel dashboard-presents-product-area">
@@ -284,8 +284,8 @@ class smartblog extends Module
 					</div>
 				</div>
 			</div>
-	<?php
-		}elseif($controller_name == 'AdminDashboard'){
+<?php
+		} elseif ($controller_name == 'AdminDashboard') {
 			include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
 			SmartBlogLicense::init();
 		}
@@ -714,40 +714,40 @@ class smartblog extends Module
 				return $html;
 			}
 		} elseif (Tools::isSubmit('activatesmartblog')) {
-			$purchase_code = strval( Tools::getValue( 'smartblogpurchasecode' ) );
-			$action = Tools::getValue( 'licenseaction' );
+			$purchase_code = strval(Tools::getValue('smartblogpurchasecode'));
+			$action = Tools::getValue('licenseaction');
 
-			if ( ! $purchase_code || empty( $purchase_code ) ) {
-				$html .= $this->displayError( $this->l( 'Please Enter a Purchase Code' ) );
+			if (!$purchase_code || empty($purchase_code)) {
+				$html .= $this->displayError($this->l('Please Enter a Purchase Code'));
 			} else {
 
 				include_once _MODULE_SMARTBLOG_CLASS_DIR_ . 'SmartBlogLicense.php';
 
 				$license = new SmartBlogLicense();
-				if($action){
-					$status = $license->smartblog_activate_license( $purchase_code );
-					if ( $status ) {
-						Configuration::updateValue( 'SMARTBLOG_LICENSE', $purchase_code );
-						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'valid' );
-						$today = date( 'Y-m-d' );
-						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', $today );
-						$html .= $this->displayConfirmation( $this->l( 'Purchase Code Activated' ) );
+				if ($action) {
+					$status = $license->smartblog_activate_license($purchase_code);
+					if ($status) {
+						Configuration::updateValue('SMARTBLOG_LICENSE', $purchase_code);
+						Configuration::updateValue('SMARTBLOG_LICENSE_VALIDITY', 'valid');
+						$today = date('Y-m-d');
+						Configuration::updateValue('SMARTBLOG_LICENSE_DATE', $today);
+						$html .= $this->displayConfirmation($this->l('Purchase Code Activated'));
 					} else {
-						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
-						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
-						$html .= $this->displayError( $this->l( 'Invalid Purchase Code. Please try again!!!' ) );
+						Configuration::updateValue('SMARTBLOG_LICENSE', '');
+						Configuration::updateValue('SMARTBLOG_LICENSE_VALIDITY', 'invalid');
+						$html .= $this->displayError($this->l('Invalid Purchase Code. Please try again!!!'));
 					}
-				}else{
-					$status = $license->smartblog_deactivate_license( $purchase_code );
-					if ( $status ) {
-						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
-						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
-						Configuration::updateValue( 'SMARTBLOG_LICENSE_DATE', '' );
-						$html .= $this->displayConfirmation( $this->l( 'Purchase Code Dectivated' ) );
+				} else {
+					$status = $license->smartblog_deactivate_license($purchase_code);
+					if ($status) {
+						Configuration::updateValue('SMARTBLOG_LICENSE', '');
+						Configuration::updateValue('SMARTBLOG_LICENSE_VALIDITY', 'invalid');
+						Configuration::updateValue('SMARTBLOG_LICENSE_DATE', '');
+						$html .= $this->displayConfirmation($this->l('Purchase Code Dectivated'));
 					} else {
-						Configuration::updateValue( 'SMARTBLOG_LICENSE', '' );
-						Configuration::updateValue( 'SMARTBLOG_LICENSE_VALIDITY', 'invalid' );
-						$html .= $this->displayError( $this->l( 'Invalid Purchase Code. Please try again!!!' ) );
+						Configuration::updateValue('SMARTBLOG_LICENSE', '');
+						Configuration::updateValue('SMARTBLOG_LICENSE_VALIDITY', 'invalid');
+						$html .= $this->displayError($this->l('Invalid Purchase Code. Please try again!!!'));
 					}
 				}
 			}
@@ -759,7 +759,7 @@ class smartblog extends Module
 			$html  .= $helper->generateForm($this->fields_form);
 			$auc    = new AdminAboutUsController();
 			return $html;
-		}else {
+		} else {
 
 			$helper = $this->activationForm();
 			$html  .= $helper->generateForm($this->fields_form);
@@ -938,9 +938,9 @@ class smartblog extends Module
 		$default_lang                 = (int) Configuration::get('PS_LANG_DEFAULT');
 		$desc = '<a href="#">Click here</a> to get the Purchase Code For FREE!!!';
 		$actiontext = 'Activate';
-		$validity = Configuration::get( 'SMARTBLOG_LICENSE_VALIDITY' );
+		$validity = Configuration::get('SMARTBLOG_LICENSE_VALIDITY');
 		$action = 1;
-		if($validity=='valid'){
+		if ($validity == 'valid') {
 			$action = 0;
 			$desc = "Your License Key Is Activated.";
 			$actiontext = 'Deactivate';
@@ -1401,7 +1401,8 @@ class smartblog extends Module
 		return $my_link;
 	}
 
-	public function urlPatterWithoutId( $alias, $html ) {
+	public function urlPatterWithoutId($alias, $html)
+	{
 		$my_link = array(
 			'smartblog'                     => array(
 				'controller' => 'category',
@@ -1470,8 +1471,8 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
-					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				),
 				'params'     => array(
 					'fc'     => 'module',
@@ -1490,8 +1491,8 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
-					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				),
 				'params'     => array(
 					'fc'     => 'module',
@@ -1611,8 +1612,8 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
-					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				),
 				'params'     => array(
 					'fc'     => 'module',
@@ -1631,8 +1632,8 @@ class smartblog extends Module
 						'regexp' => '[_a-zA-Z0-9-\pL]*',
 						'param'  => 'slug',
 					),
-					'meta_keywords' => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
-					'meta_title'    => array( 'regexp' => '[_a-zA-Z0-9-\pL]*' ),
+					'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+					'meta_title'    => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				),
 				'params'     => array(
 					'fc'     => 'module',
