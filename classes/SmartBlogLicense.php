@@ -18,28 +18,25 @@ class SmartBlogLicense
 	 */
 	public function __construct($scheduled = 1)
 	{
-		Configuration::updateValue('SMARTBLOG_DLINK', "");
+		// Configuration::updateValue('SMARTBLOG_DLINK', "");
 
 		if ($scheduled) {
 			$purchase_code = Configuration::get('SMARTBLOG_LICENSE');
 			$todate        = Configuration::get('SMARTBLOG_LICENSE_DATE');
-			if ($purchase_code && $todate) {
+			$stable = Configuration::get('SMARTBLOG_STABLE');
+			$d_link = Configuration::get('SMARTBLOG_DLINK');
 
-				$stable = Configuration::get('SMARTBLOG_STABLE');
-				$d_link = Configuration::get('SMARTBLOG_DLINK');
+			if (isset($stable) && isset($d_link)) {
 
-				if (isset($stable) && isset($d_link)) {
-
-					if ($stable == '' && $d_link == '') {
-						$today = date('Y-m-d');
-						// if ( $today > $todate ) {
+				if ($stable == '' && $d_link == '') {
+					$today = date('Y-m-d');
+					if ( $today > $todate ) {
 						Configuration::updateValue('SMARTBLOG_LICENSE_DATE', $today);
 						$this->smartblog_get_update($purchase_code);
-						// }
-					} else {
-
-						$this->show_notification($stable, $d_link);
 					}
+				} else {
+
+					$this->show_notification($stable, $d_link);
 				}
 			}
 		}
@@ -104,6 +101,7 @@ class SmartBlogLicense
 		$responsearray = Tools::jsonDecode($response, true);
 
 		if ($responsearray['success'] && $responsearray['license'] == 'valid') {
+			Configuration::updateValue('SMARTBLOG_LICENSE_DATE', "");
 			return true;
 		} else {
 			return false;
@@ -133,6 +131,8 @@ class SmartBlogLicense
 
 		$responsearray = Tools::jsonDecode($response, true);
 		if ($responsearray['success'] && $responsearray['license'] == 'deactivated') {
+			Configuration::updateValue('SMARTBLOG_STABLE', "");
+			Configuration::updateValue('SMARTBLOG_DLINK', "");
 			return true;
 		} else {
 			return false;
