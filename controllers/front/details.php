@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2015 PrestaShop
  *
@@ -24,9 +25,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once dirname( __FILE__ ) . '/../../classes/controllers/FrontController.php';
-
-class smartblogDetailsModuleFrontController extends smartblogModuleFrontController {
+require_once dirname(__FILE__) . '/../../classes/controllers/FrontController.php';
+class smartblogDetailsModuleFrontController extends smartblogModuleFrontController
+{
 
 
 	public $ssl     = false;
@@ -35,136 +36,135 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 	protected $post;
 
 
-	public function canonicalRedirection( $canonicalURL = '' ) {
-		if ( Tools::getValue( 'live_edit' ) ) {
+	public function canonicalRedirection($canonicalURL = '')
+	{
+		if (Tools::getValue('live_edit')) {
 			return;
 		}
 
-		$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
-		$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+		$protocol_link    = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 
-		$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
-		if ( Validate::isLoadedObject( $this->post ) && ( $canonicalURL = $smartbloglink->getSmartBlogPostLink( $this->post, $this->post->link_rewrite ) ) ) {
-			parent::canonicalRedirection( $canonicalURL );
+		$smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
+		if (Validate::isLoadedObject($this->post) && ($canonicalURL = $smartbloglink->getSmartBlogPostLink($this->post, $this->post->link_rewrite))) {
+			parent::canonicalRedirection($canonicalURL);
 		}
 	}
 
 
-	public function init() {
+	public function init()
+	{
 
 		parent::init();
 	}
 
+	public function initContent()
+	{
 
-
-
-
-	public function initContent() {
-
-		$smartblogurlpattern = (int) Configuration::get( 'smartblogurlpattern' );
+		$smartblogurlpattern = (int) Configuration::get('smartblogurlpattern');
 
 		// now we will check whihc option we need to url rewrite
 		$id_post = null;
-		switch ( $smartblogurlpattern ) {
+		switch ($smartblogurlpattern) {
 
 			case 1:
 				$SmartBlog = new smartblog();
-				$slug      = Tools::getValue( 'slug' );
-				$id_post   = $SmartBlog->slug2id( $slug );
+				$slug      = Tools::getValue('slug');
+				$id_post   = $SmartBlog->slug2id($slug);
 
 				break;
 			case 2:
-				$id_post = pSQL( Tools::getvalue( 'id_post' ) );
+				$id_post = pSQL(Tools::getvalue('id_post'));
 				break;
 			case 3:
-				$id_post = pSQL( Tools::getvalue( 'id_post' ) );
+				$id_post = pSQL(Tools::getvalue('id_post'));
 				break;
 
 			default:
-				$id_post = pSQL( Tools::getvalue( 'id_post' ) );
+				$id_post = pSQL(Tools::getvalue('id_post'));
 		}
 
-		if ( $id_post ) {
+		if ($id_post) {
 
-			$this->post = new SmartBlogPost( $id_post, true, $this->context->language->id, $this->context->shop->id );
+			$this->post = new SmartBlogPost($id_post, true, $this->context->language->id, $this->context->shop->id);
 
 			$this->post_id        = $id_post;
-				$meta_title       = $this->post->meta_title;
-				$meta_description = $this->post->meta_description;
-				$meta_keyword     = $this->post->meta_keyword;
+			$meta_title       = $this->post->meta_title;
+			$meta_description = $this->post->meta_description;
+			$meta_keyword     = $this->post->meta_keyword;
 
-			if ( ! $this->post->active ) {
+			if (!$this->post->active) {
 				$this->post = array();
 			}
 
-			if ( new DateTime() >= new DateTime( $this->post->created ) ) {
+			if (new DateTime() >= new DateTime($this->post->created)) {
 				$published = true;
 			} else {
 				$published = false;
 			}
 		}
 
-		if ( ! Validate::isLoadedObject( $this->post ) ) {
-			header( 'HTTP/1.1 404 Not Found' );
-			header( 'Status: 404 Not Found' );
-			$this->errors[] = Tools::displayError( 'Post not found' );
+		if (!Validate::isLoadedObject($this->post)) {
+			header('HTTP/1.1 404 Not Found');
+			header('Status: 404 Not Found');
+			$this->errors[] = Tools::displayError('Post not found');
 		}
 
 		parent::initContent();
 
 		// $this->canonicalRedirection();
 
-		if ( ! $this->errors ) {
-			Hook::exec( 'actionsbsingle', array( 'id_post' => $this->post ) );
+		if (!$this->errors) {
+			Hook::exec('actionsbsingle', array('id_post' => $this->post));
 			$blogcomment   = new Blogcomment();
 			$SmartBlogPost = new SmartBlogPost();
 			$BlogCategory  = new BlogCategory();
 
 			$id_lang = $this->context->language->id;
 
-			$post = $SmartBlogPost->getPost( $id_post, $id_lang );
+			$post = $SmartBlogPost->getPost($id_post, $id_lang);
 
 			$title_category    = array();
-			$getPostCategories = $this->getPostCategories( $id_post );
+			$getPostCategories = $this->getPostCategories($id_post);
 
 			$i = 0;
-			foreach ( $getPostCategories as $category ) {
-				$title_category[] = $BlogCategory->getNameCategory( $getPostCategories[ $i ]['id_smart_blog_category'] );
+			foreach ($getPostCategories as $category) {
+				$title_category[] = $BlogCategory->getNameCategory($getPostCategories[$i]['id_smart_blog_category']);
 				$i++;
 			}
 
-			$post['post_img'] = null;// --extra added
+			$post['post_img'] = null; // --extra added
 
-			$tags         = $SmartBlogPost->getProductTags( $id_post );
-			$comment      = $blogcomment->getComment( $id_post );
-			$countcomment = $blogcomment->getToltalComment( $id_post );
+			$tags         = $SmartBlogPost->getProductTags($id_post);
+			$comment      = $blogcomment->getComment($id_post);
+			$countcomment = $blogcomment->getToltalComment($id_post);
 			$id_cate      = $post['id_category'];
 			// $title_category = $BlogCategory->getNameCategory($id_cate);
-			if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $id_post . '.jpg' ) ) {
+			if (file_exists(_PS_MODULE_DIR_ . 'smartblog/images/' . $id_post . '.jpg')) {
 				$post_img = $id_post;
 			} else {
 				$post_img = 'no';
 			}
 
-			$posts_previous = SmartBlogPost::getPreviousPostsById( $id_lang, $id_post );
+			$posts_previous = SmartBlogPost::getPreviousPostsById($id_lang, $id_post);
 
-			$posts_next = SmartBlogPost::getNextPostsById( $id_lang, $id_post );
+			$posts_next = SmartBlogPost::getNextPostsById($id_lang, $id_post);
 
-			 /* Server Params */
-			$protocol_link    = ( Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
-			$protocol_content = ( isset( $useSSL ) and $useSSL and Configuration::get( 'PS_SSL_ENABLED' ) ) ? 'https://' : 'http://';
+			/* Server Params */
+			$protocol_link    = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+			$protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 
-			$smartbloglink = new SmartBlogLink( $protocol_link, $protocol_content );
+			$smartbloglink = new SmartBlogLink($protocol_link, $protocol_content);
 
-			SmartBlogPost::postViewed( $id_post );
+			SmartBlogPost::postViewed($id_post);
 
 			// here we can give validation if category page or other page it will show
-			$post['date'] = Smartblog::displayDate( $post['created'] );
+			$post['date'] = Smartblog::displayDate($post['created']);
 
 			$this->context->smarty->assign(
 				array(
-					'link_rewrite_'              => SmartBlogPost::GetPostSlugById( $id_post, $this->context->language->id ),
-					'displayBackOfficeSmartBlog' => Hook::exec( 'displayBackOfficeSmartBlog' ),
+					'link_rewrite_'              => SmartBlogPost::GetPostSlugById($id_post, $this->context->language->id),
+					'displayBackOfficeSmartBlog' => Hook::exec('displayBackOfficeSmartBlog'),
 					'smartbloglink'              => $smartbloglink,
 					'baseDir'                    => _PS_BASE_URL_ . __PS_BASE_URI__,
 					'modules_dir'                => _PS_BASE_URL_ . __PS_BASE_URI__ . 'modules/',
@@ -172,25 +172,25 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 					'posts_next'                 => $posts_next,
 					'posts_previous'             => $posts_previous,
 					'comments'                   => $comment,
-					'enableguestcomment'         => Configuration::get( 'smartenableguestcomment' ),
+					'enableguestcomment'         => Configuration::get('smartenableguestcomment'),
 					'is_looged'                  => $this->context->customer->isLogged(),
 					'is_looged_id'               => $this->context->customer->id,
 					'is_looged_email'            => $this->context->customer->email,
 					'is_looged_fname'            => $this->context->customer->firstname,
 					'tags'                       => $tags,
-					'title_category'             => ( isset( $title_category[0][0]['name'] ) ) ? $title_category[0][0]['name'] : '',
-					'cat_link_rewrite'           => ( isset( $title_category[0][0]['link_rewrite'] ) ) ? $title_category[0][0]['link_rewrite'] : '',
+					'title_category'             => (isset($title_category[0][0]['name'])) ? $title_category[0][0]['name'] : '',
+					'cat_link_rewrite'           => (isset($title_category[0][0]['link_rewrite'])) ? $title_category[0][0]['link_rewrite'] : '',
 					'meta_title'                 => $post['meta_title'],
 					'post_active'                => $post['active'],
 					'content'                    => $post['content'],
 					'id_post'                    => $post['id_post'],
-					'smartshowauthorstyle'       => Configuration::get( 'smartshowauthorstyle' ),
-					'smartshowauthor'            => Configuration::get( 'smartshowauthor' ),
-					'created'                    => Smartblog::displayDate( $post['created'] ),
+					'smartshowauthorstyle'       => Configuration::get('smartshowauthorstyle'),
+					'smartshowauthor'            => Configuration::get('smartshowauthor'),
+					'created'                    => Smartblog::displayDate($post['created']),
 					'firstname'                  => $post['firstname'],
 					'lastname'                   => $post['lastname'],
-					'smartcustomcss'             => Configuration::get( 'smartcustomcss' ),
-					'smartshownoimg'             => Configuration::get( 'smartshownoimg' ),
+					'smartcustomcss'             => Configuration::get('smartcustomcss'),
+					'smartshownoimg'             => Configuration::get('smartshownoimg'),
 					'comment_status'             => $post['comment_status'],
 					'countcomment'               => $countcomment,
 					'post_img'                   => $post_img,
@@ -198,71 +198,119 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 					'id_category'                => $post['id_category'],
 				)
 			);
-			$this->context->smarty->assign( 'HOOK_SMART_BLOG_POST_FOOTER', Hook::exec( 'displaySmartAfterPost' ) );
+			$this->context->smarty->assign('HOOK_SMART_BLOG_POST_FOOTER', Hook::exec('displaySmartAfterPost'));
 		}
-		$this->context->smarty->assign( SmartBlogPost::GetPostMetaByPost( $id_post ) );
-
-		$this->setTemplate( 'module:smartblog/views/templates/front/posts.tpl' );
+		$this->context->smarty->assign(SmartBlogPost::GetPostMetaByPost($id_post));
+		$templatepath = $this->get_template_path("posts.tpl","loveus");
+		if("outside"==$templatepath){
+			$this->setTemplate("module:smartblog/views/templates/front/themes/".$templatepath."/posts.tpl");
+		}else{
+			$this->setTemplate("module:smartblog/views/templates/front/posts.tpl");
+		}
 	}
 
-	  /**
-	   * Sets default medias for this controller
-	   */
-	public function setMedia() {
-		parent::setMedia();
+	public function get_template_path($tplName, $themeName )
 
-		if ( ! $this->useMobileTheme() ) {
+	{
+		$directory= _PS_THEME_DIR_."modules/smartblog/views/templates/front/themes/";
+		$directory_p= _PS_PARENT_THEME_DIR_."modules/smartblog/views/templates/front/themes/";
+		$fileConfig = '/config/theme.yml';
+		if(is_dir($directory)){
+			$scanned_directory = array_diff(scandir($directory), array('..', '.'));
+		}
+		if(is_dir($directory_p)){
+			$scanned_directory_p = array_diff(scandir($directory_p), array('..', '.'));
+		}
+		$childthemeArray=array();
+		if(!empty($scanned_directory)){
+			sort($scanned_directory);
+			foreach($scanned_directory as $dir){
+				if (file_exists($directory . $dir . $fileConfig)) {
+					$parentAttributes = Symfony\Component\Yaml\Yaml::parse(file_get_contents($directory_p . $dir . $fileConfig));
+					if($parentAttributes['parent']==$themeName){
+						if (file_exists($directory_p . $dir ."/". $tplName )) {
+							return $dir;
+						}
+					}
+				}
+			}
+		}
+		if(!empty($scanned_directory_p)){
+			sort($scanned_directory_p);
+			foreach($scanned_directory_p as $dir){
+				if (file_exists($directory_p . $dir . $fileConfig)) {
+					$parentAttributes = Symfony\Component\Yaml\Yaml::parse(file_get_contents($directory_p . $dir . $fileConfig));
+					if($parentAttributes['parent']==$themeName){
+						if (file_exists($directory_p . $dir ."/". $tplName )) {
+							return $dir;
+						}
+					}
+				}
+			}
+		}
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/views/templates/front/themes/'$themeName."/" .$tplName )) {
+			return $themeName;
+		}
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/views/templates/front/themes/default/' .$tplName )) {
+			return "default";
+		}
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/views/templates/front/' .$tplName )) {
+			return "outside";
+		}
+	}
+
+	/**
+	 * Sets default medias for this controller
+	 */
+	public function setMedia()
+	{
+		parent::setMedia();
+		if (!$this->useMobileTheme()) {
 			// TODO : check why cluetip css is include without js file
 			$this->addCSS(
 				array(
-
 					_THEME_CSS_DIR_ . 'product_list.css' => 'all',
 				)
 			);
 		}
-
 	}
 
-	public function _posts() {
+	public function _posts()
+	{
 
 		$SmartBlogPost = new SmartBlogPost();
-
-		if ( Tools::isSubmit( 'addComment' ) ) {
+		if (Tools::isSubmit('addComment')) {
 			$id_lang = $this->context->language->id;
-			$id_post = pSQL( Tools::getValue( 'id_post' ) );
-			$post    = $SmartBlogPost->getPost( $id_post, $id_lang );
-			if ( $post['comment_status'] == 1 ) {
-
-				$name    = pSQL( Tools::getValue( 'name' ) );
-				$comment = pSQL( Tools::getValue( 'comment' ) );
-				$mail    = pSQL( Tools::getValue( 'mail' ) );
-				if ( Tools::getValue( 'mail' ) == '' ) {
+			$id_post = pSQL(Tools::getValue('id_post'));
+			$post    = $SmartBlogPost->getPost($id_post, $id_lang);
+			if ($post['comment_status'] == 1) {
+				$name    = pSQL(Tools::getValue('name'));
+				$comment = pSQL(Tools::getValue('comment'));
+				$mail    = pSQL(Tools::getValue('mail'));
+				if (Tools::getValue('mail') == '') {
 					$website = '#';
 				} else {
-					$website = pSQL( Tools::getValue( 'website' ) );
+					$website = pSQL(Tools::getValue('website'));
 				}
-
-				$id_parent_post = (int) Tools::getValue( 'id_parent_post' );
-
+				$id_parent_post = (int) Tools::getValue('id_parent_post');
 				$comments = array();
-
-				if ( empty( $name ) ) {
-					$this->_report .= '<p class="error">' . $this->module->l( 'Name is required' ) . '</p>';
-				} elseif ( empty( $comment ) ) {
-					$this->_report .= '<p class="error">' . $this->module->l( 'Comment is required' ) . '</p>';
-				} elseif ( ! filter_var( $mail, FILTER_VALIDATE_EMAIL ) ) {
-					$this->_report .= '<p class="error">' . $this->module->l( 'E-mail is not valid' ) . '</p>';
+				if (empty($name)) {
+					$this->_report .= '<p class="error">' . $this->module->l('Name is required') . '</p>';
+				} elseif (empty($comment)) {
+					$this->_report .= '<p class="error">' . $this->module->l('Comment is required') . '</p>';
+				} elseif (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+					$this->_report .= '<p class="error">' . $this->module->l('E-mail is not valid') . '</p>';
 				} else {
 					$comments['name']    = $name;
 					$comments['mail']    = $mail;
 					$comments['comment'] = $comment;
 					$comments['website'] = $website;
-					if ( ! $id_parent_post = pSQL( Tools::getvalue( 'comment_parent' ) ) ) {
+					if (!$id_parent_post = pSQL(Tools::getvalue('comment_parent'))) {
 						$id_parent_post = 0;
 					}
-					$value = Configuration::get( 'smartacceptcomment' );
-					if ( Configuration::get( 'smartacceptcomment' ) != '' && Configuration::get( 'smartacceptcomment' ) != null ) {
-						$value = Configuration::get( 'smartacceptcomment' );
+					$value = Configuration::get('smartacceptcomment');
+					if (Configuration::get('smartacceptcomment') != '' && Configuration::get('smartacceptcomment') != null) {
+						$value = Configuration::get('smartacceptcomment');
 					} else {
 						$value = 0;
 					}
@@ -274,53 +322,56 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 					$bc->website   = $website;
 					$bc->id_parent = (int) $id_parent_post;
 					$bc->active    = (int) $value;
-					if ( $bc->add() ) {
-						$this->_report .= '<p class="success">' . $this->module->l( 'Comment added !' ) . '</p>';
-						Hook::exec( 'actionsbpostcomment', array( 'bc' => $bc ) );
-						$this->smartsendMail( $name, $mail, $comment );
+					if ($bc->add()) {
+						$this->_report .= '<p class="success">' . $this->module->l('Comment added !') . '</p>';
+						Hook::exec('actionsbpostcomment', array('bc' => $bc));
+						$this->smartsendMail($name, $mail, $comment);
 					}
 				}
 			}
 		}
 	}
 
-	private function smartsendMail( $sname, $semailAddr, $scomment, $slink = null ) {
-		$name           = Tools::stripslashes( $sname );
+	private function smartsendMail($sname, $semailAddr, $scomment, $slink = null)
+	{
+		$name           = Tools::stripslashes($sname);
 		$e_body         = 'You have Received a New Comment In Your Blog Post From ' . $name . '. Comment: ' . $scomment . ' .Your Can reply Here : ' . $slink . '';
-		$emailAddr      = Tools::stripslashes( $semailAddr );
-		$comment        = Tools::stripslashes( $scomment );
+		$emailAddr      = Tools::stripslashes($semailAddr);
+		$comment        = Tools::stripslashes($scomment);
 		$subject        = 'New Comment Posted';
-		$id_lang        = (int) Configuration::get( 'PS_LANG_DEFAULT' );
-		$to             = Configuration::get( 'PS_SHOP_EMAIL' );
+		$id_lang        = (int) Configuration::get('PS_LANG_DEFAULT');
+		$to             = Configuration::get('PS_SHOP_EMAIL');
 		$contactMessage = "
 				$comment 
 				Name: $name
-				IP: " . ( ( version_compare( _PS_VERSION_, '1.3.0.0', '<' ) ) ? $_SERVER['REMOTE_ADDR'] : Tools::getRemoteAddr() );
-		if ( Mail::Send(
+				IP: " . ((version_compare(_PS_VERSION_, '1.3.0.0', '<')) ? $_SERVER['REMOTE_ADDR'] : Tools::getRemoteAddr());
+		if (Mail::Send(
 			$id_lang,
 			'contact',
 			$subject,
 			array(
-				'{message}' => nl2br( $e_body ),
+				'{message}' => nl2br($e_body),
 				'{email}'   => $emailAddr,
 			),
 			$to,
 			null,
 			$emailAddr,
 			$name
-		) ) {
+		)) {
 			return true;
 		}
 	}
 
-	public function getPost() {
+	public function getPost()
+	{
 		return $this->post;
 	}
 
-	public function getCover() {
+	public function getCover()
+	{
 
-		if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $this->post->id . '.jpg' ) ) {
-			
+		if (file_exists(_PS_MODULE_DIR_ . 'smartblog/images/' . $this->post->id . '.jpg')) {
+
 			$post_img = $this->post->id . '.jpg';
 		} else {
 			$post_img = 'no';
@@ -328,18 +379,19 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 		return $post_img;
 	}
 
-	public function getPostCategories( $id_post ) {
+	public function getPostCategories($id_post)
+	{
 		$sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'smart_blog_post_category` WHERE id_smart_blog_post =  ' . (int) $id_post;
-		return Db::getInstance( _PS_USE_SQL_SLAVE_ )->executeS( $sql );
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
-	public static function getCategoryDetail( $id ) {
+	public static function getCategoryDetail($id)
+	{
 		$id_lang = (int) Context::getContext()->language->id;
 		$sql     = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl, ' . _DB_PREFIX_ . 'smart_blog_category p 
-                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . pSQL( $id ) . ' AND pl.id_lang = ' . $id_lang;
-		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
+                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . pSQL($id) . ' AND pl.id_lang = ' . $id_lang;
+		if (!$result = Db::getInstance()->executeS($sql)) {
 			return false;
 		}
-		return Db::getInstance()->executeS( $sql );
+		return Db::getInstance()->executeS($sql);
 	}
-
 }

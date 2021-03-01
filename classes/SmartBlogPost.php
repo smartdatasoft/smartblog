@@ -305,21 +305,10 @@ class SmartBlogPost extends ObjectModel {
 		$BlogCategory = new BlogCategory();
 		$i            = 0;
 		foreach ( $posts as $post ) {
-
-			// if ( new DateTime() >= new DateTime( $post['created'] ) ) {
-
-			// } else {
-			// die( __DIR__ . ' ' . __FILE__ . ' ' . __LINE__ );
-
-			// continue;
-			// }
-
 			$selected_cat = BlogCategory::getPostCategoriesFull( (int) $post['id_smart_blog_post'], Context::getContext()->language->id );
-
 			$result[ $i ]['id_category']      = 1;
 			$result[ $i ]['cat_link_rewrite'] = '';
 			$result[ $i ]['cat_name']         = '';
-
 			foreach ( $selected_cat as $key => $value ) {
 				$result[ $i ]['id_category']      = $selected_cat[ $key ]['id_category'];
 				$result[ $i ]['cat_link_rewrite'] = $selected_cat[ $key ]['link_rewrite'];
@@ -336,7 +325,6 @@ class SmartBlogPost extends ObjectModel {
 			$result[ $i ]['meta_keyword']      = $post['meta_keyword'];
 			$result[ $i ]['link_rewrite']      = $post['link_rewrite'];
 			$employee                          = new Employee( $post['id_author'] );
-
 			$result[ $i ]['lastname']  = $employee->lastname;
 			$result[ $i ]['firstname'] = $employee->firstname;
 			if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $post['id_smart_blog_post'] . '.jpg' ) ) {
@@ -365,9 +353,7 @@ class SmartBlogPost extends ObjectModel {
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;
 		}
-
 		$return_count = 0;
-
 		foreach ( $posts as $post ) {
 			if ( new DateTime() >= new DateTime( $post['created'] ) ) {
 				$return_count++;
@@ -375,7 +361,6 @@ class SmartBlogPost extends ObjectModel {
 				continue;
 			}
 		}
-
 		return $return_count;
 	}
 
@@ -393,9 +378,6 @@ class SmartBlogPost extends ObjectModel {
                 WHERE pl.id_lang=' . pSQL( $id_lang ) . '
                 AND p.active= 1 AND pc.id_smart_blog_category = ' . pSQL( $id_category );
 		return Db::getInstance()->getValue( $sql );
-		// if (!$posts = Db::getInstance()->executeS($sql))
-		// return false;
-		// return count($posts);
 	}
 
 	public static function addTags( $id_lang = null, $id_post, $tag_list, $separator = ',' ) {
@@ -407,11 +389,9 @@ class SmartBlogPost extends ObjectModel {
 		if ( ! Validate::isUnsignedId( $id_lang ) ) {
 			return false;
 		}
-
 		if ( ! is_array( $tag_list ) ) {
 			$tag_list = array_filter( array_unique( array_map( 'trim', preg_split( '#\\' . $separator . '#', $tag_list, null, PREG_SPLIT_NO_EMPTY ) ) ) );
 		}
-
 		$list = array();
 		if ( is_array( $tag_list ) ) {
 			foreach ( $tag_list as $tag ) {
@@ -440,17 +420,17 @@ class SmartBlogPost extends ObjectModel {
 			$data .= '(' . (int) $tag . ',' . (int) $id_post . '),';
 		}
 		$data = rtrim( $data, ',' );
-		
-
 		return Db::getInstance()->execute(
 			'
 		INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_tag` (`id_tag`, `id_post`)
 		VALUES ' . $data
 		);
 	}
+
 	public static function subStr( $string, $length ) {
 		return strlen( $string ) > $length ? substr( $string, 0, $length ) . '...' : $string;
 	}
+
 	public function add( $autodate = true, $null_values = false ) {
 		if ( ! parent::add( $autodate, $null_values ) ) {
 			return false;
@@ -607,17 +587,11 @@ class SmartBlogPost extends ObjectModel {
 			$result[ $i ]['meta_description']  = $post['meta_description'];
 			$result[ $i ]['content']           = $post['content'];
 			$result[ $i ]['meta_keyword']      = $post['meta_keyword'];
-			// $result[$i]['id_category'] = $post['id_category'];
 			$result[ $i ]['id_category']  = 1;
 			$result[ $i ]['link_rewrite'] = $post['link_rewrite'];
-
-			// $result[$i]['cat_name'] = $BlogCategory->getCatName($post['id_category']);
-			// $result[$i]['cat_link_rewrite'] = $BlogCategory->getCatLinkRewrite($post['id_category']);
 			$result[ $i ]['cat_name']         = 'uncategories';
 			$result[ $i ]['cat_link_rewrite'] = 'uncategories';
-
 			$employee = new Employee( $post['id_author'] );
-
 			$result[ $i ]['lastname']  = $employee->lastname;
 			$result[ $i ]['firstname'] = $employee->firstname;
 			if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $post['id_smart_blog_post'] . '.jpg' ) ) {
@@ -627,12 +601,11 @@ class SmartBlogPost extends ObjectModel {
 				$result[ $i ]['post_img'] = 'no';
 			}
 			$result[ $i ]['created'] = $post['created'];
-
 			$i++;
 		}
 		return $result;
 	}
-	// ($month = null, $year = null, $limit_start = 0, $limit = 5)
+	
 	public static function getArchiveResult( $month = null, $year = null, $day = null, $limit_start = 0, $limit = 5 ) {
 		$BlogCategory = '';
 		$day          = pSQL( $day );
@@ -668,7 +641,6 @@ class SmartBlogPost extends ObjectModel {
 		$BlogCategory = new BlogCategory();
 		$i            = 0;
 		foreach ( $posts as $post ) {
-
 			$result[ $i ]['id_post']           = $post['id_smart_blog_post'];
 			$result[ $i ]['viewed']            = $post['viewed'];
 			$result[ $i ]['is_featured']       = $post['is_featured'];
@@ -679,10 +651,8 @@ class SmartBlogPost extends ObjectModel {
 			$result[ $i ]['meta_keyword']      = $post['meta_keyword'];
 			$result[ $i ]['id_category']       = $post['id_category'];
 			$result[ $i ]['link_rewrite']      = $post['link_rewrite'];
-			//$result[ $i ]['cat_name']          = $BlogCategory->getCatName( $post['id_smart_blog_post'] );
 			$result[ $i ]['cat_link_rewrite']  = $BlogCategory->getCatLinkRewrite( $post['id_smart_blog_post'] );
 			$employee                          = new Employee( $post['id_author'] );
-
 			$result[ $i ]['lastname']  = $employee->lastname;
 			$result[ $i ]['firstname'] = $employee->firstname;
 			if ( file_exists( _PS_MODULE_DIR_ . 'smartblog/images/' . $post['id_smart_blog_post'] . '.jpg' ) ) {
@@ -754,11 +724,9 @@ class SmartBlogPost extends ObjectModel {
 			$months = self::getArchiveM( $value['year'] );
 			$j      = 0;
 			foreach ( $months as $month ) {
-
 				$monthNum  = $month['month'];
 				$dateObj   = DateTime::createFromFormat( '!m', $monthNum );
 				$monthName = $dateObj->format( 'F' );
-
 				$result['children'][ $i ]['children'][ $j ] = array(
 					'id'          => $count,
 					'name'        => $monthName,
@@ -776,21 +744,6 @@ class SmartBlogPost extends ObjectModel {
 				$count++;
 				$days = self::getArchiveD( $month['month'], $value['year'] );
 				$k    = 0;
-				// foreach ($days as $day) {
-				// $time = strtotime($value['year'].'/'.$month['month'].'/'.$day['day']);
-
-				// $newformat = date('jS \of F Y',$time);
-				// $result['children'][$i]['children'][$j]['children'][$k] = array(
-				// 'id' => $count,
-				// 'name' => $newformat,
-				// 'link' => smartblog::GetSmartBlogLink('smartblog_day',array('year'=>$value['year'],'month'=>$month['month'],'day'=>$day['day'])),
-				// 'level_depth' => '',
-				// 'desc' => '',
-				// 'children' => array()
-				// );
-				// $count++;
-				// $k++;
-				// }
 				$j++;
 			}
 			$i++;
@@ -996,16 +949,6 @@ class SmartBlogPost extends ObjectModel {
                 LIMIT ' . $limit;
 
 		$posts = Db::getInstance( _PS_USE_SQL_SLAVE_ )->executeS( $sql );
-		/*
-		if (empty($posts)) {
-			$sql2 = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN
-				' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN
-				' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post  AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
-				WHERE pl.id_lang=' . $id_lang_defaut . '
-				AND p.active= 1 ORDER BY '.$orderby.' '.$orderway.'
-				LIMIT ' . pSQL($limit);
-			$posts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql2);
-		}*/
 		$i = 0;
 		foreach ( $posts as $post ) {
 			$result[ $i ]['id']                = $post['id_smart_blog_post'];
@@ -1029,26 +972,6 @@ class SmartBlogPost extends ObjectModel {
 		return $result;
 	}
 
-	/*
-	public function getImages($id_lang, $id_product)
-	{
-		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = ' . (int) $id_product_attribute : '');
-		$sql = 'SELECT *
-					FROM `' . _DB_PREFIX_ . 'image` i
-					LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image`)';
-
-		if ($id_product_attribute)
-			$sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
-
-		$sql .= ' WHERE i.`id_product` = ' . (int) $id_product . ' AND il.`id_lang` = ' . (int) $id_lang . $attribute_filter . '
-					ORDER BY i.`position` ASC';
-		$images = Db::getInstance()->executeS($sql);
-
-
-		foreach ($images as $k => $image)
-			$images[$k] = new Image($image['id_image']);
-	}
-	*/
 	public static function getAccessoriesLight( $id_lang, $id_smart_blog_post ) {
 
 		if(!Module::isInstalled( 'smartblogrelatedproducts' )){
@@ -1063,30 +986,16 @@ class SmartBlogPost extends ObjectModel {
 		if ( empty( $associates ) ) {
 			return array();
 		}
-
 		$associates = str_replace( '-', ',', Tools::substr( $associates, 0, -1 ) );
-
 		return Db::getInstance()->executeS(
-			'
-	      SELECT p.`id_product`, p.`reference`, pl.`name`
-	      FROM `' . _DB_PREFIX_ . 'product` p      
-	      LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
-	        p.`id_product` = pl.`id_product`
-	        AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang( 'pl' ) . '
-	      )
-	      WHERE p.id_product IN(' . $associates . ')'
+			'SELECT p.`id_product`, p.`reference`, pl.`name`
+		      FROM `' . _DB_PREFIX_ . 'product` p      
+		      LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
+		        p.`id_product` = pl.`id_product`
+		        AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang( 'pl' ) . '
+		      )
+		      WHERE p.id_product IN(' . $associates . ')'
 		);
-		// return Db::getInstance()->executeS('
-		// SELECT p.`id_product`, p.`reference`, pl.`name`
-		// FROM `'._DB_PREFIX_.'smart_blog_product_related` as b_pr
-		// LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= b_pr.`id_product`)
-		//
-		// LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-		// p.`id_product` = pl.`id_product`
-		// AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-		// )
-		// WHERE `id_smart_blog_post` = '.(int)$id_smart_blog_post
-		// );
 	}
 
 	/**
@@ -1147,26 +1056,24 @@ class SmartBlogPost extends ObjectModel {
 
 		if ( count( $productIds ) ) {
 			$assembler = new ProductAssembler( Context::getcontext() );
+			$presenterFactory     = new ProductPresenterFactory( Context::getcontext() );
+			$presentationSettings = $presenterFactory->getPresentationSettings();
+			$presenter            = new ProductListingPresenter(
+				new ImageRetriever(
+					Context::getcontext()->link
+				),
+				Context::getcontext()->link,
+				new PriceFormatter(),
+				new ProductColorsRetriever(),
+				Context::getcontext()->getTranslator()
+			);
 
-				$presenterFactory     = new ProductPresenterFactory( Context::getcontext() );
-				$presentationSettings = $presenterFactory->getPresentationSettings();
-				$presenter            = new ProductListingPresenter(
-					new ImageRetriever(
-						Context::getcontext()->link
-					),
-					Context::getcontext()->link,
-					new PriceFormatter(),
-					new ProductColorsRetriever(),
-					Context::getcontext()->getTranslator()
-				);
-
-				$productsViewed = array();
+			$productsViewed = array();
 			if ( is_array( $productIds ) && count( $productIds ) ) {
 				foreach ( $productIds as $productId ) {
 					if ( ! $productId ) {
 						continue;
 					}
-
 					$productsViewed[] = $presenter->present(
 						$presentationSettings,
 						$assembler->assembleProduct(
