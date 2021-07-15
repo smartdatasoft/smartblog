@@ -478,7 +478,7 @@ class smartblog extends Module
 		for ($i = 1; $i <= 4; $i++) {
 			Db::getInstance()->Execute(
 				'INSERT INTO `' . _DB_PREFIX_ . 'smart_blog_post_shop`(`id_smart_blog_post`, `id_shop`) 
-        VALUES(' . $i . ',' . (int) $this->smart_shop_id . ')'
+        VALUES(' . (int) $i . ',' . (int) $this->smart_shop_id . ')'
 			);
 		}
 		for ($i = 1; $i <= 7; $i++) {
@@ -815,7 +815,7 @@ class smartblog extends Module
 				foreach ($shop_list as $shop_id) {
 					$sql = 'SELECT hm.`id_module`
                         FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
-                        WHERE hm.`id_module` = ' . (int) ($id_module) . ' AND h.`id_hook` = ' . $id_hook . '
+                        WHERE hm.`id_module` = ' . (int) ($id_module) . ' AND h.`id_hook` = ' . (int) $id_hook . '
                         AND h.`id_hook` = hm.`id_hook` AND `id_shop` = ' . (int) $shop_id;
 					if (Db::getInstance()->getRow($sql)) {
 						continue;

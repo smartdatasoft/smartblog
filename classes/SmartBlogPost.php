@@ -164,7 +164,7 @@ class SmartBlogPost extends ObjectModel {
 			$id_post = 1;
 		}
 
-		$sql             = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_related WHERE id_smart_blog_post = ' . $id_post;
+		$sql             = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_related WHERE id_smart_blog_post = ' . (int) $id_post;
 		$postDetails     = Db::getInstance()->executeS( $sql );
 		if(empty($postDetails)){
 			return array();
@@ -222,8 +222,8 @@ class SmartBlogPost extends ObjectModel {
 		$sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post 
-                WHERE pl.id_lang=' . $id_lang . '
-                AND p.active= 1 AND p.id_smart_blog_post = ' . $id_post;
+                WHERE pl.id_lang=' . (int) $id_lang . '
+                AND p.active= 1 AND p.id_smart_blog_post = ' . (int) $id_post;
 
 		if ( ! $post = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -296,7 +296,7 @@ class SmartBlogPost extends ObjectModel {
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
                 WHERE pl.id_lang=' . $id_lang . '
-                AND p.active= 1 ORDER BY p.id_smart_blog_post DESC LIMIT ' . $limit_start . ',' . $limit;
+                AND p.active= 1 ORDER BY p.id_smart_blog_post DESC LIMIT ' . (int) $limit_start . ',' . (int) $limit;
 
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -360,7 +360,7 @@ class SmartBlogPost extends ObjectModel {
 		$sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
-                WHERE pl.id_lang=' . $id_lang . '
+                WHERE pl.id_lang=' . (int) $id_lang . '
                 AND p.active= 1';
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -390,8 +390,8 @@ class SmartBlogPost extends ObjectModel {
                 ' . _DB_PREFIX_ . 'smart_blog_post_category pc ON p.id_smart_blog_post=pc.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON pc.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '
-                AND p.active= 1 AND pc.id_smart_blog_category = ' . pSQL( $id_category );
+                WHERE pl.id_lang=' .  (int)  $id_lang  . '
+                AND p.active= 1 AND pc.id_smart_blog_category = ' .  (int) $id_category;
 		return Db::getInstance()->getValue( $sql );
 		// if (!$posts = Db::getInstance()->executeS($sql))
 		// return false;
@@ -462,7 +462,7 @@ class SmartBlogPost extends ObjectModel {
 
 	public static function postViewed( $id_post ) {
 
-		$sql = 'UPDATE ' . _DB_PREFIX_ . 'smart_blog_post as p SET p.viewed = (p.viewed+1) where p.id_smart_blog_post = ' . $id_post;
+		$sql = 'UPDATE ' . _DB_PREFIX_ . 'smart_blog_post as p SET p.viewed = (p.viewed+1) where p.id_smart_blog_post = ' . (int) $id_post;
 
 		return Db::getInstance()->execute( $sql );
 
@@ -498,7 +498,7 @@ class SmartBlogPost extends ObjectModel {
 			'
 		SELECT  t.`name`,t.`slug`
 		FROM ' . _DB_PREFIX_ . 'smart_blog_tag t
-		LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . $id_lang . ')
+		LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . (int) $id_lang . ')
 		WHERE pt.`id_post`=' . (int) $id_post
 		) ) {
 			return false;
@@ -514,7 +514,7 @@ class SmartBlogPost extends ObjectModel {
 		if ( ! $tmp = Db::getInstance( _PS_USE_SQL_SLAVE_ )->executeS(
 			'SELECT  t.`name`
             FROM ' . _DB_PREFIX_ . 'smart_blog_tag t
-            LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . $id_lang . ')
+            LEFT JOIN ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON (pt.id_tag = t.id_tag AND t.id_lang = ' . (int) $id_lang . ')
             WHERE pt.`id_post`=' . (int) $id_post
 		) ) {
 			return false;
@@ -589,7 +589,7 @@ class SmartBlogPost extends ObjectModel {
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON p.id_smart_blog_post=ps.id_smart_blog_post  AND  ps.id_shop = ' . (int) Context::getContext()->shop->id . ' INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_tag pt ON pl.id_smart_blog_post = pt.id_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_tag t ON pt.id_tag=t.id_tag 
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '  AND p.active = 1 	 		
+                WHERE pl.id_lang="' . pSQL( $id_lang ) . '"  AND p.active = 1 	 		
                 AND t.slug="' . pSQL( $tags ) . '"';
 
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
@@ -635,14 +635,16 @@ class SmartBlogPost extends ObjectModel {
 	// ($month = null, $year = null, $limit_start = 0, $limit = 5)
 	public static function getArchiveResult( $month = null, $year = null, $day = null, $limit_start = 0, $limit = 5 ) {
 		$BlogCategory = '';
-		$day          = pSQL( $day );
-		$month        = pSQL( $month );
-		$year         = pSQL( $year );
+
+		$day          = (int) $day;
+		$month        = (int) $month;
+		$year         = (int) $year;
 		$result       = array();
 		$id_lang      = (int) Context::getContext()->language->id;
+		$id_lang      = (int) $id_lang;
 		if ( $month != '' and $month != null and $year != '' and $year != null and $day != '' and $day != null ) {
 			$sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post s INNER JOIN ' . _DB_PREFIX_ . 'smart_blog_post_lang sl ON s.id_smart_blog_post = sl.id_smart_blog_post
-                 and sl.id_lang = ' . $id_lang . ' INNER JOIN ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON ps.id_smart_blog_post = s.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
+                 and sl.id_lang = ' . (int) $id_lang . ' INNER JOIN ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON ps.id_smart_blog_post = s.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
             where s.active = 1 and DAY(s.created) = ' . $day . ' and MONTH(s.created) = ' . $month . ' AND YEAR(s.created) = ' . $year . ' ORDER BY s.id_smart_blog_post DESC';
 		} elseif ( $month != '' and $month != null and $year != '' and $year != null ) {
 			$sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post s INNER JOIN ' . _DB_PREFIX_ . 'smart_blog_post_lang sl ON s.id_smart_blog_post = sl.id_smart_blog_post
@@ -701,7 +703,7 @@ class SmartBlogPost extends ObjectModel {
 	public static function getArchiveD( $month, $year ) {
 
 		$sql = 'SELECT DAY(p.created) as day FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON p.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . ' 
-                 where MONTH(p.created) = ' . pSQL( $month ) . ' AND YEAR(p.created) = ' . pSQL( $year ) . ' GROUP BY DAY(p.created)';
+                 where MONTH(p.created) = "' . pSQL( $month ) . '" AND YEAR(p.created) = "' . pSQL( $year ) . '" GROUP BY DAY(p.created)';
 
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -713,7 +715,7 @@ class SmartBlogPost extends ObjectModel {
 	public static function getArchiveM( $year ) {
 
 		$sql = 'SELECT MONTH(p.created) as month FROM ' . _DB_PREFIX_ . 'smart_blog_post p  INNER JOIN ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON p.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . ' 
-                 where YEAR(p.created) = ' . pSQL( $year ) . ' GROUP BY MONTH(p.created)';
+                 where YEAR(p.created) = "' . pSQL( $year ) . '" GROUP BY MONTH(p.created)';
 
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -832,7 +834,7 @@ class SmartBlogPost extends ObjectModel {
 		}
 		$keyword = pSQL( $keyword );
 		$sql     = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_lang pl, ' . _DB_PREFIX_ . 'smart_blog_post p 
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '  AND p.active = 1 
+                WHERE pl.id_lang= "' . pSQL( $id_lang ) . '"  AND p.active = 1 
                 AND pl.id_smart_blog_post=p.id_smart_blog_post AND
                 (pl.meta_title LIKE \'%' . $keyword . '%\' OR
                  pl.meta_keyword LIKE \'%' . $keyword . '%\' OR
@@ -886,7 +888,7 @@ class SmartBlogPost extends ObjectModel {
 		}
 		$keyword = pSQL( $keyword );
 		$sql     = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_lang pl, ' . _DB_PREFIX_ . 'smart_blog_post p 
-                WHERE pl.id_lang=' . $id_lang . '
+                WHERE pl.id_lang=' . (int) $id_lang . '
                 AND pl.id_smart_blog_post=p.id_smart_blog_post AND p.active = 1 AND 
                 (pl.meta_title LIKE \'%' . $keyword . '%\' OR
                  pl.meta_keyword LIKE \'%' . $keyword . '%\' OR
@@ -916,8 +918,8 @@ class SmartBlogPost extends ObjectModel {
 		$sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post 
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '
-                AND p.active= 1 AND p.id_smart_blog_post = ' . pSQL( $id_post );
+                WHERE pl.id_lang="' . pSQL( $id_lang ) . '"
+                AND p.active= 1 AND p.id_smart_blog_post = ' .  (int) $id_post;
 
 		if ( ! $post = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -935,8 +937,8 @@ class SmartBlogPost extends ObjectModel {
 		$sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post 
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '
-                AND p.active= 1 AND p.id_smart_blog_post = ' . pSQL( $id_post );
+                WHERE pl.id_lang= "' . pSQL( $id_lang ) . '"
+                AND p.active= 1 AND p.id_smart_blog_post = ' .  (int) $id_post;
 
 		if ( ! $post = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -1058,7 +1060,7 @@ class SmartBlogPost extends ObjectModel {
 		if ( empty( $id_smart_blog_post ) ) {
 			return array();
 		}
-		$associates = Db::getInstance()->getValue( 'SELECT `related_poroduct_id` FROM `' . _DB_PREFIX_ . "smart_blog_post_related` WHERE `id_smart_blog_post`={$id_smart_blog_post}" );
+		$associates = Db::getInstance()->getValue( 'SELECT `related_poroduct_id` FROM `' . _DB_PREFIX_ . 'smart_blog_post_related` WHERE `id_smart_blog_post`='.  (int) $id_smart_blog_post);
 
 		if ( empty( $associates ) ) {
 			return array();
@@ -1120,7 +1122,7 @@ class SmartBlogPost extends ObjectModel {
 
 		$sql = 'SELECT  p.id_smart_blog_post,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post 
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '  AND p.active = 1 AND p.id_smart_blog_post = ' . pSQL( $id_post ) . '+1';
+                WHERE pl.id_lang="' . pSQL( $id_lang ) . '"  AND p.active = 1 AND p.id_smart_blog_post = ' .  (int) $id_post . '+1';
 
 		if ( ! $posts_next = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -1132,7 +1134,7 @@ class SmartBlogPost extends ObjectModel {
 
 		$sql = 'SELECT  p.id_smart_blog_post,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post 
-                WHERE pl.id_lang=' . pSQL( $id_lang ) . '  AND p.active = 1 AND p.id_smart_blog_post = ' . pSQL( $id_post ) . '-1';
+                WHERE pl.id_lang= "' . pSQL( $id_lang ) . '"  AND p.active = 1 AND p.id_smart_blog_post = ' .  (int) $id_post . '-1';
 
 		if ( ! $posts_previous = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -1216,7 +1218,7 @@ class SmartBlogPost extends ObjectModel {
 					$sql1 = 'SELECT  p.id_smart_blog_post,p.created,pl.meta_title,pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_post p INNER JOIN 
                   ' . _DB_PREFIX_ . 'smart_blog_post_lang pl ON p.id_smart_blog_post=pl.id_smart_blog_post INNER JOIN 
                   ' . _DB_PREFIX_ . 'smart_blog_post_shop ps ON pl.id_smart_blog_post = ps.id_smart_blog_post AND ps.id_shop = ' . (int) Context::getContext()->shop->id . '
-                  WHERE pl.id_lang=' . pSQL( $id_lang ) . '  AND p.active = 1  AND p.`id_smart_blog_post` IN(' . $post['id_smart_blog_post'] . ') ORDER BY p.id_smart_blog_post DESC LIMIT 0,' . $limit;
+                  WHERE pl.id_lang= "' . pSQL( $id_lang ) . '"  AND p.active = 1  AND p.`id_smart_blog_post` IN(' . $post['id_smart_blog_post'] . ') ORDER BY p.id_smart_blog_post DESC LIMIT 0,' . (int) $limit;
 
 					$post           = Db::getInstance()->executeS( $sql1 );
 					$relatedPosts[] = $post[0];

@@ -67,7 +67,7 @@ class Blogcomment extends ObjectModel
         if ($id_parent == '' && $id_parent == null) {
             $id_parent = 0;
         }
-        $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'smart_blog_comment(id_post,name,email,content,website,id_parent, active) VALUES (' . (int) $id_post . ', \'' . $comment['name'] . '\', \'' . $comment['mail'] . '\', \'' . $comment['comment'] . '\', \'' . $comment['website'] . '\', ' . $id_parent . ', ' . $value . ')';
+        $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'smart_blog_comment(id_post,name,email,content,website,id_parent, active) VALUES (' . (int) $id_post . ', \'' . $comment['name'] . '\', \'' . $comment['mail'] . '\', \'' . $comment['comment'] . '\', \'' . $comment['website'] . '\', ' .  (int) $id_parent . ', ' . $value . ')';
         if (!Db::getInstance()->execute($sql))
             return false;
     }
@@ -78,7 +78,7 @@ class Blogcomment extends ObjectModel
         $child_comments = NULL;
 
         $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_comment 
-                WHERE active=1 AND id_parent=' . $id_parent;
+                WHERE active=1 AND id_parent=' .  (int) $id_parent;
         if (!$child_comments = DB::getInstance()->executeS($sql))
             return false;
         $j = 0;
@@ -104,7 +104,7 @@ class Blogcomment extends ObjectModel
     {
  
         $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_comment 
-                WHERE active=1  AND id_parent=0 AND id_post=' . $id_post;
+                WHERE active=1  AND id_parent=0 AND id_post=' .  (int) $id_post;
         if (!$comments = DB::getInstance()->executeS($sql))
             return false;
         $i = 0;
@@ -160,7 +160,7 @@ class Blogcomment extends ObjectModel
     {
 
         $sql = 'SELECT id_post FROM ' . _DB_PREFIX_ . 'smart_blog_comment 
-                WHERE id_post=' . $id . ' 
+                WHERE id_post=' .  (int) $id . ' 
                 AND active=1';
         if (!$posts = Db::getInstance()->executeS($sql))
             return false;

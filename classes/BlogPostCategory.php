@@ -45,8 +45,8 @@ class BlogPostCategory extends ObjectModel
         $sql = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_post_lang pl INNER JOIN 
                 ' . _DB_PREFIX_ . 'smart_blog_post p ON pl.id_smart_blog_post=p.id_smart_blog_post INNER JOIN
                 ' . _DB_PREFIX_ . 'smart_blog_post_category pc ON p.id_smart_blog_post=pc.id_smart_blog_post
-                WHERE pl.id_lang=' . $id_lang . ' and p.active = 1 AND pc.id_smart_blog_category = ' . $id_category . '
-                ORDER BY p.id_smart_blog_post DESC LIMIT ' . $limit_start . ',' . $limit;
+                WHERE pl.id_lang=' . (int) $id_lang . ' and p.active = 1 AND pc.id_smart_blog_category = ' . (int) $id_category . '
+                ORDER BY p.id_smart_blog_post DESC LIMIT ' . (int) $limit_start . ',' . (int) $limit;
 
         if (!$posts = Db::getInstance()->executeS($sql))
             return false;

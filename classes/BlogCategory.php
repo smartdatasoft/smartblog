@@ -368,7 +368,7 @@ class BlogCategory extends ObjectModel {
 	}
 
 	public static function getAllChildCategory( $id_smart_blog_category, $current ) {
-		$sql = 'select id_smart_blog_category from `' . _DB_PREFIX_ . 'smart_blog_category` where id_smart_blog_category = ' . $id_smart_blog_category;
+		$sql = 'select id_smart_blog_category from `' . _DB_PREFIX_ . 'smart_blog_category` where id_smart_blog_category = ' . (int) $id_smart_blog_category;
 
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -388,7 +388,7 @@ class BlogCategory extends ObjectModel {
 	}
 
 	public static function haveChildCategory( $id_smart_blog_category ) {
-		$sql = 'select count(id_smart_blog_category) as count from `' . _DB_PREFIX_ . 'smart_blog_category` where id_parent = ' . $id_smart_blog_category;
+		$sql = 'select count(id_smart_blog_category) as count from `' . _DB_PREFIX_ . 'smart_blog_category` where id_parent = ' . (int) $id_smart_blog_category;
 
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -500,7 +500,7 @@ class BlogCategory extends ObjectModel {
 	public static function getNameCategory( $id ) {
 		$id_lang = (int) Context::getContext()->language->id;
 		$sql     = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl, ' . _DB_PREFIX_ . 'smart_blog_category p 
-                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
+                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . (int) $id . ' AND pl.id_lang = ' . (int) $id_lang;
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
 		}
@@ -629,7 +629,7 @@ class BlogCategory extends ObjectModel {
 	}
 
 	public static function getPostByCategory( $id_smart_blog_category ) {
-		$sql = 'select count(id_smart_blog_post) as count from `' . _DB_PREFIX_ . 'smart_blog_post_category` where id_smart_blog_category = ' . $id_smart_blog_category;
+		$sql = 'select count(id_smart_blog_post) as count from `' . _DB_PREFIX_ . 'smart_blog_post_category` where id_smart_blog_category = ' . (int) $id_smart_blog_category;
 
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -728,7 +728,7 @@ class BlogCategory extends ObjectModel {
 
 	public static function getCatName( $id ) {
 		$id_lang = (int) Context::getContext()->language->id;
-		$sql     = 'SELECT pl.name FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl join ' . _DB_PREFIX_ . 'smart_blog_post_category as p3 on pl.id_smart_blog_category=p3.id_smart_blog_category  WHERE pl.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
+		$sql     = 'SELECT pl.name FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl join ' . _DB_PREFIX_ . 'smart_blog_post_category as p3 on pl.id_smart_blog_category=p3.id_smart_blog_category  WHERE pl.id_smart_blog_category=' . (int) $id . ' AND pl.id_lang = ' . (int) $id_lang;
 
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
@@ -738,7 +738,7 @@ class BlogCategory extends ObjectModel {
 
 	public static function getCatLinkRewrite( $id ) {
 		$id_lang = (int) Context::getContext()->language->id;
-		$sql     = 'SELECT pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl join ' . _DB_PREFIX_ . 'smart_blog_post_category as p3 on pl.id_smart_blog_category=p3.id_smart_blog_category  WHERE pl.id_smart_blog_category=' . $id . ' AND pl.id_lang = ' . $id_lang;
+		$sql     = 'SELECT pl.link_rewrite FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl join ' . _DB_PREFIX_ . 'smart_blog_post_category as p3 on pl.id_smart_blog_category=p3.id_smart_blog_category  WHERE pl.id_smart_blog_category=' . (int) $id . ' AND pl.id_lang = ' . (int) $id_lang;
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
 		}
@@ -768,7 +768,7 @@ class BlogCategory extends ObjectModel {
                 FROM `' . _DB_PREFIX_ . 'smart_blog_category` c
                 ' . ( $use_shop_restriction ? Shop::addSqlAssociation( 'smart_blog_category', 'c' ) : '' ) . '
                 LEFT JOIN `' . _DB_PREFIX_ . 'smart_blog_category_lang` cl ON c.`id_smart_blog_category` = cl.`id_smart_blog_category`              
-                WHERE 1 ' . $sql_filter . ' ' . ( $id_lang ? 'AND cl.`id_lang` = ' . (int) $id_lang : '' ) . '
+                WHERE 1 ' . $sql_filter . ' ' . ( (int) $id_lang ? 'AND cl.`id_lang` = ' . (int) $id_lang : '' ) . '
                 ' . ( $active ? ' AND c.`active` = 1' : '' ) . '              
                 ' . ( $sql_limit != '' ? $sql_limit : '' )
 			);
@@ -811,8 +811,8 @@ class BlogCategory extends ObjectModel {
 			if ( is_array( $cats ) ) {
 				foreach ( $cats as $cat ) {
 					$insert[] = array(
-						'id_smart_blog_category' => $cat,
-						'id_smart_blog_post'     => $id_post,
+						'id_smart_blog_category' =>  (int) $cat,
+						'id_smart_blog_post'     =>  (int) $id_post,
 					);
 				}
 

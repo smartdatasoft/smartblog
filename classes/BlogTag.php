@@ -59,7 +59,7 @@ class BlogTag extends ObjectModel {
 			$id_lang = (int) Context::getContext()->language->id;
 		}
 
-		$sql = 'SELECT id_tag FROM ' . _DB_PREFIX_ . 'smart_blog_tag WHERE id_lang=' . $id_lang . ' AND name="' . $tag . '"';
+		$sql = 'SELECT id_tag FROM ' . _DB_PREFIX_ . 'smart_blog_tag WHERE id_lang=' . (int) $id_lang . ' AND name="' . $tag . '"';
 
 		if ( ! $posts = Db::getInstance()->executeS( $sql ) ) {
 			return false;

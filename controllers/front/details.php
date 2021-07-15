@@ -335,7 +335,7 @@ class smartblogDetailsModuleFrontController extends smartblogModuleFrontControll
 	public static function getCategoryDetail( $id ) {
 		$id_lang = (int) Context::getContext()->language->id;
 		$sql     = 'SELECT * FROM ' . _DB_PREFIX_ . 'smart_blog_category_lang pl, ' . _DB_PREFIX_ . 'smart_blog_category p 
-                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category=' . pSQL( $id ) . ' AND pl.id_lang = ' . $id_lang;
+                       WHERE pl.id_smart_blog_category=p.id_smart_blog_category AND p.id_smart_blog_category= "' . pSQL( $id ) . '" AND pl.id_lang = ' . (int) $id_lang;
 		if ( ! $result = Db::getInstance()->executeS( $sql ) ) {
 			return false;
 		}
