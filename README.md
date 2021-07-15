@@ -4,6 +4,7 @@
 
 ## SmartBlog is now compatible with the best Elementor Based Page Builder for PrestaShop [Crazyelements](https://classydevs.com/crazy-elements/?utm_source=smartblog_github_crazy&utm_medium=smartblog_github_redme&utm_campaign=smartblog_github_redme&utm_term=smartblog_github_redme). 
 
+You can edit your blog content with Crazy Elements.
 
 We will release more features and updates on the version available on ClassyDevs
 
