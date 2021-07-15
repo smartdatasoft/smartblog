@@ -936,7 +936,7 @@ class smartblog extends Module
 	protected function activationForm()
 	{
 		$default_lang                 = (int) Configuration::get('PS_LANG_DEFAULT');
-		$desc = '<a href="#">Click here</a> to get the Purchase Code For FREE!!!';
+		$desc = '<a href="https://classydevs.com/free-modules/smartblog/">Click here</a> to get the Purchase Code For FREE!!!';
 		$actiontext = 'Activate';
 		$validity = Configuration::get('SMARTBLOG_LICENSE_VALIDITY');
 		$action = 1;
