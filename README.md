@@ -1,3 +1,5 @@
+# SmartBlog is the First and Best Prestashop Free Module for Blog
+
 # SmartBlog Version 4.0.6 is Available on [ClassyDevs](https://classydevs.com/free-modules/smartblog/?utm_source=sbloggithub&utm_medium=sbloggithubredmi&utm_campaign=sbloggithubredmi)
 
 ## Demo Link https://smartblog.classydevs.com/
