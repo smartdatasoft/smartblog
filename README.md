@@ -1,8 +1,15 @@
 # SmartBlog is the First and Best Prestashop Free Module for Blog
 
-# SmartBlog Version 4.0.6 is Available on [ClassyDevs](https://classydevs.com/free-modules/smartblog/?utm_source=sbloggithub&utm_medium=sbloggithubredmi&utm_campaign=sbloggithubredmi)
+# SmartBlog Version 4.0.7 is Available on [ClassyDevs](https://classydevs.com/free-modules/smartblog/?utm_source=sbloggithub&utm_medium=sbloggithubredmi&utm_campaign=sbloggithubredmi)
 
 ## Demo Link https://smartblog.classydevs.com/
+
+#[MyShop Multipurpose PrestaShop Free Theme](https://classydevs.com/myshop-multipurpose-prestashop-free-theme-download/?utm_source=sbloggithubmyshopbanner&utm_medium=sbloggithubredmimyshopbanner&utm_campaign=sbloggithubredmimyshopbanner) is compatible with SmartBlog. 
+
+This is the best multipurpose PrestaShop theme which is for FREE!!! Included with Free Crazyelements and SmartBlog
+## Demo Link https://myshop.classydevs.net/en/smartblog.html
+
+<a href="https://classydevs.com/free-modules/classy-product-extra-tab/?utm_source=sbloggithubredmimyshopbanner&utm_medium=sbloggithubredmimyshopbanner&utm_campaign=sbloggithubredmimyshopbanner" target="_blank"><img src="https://github.com/smartdatasoft/smartblog/blob/develop/myshop_multipurpose_prestashop_theme_free.jpeg" alt="Logo" width="500" height="500"></a>
 
 ## SmartBlog is now compatible with the best Elementor Based Page Builder for PrestaShop [Crazyelements](https://classydevs.com/crazy-elements/?utm_source=smartblog_github_crazy&utm_medium=smartblog_github_redme&utm_campaign=smartblog_github_redme&utm_term=smartblog_github_redme). 
 
