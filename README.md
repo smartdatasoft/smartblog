@@ -4,7 +4,7 @@
 
 ## Demo Link https://smartblog.classydevs.com/
 
-#[MyShop Multipurpose PrestaShop Free Theme](https://classydevs.com/myshop-multipurpose-prestashop-free-theme-download/?utm_source=sbloggithubmyshopbanner&utm_medium=sbloggithubredmimyshopbanner&utm_campaign=sbloggithubredmimyshopbanner) is compatible with SmartBlog. 
+# [MyShop Multipurpose PrestaShop Free Theme](https://classydevs.com/myshop-multipurpose-prestashop-free-theme-download/?utm_source=sbloggithubmyshopbanner&utm_medium=sbloggithubredmimyshopbanner&utm_campaign=sbloggithubredmimyshopbanner) is compatible with SmartBlog. 
 
 This is the best multipurpose PrestaShop theme which is for FREE!!! Included with Free Crazyelements and SmartBlog
 ## Demo Link https://myshop.classydevs.net/en/smartblog.html
