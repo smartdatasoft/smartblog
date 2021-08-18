@@ -13,6 +13,10 @@ This is the best multipurpose PrestaShop theme which is for FREE!!! Included wit
 
 ## SmartBlog is now compatible with the best Elementor Based Page Builder for PrestaShop [Crazyelements](https://classydevs.com/crazy-elements/?utm_source=smartblog_github_crazy&utm_medium=smartblog_github_redme&utm_campaign=smartblog_github_redme&utm_term=smartblog_github_redme). 
 
+You can Show your blog posts anywhere you want on your PrestaShop 1.7 site with Crazyelements FREE page builder using [Smart Blog Addons for Crazy Elements](https://1.envato.market/15D6qa). 
+
+<a href="https://1.envato.market/15D6qa" target="_blank"><img src="https://github.com/smartdatasoft/smartblog/blob/develop/smartblog-addons-for-crazyelements-page-builder.png" alt="Logo" width="900" height="600"></a>
+
 You can edit your blog content with Crazy Elements.
 
 We will release more features and updates on the version available on ClassyDevs
