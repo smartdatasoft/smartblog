@@ -6,18 +6,18 @@
 
 # [MyShop Multipurpose PrestaShop Free Theme](https://classydevs.com/myshop-multipurpose-prestashop-free-theme-download/?utm_source=sbloggithubmyshopbanner&utm_medium=sbloggithubredmimyshopbanner&utm_campaign=sbloggithubredmimyshopbanner) is compatible with SmartBlog. 
 
-This is the best multipurpose PrestaShop theme which is for FREE!!! Included with Free Crazyelements and SmartBlog
+This is the best multipurpose PrestaShop theme which is for FREE!!! Included with Free Crazyelements Live Elementor Based Page Builder and SmartBlog
 ## Demo Link https://myshop.classydevs.net/en/smartblog.html
 
 <a href="https://classydevs.com/myshop-multipurpose-prestashop-free-theme-download/?utm_source=sbloggithubredmimyshopbanner&utm_medium=sbloggithubredmimyshopbanner&utm_campaign=sbloggithubredmimyshopbanner" target="_blank"><img src="https://github.com/smartdatasoft/smartblog/blob/develop/myshop_multipurpose_prestashop_theme_free.jpeg" alt="Logo" width="900" height="600"></a>
 
-## SmartBlog is now compatible with the best Elementor Based Page Builder for PrestaShop [Crazyelements](https://classydevs.com/crazy-elements/?utm_source=smartblog_github_crazy&utm_medium=smartblog_github_redme&utm_campaign=smartblog_github_redme&utm_term=smartblog_github_redme). 
+## SmartBlog is now compatible with the best Elementor Based Live Page Builder for PrestaShop [Crazyelements](https://classydevs.com/crazy-elements/?utm_source=smartblog_github_crazy&utm_medium=smartblog_github_redme&utm_campaign=smartblog_github_redme&utm_term=smartblog_github_redme). 
 
-You can Show your blog posts anywhere you want on your PrestaShop 1.7 site with Crazyelements FREE page builder using [Smart Blog Addons for Crazy Elements](https://1.envato.market/15D6qa). 
+You can Show your blog posts anywhere you want on your PrestaShop 1.7 site with Crazyelements FREE LIVE page builder using [Smart Blog Addons for Crazy Elements Live Page Builder](https://1.envato.market/15D6qa). 
 
-<a href="https://1.envato.market/15D6qa" target="_blank"><img src="https://github.com/smartdatasoft/smartblog/blob/develop/smartblog-addons-for-crazyelements-page-builder.png" alt="Logo" width="900" height="600"></a>
+<a href="https://1.envato.market/15D6qa" target="_blank"><img src="https://github.com/smartdatasoft/smartblog/blob/develop/smartblog-addons-for-crazyelements-page-builder.png" alt="Logo" width="590" height="300"></a>
 
-You can edit your blog content with Crazy Elements.
+You can edit your blog content with Crazy Elements Live Elementor Based Page Builder.
 
 We will release more features and updates on the version available on ClassyDevs
 
